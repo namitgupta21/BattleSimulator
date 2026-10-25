@@ -1,0 +1,417 @@
+{
+  "pokemon": [
+    {
+      "id": "snorlax",
+      "name": "Snorlax",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 160,
+        "attack": 110,
+        "defense": 65,
+        "special": 65,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "body-slam",
+        "hyper-beam",
+        "earthquake",
+        "rest"
+      ]
+    },
+    {
+      "id": "alakazam",
+      "name": "Alakazam",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 50,
+        "defense": 45,
+        "special": 135,
+        "speed": 120
+      },
+      "defaultMoves": [
+        "psychic",
+        "recover",
+        "thunder-wave",
+        "seismic-toss"
+      ]
+    },
+    {
+      "id": "tauros",
+      "name": "Tauros",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 75,
+        "attack": 100,
+        "defense": 95,
+        "special": 70,
+        "speed": 110
+      },
+      "defaultMoves": [
+        "body-slam",
+        "hyper-beam",
+        "earthquake",
+        "blizzard"
+      ]
+    },
+    {
+      "id": "chansey",
+      "name": "Chansey",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 250,
+        "attack": 5,
+        "defense": 5,
+        "special": 105,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "ice-beam",
+        "soft-boiled",
+        "thunder-wave",
+        "thunderbolt"
+      ]
+    },
+    {
+      "id": "gengar",
+      "name": "Gengar",
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 65,
+        "defense": 60,
+        "special": 130,
+        "speed": 110
+      },
+      "defaultMoves": [
+        "hypnosis",
+        "thunderbolt",
+        "night-shade",
+        "explosion"
+      ]
+    },
+    {
+      "id": "starmie",
+      "name": "Starmie",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 75,
+        "defense": 85,
+        "special": 100,
+        "speed": 115
+      },
+      "defaultMoves": [
+        "blizzard",
+        "thunderbolt",
+        "recover",
+        "surf"
+      ]
+    },
+    {
+      "id": "exeggutor",
+      "name": "Exeggutor",
+      "types": [
+        "Grass",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 95,
+        "attack": 95,
+        "defense": 85,
+        "special": 125,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "sleep-powder",
+        "psychic",
+        "mega-drain",
+        "explosion"
+      ]
+    },
+    {
+      "id": "zapdos",
+      "name": "Zapdos",
+      "types": [
+        "Electric",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 90,
+        "defense": 85,
+        "special": 125,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "thunderbolt",
+        "drill-peck",
+        "thunder-wave",
+        "agility"
+      ]
+    },
+    {
+      "id": "jolteon",
+      "name": "Jolteon",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 65,
+        "defense": 60,
+        "special": 110,
+        "speed": 130
+      },
+      "defaultMoves": [
+        "thunderbolt",
+        "thunder-wave",
+        "double-edge",
+        "agility"
+      ]
+    },
+    {
+      "id": "cloyster",
+      "name": "Cloyster",
+      "types": [
+        "Water",
+        "Ice"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 95,
+        "defense": 180,
+        "special": 85,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "blizzard",
+        "surf",
+        "explosion",
+        "screech"
+      ]
+    },
+    {
+      "id": "rhydon",
+      "name": "Rhydon",
+      "types": [
+        "Ground",
+        "Rock"
+      ],
+      "baseStats": {
+        "hp": 105,
+        "attack": 130,
+        "defense": 120,
+        "special": 45,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "earthquake",
+        "rock-slide",
+        "body-slam",
+        "leer"
+      ]
+    },
+    {
+      "id": "jynx",
+      "name": "Jynx",
+      "types": [
+        "Ice",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 50,
+        "defense": 35,
+        "special": 95,
+        "speed": 95
+      },
+      "defaultMoves": [
+        "blizzard",
+        "psychic",
+        "hypnosis",
+        "body-slam"
+      ]
+    },
+    {
+      "id": "slowbro",
+      "name": "Slowbro",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 95,
+        "attack": 75,
+        "defense": 110,
+        "special": 80,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "amnesia",
+        "surf",
+        "thunder-wave",
+        "rest"
+      ]
+    },
+    {
+      "id": "dragonite",
+      "name": "Dragonite",
+      "types": [
+        "Dragon",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 91,
+        "attack": 134,
+        "defense": 95,
+        "special": 100,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "agility",
+        "blizzard",
+        "thunderbolt",
+        "hyper-beam"
+      ]
+    },
+    {
+      "id": "lapras",
+      "name": "Lapras",
+      "types": [
+        "Water",
+        "Ice"
+      ],
+      "baseStats": {
+        "hp": 130,
+        "attack": 85,
+        "defense": 80,
+        "special": 95,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "blizzard",
+        "thunderbolt",
+        "surf",
+        "body-slam"
+      ]
+    },
+    {
+      "id": "venusaur",
+      "name": "Venusaur",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 82,
+        "defense": 83,
+        "special": 100,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "sleep-powder",
+        "razor-leaf",
+        "swords-dance",
+        "body-slam"
+      ]
+    },
+    {
+      "id": "charizard",
+      "name": "Charizard",
+      "types": [
+        "Fire",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 78,
+        "attack": 84,
+        "defense": 78,
+        "special": 85,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "fire-blast",
+        "swords-dance",
+        "earthquake",
+        "slash"
+      ]
+    },
+    {
+      "id": "blastoise",
+      "name": "Blastoise",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 79,
+        "attack": 83,
+        "defense": 100,
+        "special": 85,
+        "speed": 78
+      },
+      "defaultMoves": [
+        "surf",
+        "blizzard",
+        "earthquake",
+        "body-slam"
+      ]
+    },
+    {
+      "id": "golem",
+      "name": "Golem",
+      "types": [
+        "Rock",
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 120,
+        "defense": 130,
+        "special": 55,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "earthquake",
+        "rock-slide",
+        "body-slam",
+        "explosion"
+      ]
+    },
+    {
+      "id": "raichu",
+      "name": "Raichu",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 90,
+        "defense": 55,
+        "special": 90,
+        "speed": 110
+      },
+      "defaultMoves": [
+        "thunderbolt",
+        "thunder-wave",
+        "surf",
+        "agility"
+      ]
+    }
+  ]
+}
