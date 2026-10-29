@@ -287,7 +287,7 @@ sequenceDiagram
         Eng->>Eng: Perform Switch action(s)
     end
 
-    rect rgb(240, 248, 255)
+    rect rgba(240, 248, 255, 0.26)
     Note over Eng: 2. First Combatant Action
     Eng->>Eng: Status Check (Sleep / Freeze / 25% Full Paralysis / Confusion)
     opt Able to act
@@ -303,7 +303,7 @@ sequenceDiagram
     end
     end
 
-    rect rgb(255, 245, 245)
+    rect rgba(240, 248, 255, 0.26)
     Note over Eng: 3. Second Combatant Action (if not fainted)
     opt Second combatant still alive
         Eng->>Eng: Execute Move sequence (Status -> Accuracy -> Damage -> Effects)
