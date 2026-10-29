@@ -33,25 +33,24 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y ninja-build
 
-      - name: Configure CMake (Linux)
-        if: runner.os == 'Linux'
+      - name: Setup MSVC Developer Prompt (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure CMake
         run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
-      - name: Configure CMake (Windows)
-        if: runner.os == 'Windows'
-        run: cmake -B build -G "Visual Studio 17 2022" -A x64
-
       - name: Build
-        run: cmake --build build --config Release
+        run: cmake --build build
 
       - name: Run Tests
-        run: ctest --test-dir build --output-on-failure -C Release
+        run: ctest --test-dir build --output-on-failure
 
       - name: Test CLI Bot Execution
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-            ./build/cli/Release/pokemon_cli.exe --mode bot --seed 42 || ./build/cli/pokemon_cli.exe --mode bot --seed 42
+            ./build/cli/pokemon_cli.exe --mode bot --seed 42
           else
             ./build/cli/pokemon_cli --mode bot --seed 42
           fi
