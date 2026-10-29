@@ -1,4 +1,4 @@
-# Pokémon Gen 1 Battle Engine & CLI Simulator
+# BattleSimulator CLI
 
 [![CI](https://github.com/namitgupta21/BattleSimulator/actions/workflows/ci.yml/badge.svg)](https://github.com/namitgupta21/BattleSimulator/actions/workflows/ci.yml)
 ![C++17](https://img.shields.io/badge/Language-C%2B%2B17-blue.svg?logo=cplusplus)
@@ -275,13 +275,13 @@ The resolution pipeline within `BattleEngine::step()` faithfully matches Gen 1 b
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Loop as Main Loop (cli)
+    participant Client as Main Game Loop
     participant Eng as BattleEngine
     participant DMG as Gen1DamageCalculator
     participant EFF as MoveEffectDispatcher
 
-    Loop->>Eng: step(state, actionP1, actionP2, rng)
-    Note over Eng: 1. Determine Turn Priority<br/>(Switches First > Move Priority Bracket > Natural Speed)
+    Client->>Eng: step(state, actionP1, actionP2, rng)
+    Note over Eng: 1. Determine Turn Priority<br/>(Switches First > Priority Moves > Natural Speed)
     
     opt Any player chose Switch
         Eng->>Eng: Perform Switch action(s)
@@ -289,9 +289,9 @@ sequenceDiagram
 
     rect rgb(240, 248, 255)
     Note over Eng: 2. First Combatant Action
-    Eng->>Eng: Status Check (Sleep counter / Freeze / 25% Full Paralysis / Confusion)
+    Eng->>Eng: Status Check (Sleep / Freeze / 25% Full Paralysis / Confusion)
     opt Able to act
-        Eng->>Eng: Accuracy Roll (Gen 1 1..255 RNG check)
+        Eng->>Eng: Accuracy Roll (1..255 RNG check)
         opt Move Hits
             Eng->>DMG: calculateDamage(attacker, defender, move, rng)
             DMG-->>Eng: damage, isCritical, effectiveness
@@ -311,9 +311,9 @@ sequenceDiagram
     end
 
     Note over Eng: 4. End-of-Turn Residuals<br/>(Poison / Burn tick, Toxic counter increase)
-    Note over Eng: 5. Transition Phase<br/>(ActionSelection, ForcedSwitchP1/P2/Both, or GameOver)
+    Note over Eng: 5. Transition Phase<br/>(ActionSelection, ForcedSwitch, or GameOver)
     
-    Eng-->>Loop: StepResult { nextState, events }
+    Eng-->>Client: StepResult (nextState, events)
 ```
 
 ---
