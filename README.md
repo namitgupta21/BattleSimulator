@@ -15,15 +15,6 @@ $$\text{step}(S_t, A_1, A_2, \text{RNG}) \longrightarrow (S_{t+1}, \vec{E})$$
 
 ---
 
-## 📌 Repository Metadata
-
-* **Short Description (GitHub "About" summary)**:  
-  *High-performance, deterministic Gen 1 Pokémon battle engine and CLI simulator in C++17 with full 151 roster, seeded replays, and turn timers.*
-* **Suggested GitHub Topics / Tags**:  
-  `pokemon`, `cpp17`, `battle-engine`, `simulation`, `game-engine`, `cli-game`, `deterministic`, `clean-architecture`, `solid-principles`, `googletest`, `pokeapi`
-
----
-
 ## 📑 Table of Contents
 1. [Key Features](#-key-features)
 2. [Prerequisites & System Setup](#-prerequisites--system-setup)
