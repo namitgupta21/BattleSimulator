@@ -1,11 +1,10 @@
 #include "cli/human_player.hpp"
+#include "cli/timed_input.hpp"
 #include <iostream>
-#include <limits>
-#include <sstream>
 
 namespace cli {
 
-engine::BattleAction HumanPlayer::chooseAction(
+std::optional<engine::BattleAction> HumanPlayer::chooseAction(
     const engine::BattleState& state,
     engine::PlayerSide side,
     const std::vector<engine::BattleAction>& legalActions
@@ -55,26 +54,20 @@ engine::BattleAction HumanPlayer::chooseAction(
         std::cout << "\n";
     }
 
-    while (true) {
-        std::cout << "Enter selection (1-" << legalActions.size() << "): ";
-        int choice = 0;
-        if (std::cin >> choice) {
-            if (choice >= 1 && choice <= static_cast<int>(legalActions.size())) {
-                return legalActions[choice - 1];
-            }
-        } else {
-            if (std::cin.eof()) {
-                std::cout << "\n[EOF detected, selecting default action 1]\n";
-                return legalActions[0];
-            }
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        std::cout << "Invalid choice. Please try again.\n";
+    auto choice = TimedInput::getTimedChoice(
+        1,
+        static_cast<int>(legalActions.size()),
+        m_enableTimer,
+        m_timeoutSeconds
+    );
+
+    if (!choice.has_value()) {
+        return std::nullopt; // Timed out
     }
+    return legalActions[choice.value() - 1];
 }
 
-engine::BattleAction HumanPlayer::chooseForcedSwitch(
+std::optional<engine::BattleAction> HumanPlayer::chooseForcedSwitch(
     const engine::BattleState& state,
     engine::PlayerSide side,
     const std::vector<engine::BattleAction>& legalSwitches
@@ -105,23 +98,17 @@ engine::BattleAction HumanPlayer::chooseForcedSwitch(
         std::cout << "\n";
     }
 
-    while (true) {
-        std::cout << "Enter selection (1-" << legalSwitches.size() << "): ";
-        int choice = 0;
-        if (std::cin >> choice) {
-            if (choice >= 1 && choice <= static_cast<int>(legalSwitches.size())) {
-                return legalSwitches[choice - 1];
-            }
-        } else {
-            if (std::cin.eof()) {
-                std::cout << "\n[EOF detected, selecting default switch 1]\n";
-                return legalSwitches[0];
-            }
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        std::cout << "Invalid choice. Please try again.\n";
+    auto choice = TimedInput::getTimedChoice(
+        1,
+        static_cast<int>(legalSwitches.size()),
+        m_enableTimer,
+        m_timeoutSeconds
+    );
+
+    if (!choice.has_value()) {
+        return std::nullopt; // Timed out
     }
+    return legalSwitches[choice.value() - 1];
 }
 
 } // namespace cli

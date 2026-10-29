@@ -10,19 +10,19 @@ public:
     explicit RandomPlayer(engine::IRandomGenerator& rng, std::string botName = "Bot")
         : m_rng(rng), m_name(std::move(botName)) {}
 
-    engine::BattleAction chooseAction(
+    const std::string& getName() const override { return m_name; }
+
+    std::optional<engine::BattleAction> chooseAction(
         const engine::BattleState& state,
         engine::PlayerSide side,
         const std::vector<engine::BattleAction>& legalActions
     ) override;
 
-    engine::BattleAction chooseForcedSwitch(
+    std::optional<engine::BattleAction> chooseForcedSwitch(
         const engine::BattleState& state,
         engine::PlayerSide side,
         const std::vector<engine::BattleAction>& legalSwitches
     ) override;
-
-    const std::string& getName() const { return m_name; }
 
 private:
     engine::IRandomGenerator& m_rng;

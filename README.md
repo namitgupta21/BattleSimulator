@@ -101,7 +101,7 @@ $$\text{step}(\text{state}, \text{actionP1}, \text{actionP2}, \text{rng}) \longr
 
 ## Mechanics Deliberately Deferred (Phase 1 Scope)
 
-The following mechanics are documented in [`docs/ROADMAP.md`](docs/ROADMAP.md) and intentionally omitted from Phase 1:
+The following mechanics are documented in [`docs/EXCLUDED_MOVES.md`](docs/EXCLUDED_MOVES.md) and intentionally omitted from Phase 1:
 1. Multi-turn trapping moves (*Wrap*, *Fire Spin*, *Clamp*, *Bind*).
 2. Complex meta moves (*Metronome*, *Mimic*, *Transform*, *Mirror Move*, *Counter*, *Bide*).
 3. Gen 1 specific glitch reproduction (1/256 miss on 100% moves, badge boost recalculation glitches, HP desync glitches).
@@ -160,6 +160,17 @@ Or run the GoogleTest binary directly:
 ```bash
 ./build/cli/pokemon_cli --team-seed 1234
 ```
+
+**Play with Turn Timer (1.5 min per move):**
+```bash
+./build/cli/pokemon_cli --timer
+```
+> **Timer Details**:
+> - Players have up to **1.5 minutes (90 seconds)** to select an action or switch.
+> - Countdown warnings are emitted at **1min, 30s, 15s, 10s, 5s, 4s, 3s, 2s, and 1s**.
+> - If time expires, the battle terminates immediately and declares the opposing player as the winner.
+> - Custom duration can be specified via `--turn-time <seconds>` (e.g. `--turn-time 30`).
+> - Can also be toggled interactively when launching without flags.
 
 ### 4. Regenerating Full Gen 1 Game Data (PokeAPI Pipeline)
 The engine consumes normalized data from `data/pokemon.json` and `data/moves.json`. To re-fetch and validate all 151 Pokémon and their Red/Blue move pools from PokeAPI:

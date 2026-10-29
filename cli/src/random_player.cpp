@@ -2,7 +2,7 @@
 
 namespace cli {
 
-engine::BattleAction RandomPlayer::chooseAction(
+std::optional<engine::BattleAction> RandomPlayer::chooseAction(
     const engine::BattleState&,
     engine::PlayerSide,
     const std::vector<engine::BattleAction>& legalActions
@@ -14,7 +14,7 @@ engine::BattleAction RandomPlayer::chooseAction(
     return legalActions[idx];
 }
 
-engine::BattleAction RandomPlayer::chooseForcedSwitch(
+std::optional<engine::BattleAction> RandomPlayer::chooseForcedSwitch(
     const engine::BattleState&,
     engine::PlayerSide,
     const std::vector<engine::BattleAction>& legalSwitches

@@ -18,6 +18,8 @@ bool LocalJsonProvider::loadAll(const std::string& dataDirectory) {
             dir = "../" + dir;
         } else if (std::ifstream("../../" + dir + "/pokemon.json").good()) {
             dir = "../../" + dir;
+        } else if (std::ifstream("../../../" + dir + "/pokemon.json").good()) {
+            dir = "../../../" + dir;
         }
     }
     std::string sep = "/";

@@ -12,6 +12,7 @@
 #include "cli/human_player.hpp"
 #include "cli/random_player.hpp"
 #include "cli/renderer.hpp"
+#include "cli/timed_input.hpp"
 
 namespace fs = std::filesystem;
 
@@ -35,6 +36,8 @@ int main(int argc, char* argv[]) {
     std::optional<uint64_t> teamSeed;
     std::string mode = "pve"; // "pvp", "pve", or "bot"
     std::string dataDir = "data";
+    std::optional<bool> timerFlag;
+    int turnTimeSeconds = 90; // Default 1.5 minutes (90s)
 
     bool usePreset = false;
 
@@ -46,6 +49,13 @@ int main(int argc, char* argv[]) {
             teamSeed = std::stoull(argv[++i]);
         } else if (arg == "--mode" && i + 1 < argc) {
             mode = argv[++i];
+        } else if (arg == "--timer" || arg == "-t") {
+            timerFlag = true;
+        } else if (arg == "--no-timer") {
+            timerFlag = false;
+        } else if (arg == "--turn-time" && i + 1 < argc) {
+            turnTimeSeconds = std::stoi(argv[++i]);
+            timerFlag = true;
         } else if (arg == "--data" && i + 1 < argc) {
             dataDir = argv[++i];
         } else if (arg == "--preset") {
@@ -57,6 +67,9 @@ int main(int argc, char* argv[]) {
                          "  --seed <uint>       Seed for random generator & battle RNG (default: random)\n"
                          "  --team-seed <uint>  Seed specifically for roster generation\n"
                          "  --mode <mode>       Game mode: 'pve' (default), 'pvp', or 'bot'\n"
+                         "  --timer, -t         Enable turn timer (max 1.5 min per move)\n"
+                         "  --no-timer          Disable turn timer\n"
+                         "  --turn-time <sec>   Set custom turn timer limit in seconds (default: 90)\n"
                          "  --data <path>       Path to data directory (default: 'data')\n"
                          "  --preset            Use fixed iconic Gen 1 competitive rosters\n"
                          "  --random            Use seeded TeamGenerator for random teams (default)\n";
@@ -70,6 +83,21 @@ int main(int argc, char* argv[]) {
             dataDir = "../data";
         } else if (fs::exists("../../data/pokemon.json")) {
             dataDir = "../../data";
+        } else if (fs::exists("../../../data/pokemon.json")) {
+            dataDir = "../../../data";
+        }
+    }
+
+    bool timerEnabled = false;
+    if (timerFlag.has_value()) {
+        timerEnabled = timerFlag.value();
+    } else if (mode != "bot" && cli::TimedInput::isInteractiveConsole()) {
+        std::cout << "Enable turn timer (1.5 min / 90s per move)? [y/N]: " << std::flush;
+        std::string ans;
+        if (std::getline(std::cin, ans)) {
+            if (!ans.empty() && (ans[0] == 'y' || ans[0] == 'Y')) {
+                timerEnabled = true;
+            }
         }
     }
 
@@ -81,9 +109,13 @@ int main(int argc, char* argv[]) {
     std::cout << "Battle Seed : " << seed << "\n";
     std::cout << "Team Seed   : " << actualTeamSeed << "\n";
     std::cout << "Mode        : " << mode << "\n";
+    std::cout << "Timer       : " << (timerEnabled ? ("ON (" + std::to_string(turnTimeSeconds) + "s limit per move)") : "OFF") << "\n";
     std::cout << "Replay Cmd  : .\\build\\cli\\pokemon_cli.exe --seed " << seed;
     if (teamSeed.has_value()) {
         std::cout << " --team-seed " << actualTeamSeed;
+    }
+    if (timerEnabled) {
+        std::cout << " --turn-time " << turnTimeSeconds;
     }
     std::cout << "\n------------------------------------------------------------\n";
     std::cout << "Loading game data from: " << dataDir << "...\n";
@@ -144,13 +176,13 @@ int main(int argc, char* argv[]) {
     std::unique_ptr<cli::IPlayer> p2;
 
     if (mode == "pvp") {
-        p1 = std::make_unique<cli::HumanPlayer>("Player 1");
-        p2 = std::make_unique<cli::HumanPlayer>("Player 2");
+        p1 = std::make_unique<cli::HumanPlayer>("Player 1", timerEnabled, turnTimeSeconds);
+        p2 = std::make_unique<cli::HumanPlayer>("Player 2", timerEnabled, turnTimeSeconds);
     } else if (mode == "bot") {
         p1 = std::make_unique<cli::RandomPlayer>(rng, "Bot 1");
         p2 = std::make_unique<cli::RandomPlayer>(rng, "Bot 2");
     } else { // default: pve
-        p1 = std::make_unique<cli::HumanPlayer>("Player 1");
+        p1 = std::make_unique<cli::HumanPlayer>("Player 1", timerEnabled, turnTimeSeconds);
         p2 = std::make_unique<cli::RandomPlayer>(rng, "Rival Bot");
     }
 
@@ -168,25 +200,66 @@ int main(int argc, char* argv[]) {
             auto acts2 = engine.getLegalActions(state, engine::PlayerSide::Player2);
 
             auto a1 = p1->chooseAction(state, engine::PlayerSide::Player1, acts1);
-            auto a2 = p2->chooseAction(state, engine::PlayerSide::Player2, acts2);
+            if (!a1.has_value()) {
+                std::cout << "\n============================================================\n";
+                std::cout << " BATTLE TERMINATED BY TIMEOUT!\n";
+                std::cout << " " << p1->getName() << " ran out of time!\n";
+                std::cout << " WINNER: " << p2->getName() << " (Player 2)!\n";
+                std::cout << "============================================================\n";
+                state.phase = engine::BattlePhase::GameOver;
+                state.winner = engine::PlayerSide::Player2;
+                break;
+            }
 
-            auto result = engine.step(state, a1, a2, rng);
+            auto a2 = p2->chooseAction(state, engine::PlayerSide::Player2, acts2);
+            if (!a2.has_value()) {
+                std::cout << "\n============================================================\n";
+                std::cout << " BATTLE TERMINATED BY TIMEOUT!\n";
+                std::cout << " " << p2->getName() << " ran out of time!\n";
+                std::cout << " WINNER: " << p1->getName() << " (Player 1)!\n";
+                std::cout << "============================================================\n";
+                state.phase = engine::BattlePhase::GameOver;
+                state.winner = engine::PlayerSide::Player1;
+                break;
+            }
+
+            auto result = engine.step(state, *a1, *a2, rng);
             cli::Renderer::renderEvents(result.events);
             state = result.nextState;
 
         } else if (state.phase == engine::BattlePhase::ForcedSwitchP1) {
             auto switches = engine.getLegalSwitches(state, engine::PlayerSide::Player1);
             auto a1 = p1->chooseForcedSwitch(state, engine::PlayerSide::Player1, switches);
+            if (!a1.has_value()) {
+                std::cout << "\n============================================================\n";
+                std::cout << " BATTLE TERMINATED BY TIMEOUT!\n";
+                std::cout << " " << p1->getName() << " ran out of time selecting replacement!\n";
+                std::cout << " WINNER: " << p2->getName() << " (Player 2)!\n";
+                std::cout << "============================================================\n";
+                state.phase = engine::BattlePhase::GameOver;
+                state.winner = engine::PlayerSide::Player2;
+                break;
+            }
 
-            auto result = engine.resolveForcedSwitches(state, a1, std::nullopt, rng);
+            auto result = engine.resolveForcedSwitches(state, *a1, std::nullopt, rng);
             cli::Renderer::renderEvents(result.events);
             state = result.nextState;
 
         } else if (state.phase == engine::BattlePhase::ForcedSwitchP2) {
             auto switches = engine.getLegalSwitches(state, engine::PlayerSide::Player2);
             auto a2 = p2->chooseForcedSwitch(state, engine::PlayerSide::Player2, switches);
+            if (!a2.has_value()) {
+                std::cout << "\n============================================================\n";
+                std::cout << " BATTLE TERMINATED BY TIMEOUT!\n";
+                std::cout << " " << p2->getName() << " ran out of time selecting replacement!\n";
+                std::cout << " WINNER: " << p1->getName() << " (Player 1)!\n";
+                std::cout << "============================================================\n";
+                state.phase = engine::BattlePhase::GameOver;
+                state.winner = engine::PlayerSide::Player1;
+                break;
+            }
 
-            auto result = engine.resolveForcedSwitches(state, std::nullopt, a2, rng);
+            auto result = engine.resolveForcedSwitches(state, std::nullopt, *a2, rng);
             cli::Renderer::renderEvents(result.events);
             state = result.nextState;
 
@@ -195,9 +268,30 @@ int main(int argc, char* argv[]) {
             auto switches2 = engine.getLegalSwitches(state, engine::PlayerSide::Player2);
 
             auto a1 = p1->chooseForcedSwitch(state, engine::PlayerSide::Player1, switches1);
-            auto a2 = p2->chooseForcedSwitch(state, engine::PlayerSide::Player2, switches2);
+            if (!a1.has_value()) {
+                std::cout << "\n============================================================\n";
+                std::cout << " BATTLE TERMINATED BY TIMEOUT!\n";
+                std::cout << " " << p1->getName() << " ran out of time selecting replacement!\n";
+                std::cout << " WINNER: " << p2->getName() << " (Player 2)!\n";
+                std::cout << "============================================================\n";
+                state.phase = engine::BattlePhase::GameOver;
+                state.winner = engine::PlayerSide::Player2;
+                break;
+            }
 
-            auto result = engine.resolveForcedSwitches(state, a1, a2, rng);
+            auto a2 = p2->chooseForcedSwitch(state, engine::PlayerSide::Player2, switches2);
+            if (!a2.has_value()) {
+                std::cout << "\n============================================================\n";
+                std::cout << " BATTLE TERMINATED BY TIMEOUT!\n";
+                std::cout << " " << p2->getName() << " ran out of time selecting replacement!\n";
+                std::cout << " WINNER: " << p1->getName() << " (Player 1)!\n";
+                std::cout << "============================================================\n";
+                state.phase = engine::BattlePhase::GameOver;
+                state.winner = engine::PlayerSide::Player1;
+                break;
+            }
+
+            auto result = engine.resolveForcedSwitches(state, *a1, *a2, rng);
             cli::Renderer::renderEvents(result.events);
             state = result.nextState;
         }

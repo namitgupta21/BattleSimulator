@@ -27,4 +27,6 @@ target_link_libraries(pokemon_tests PRIVATE
 )
 
 include(GoogleTest)
-gtest_discover_tests(pokemon_tests)
+gtest_discover_tests(pokemon_tests
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
