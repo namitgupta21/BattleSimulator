@@ -4,6 +4,8 @@ add_library(pokemon_engine STATIC
     src/effects.cpp
     src/engine.cpp
     src/data_loader.cpp
+    src/local_json_provider.cpp
+    src/team_generator.cpp
     src/serializer.cpp
 )
 

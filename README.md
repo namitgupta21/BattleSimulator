@@ -56,18 +56,20 @@ $$\text{step}(\text{state}, \text{actionP1}, \text{actionP2}, \text{rng}) \longr
    - `BattleEngine`: Coordinates turn resolution, speed comparison, and forced switches.
    - `Gen1DamageCalculator`: Pure calculation of base damage, level multipliers, STAB, type effectiveness, and rolls.
    - `MoveEffectDispatcher`: Decouples individual effect executions (damage, status infliction, stat stages, recoil, healing).
-   - `GameDataRegistry`: Handles JSON ingestion, parsing, and species/move instantiations.
+   - `LocalJsonProvider` / `IDataProvider`: Decouples raw JSON ingestion, validation, and data persistence from engine logic.
+   - `TeamGenerator`: Pure deterministic weighted roster generation guaranteeing legal Gen 1 teams.
    - `Renderer`: Renders structured `BattleEvent` records to terminal without modifying or querying business logic.
 2. **Open / Closed Principle (OCP)**:
    - Move effects use the **Strategy Pattern** (`IMoveEffectHandler`). Adding new move mechanics in future phases requires registering a new handler rather than modifying `BattleEngine`.
    - Players implement `IPlayer`. Future heuristic or Minimax AI opponents plug in seamlessly.
 3. **Liskov Substitution Principle (LSP)**:
    - `HumanPlayer` and `RandomPlayer` can be swapped interchangeably without altering game loop behavior.
+   - `LocalJsonProvider` can be replaced with any mock `IDataProvider` in testing without altering the engine or team generation.
    - `MersenneTwisterRNG` and `MockRNG` implement `IRandomGenerator` identically.
 4. **Interface Segregation Principle (ISP)**:
-   - Segregated, focused interfaces: `IRandomGenerator`, `IPlayer`, `ITypeChart`, `IDamageCalculator`, `IMoveEffectHandler`.
+   - Segregated, focused interfaces: `IRandomGenerator`, `IPlayer`, `ITypeChart`, `IDamageCalculator`, `IMoveEffectHandler`, `IDataProvider`.
 5. **Dependency Inversion Principle (DIP)**:
-   - `BattleEngine` depends on abstractions (`IRandomGenerator`, `ITypeChart`, `IDamageCalculator`, `MoveEffectDispatcher`), allowing deterministic mock injection in unit tests.
+   - High-level modules (`BattleEngine`, `TeamGenerator`) depend on abstractions (`IRandomGenerator`, `ITypeChart`, `IDamageCalculator`, `IDataProvider`), not concrete implementations.
 
 ---
 
@@ -134,9 +136,14 @@ Or run the GoogleTest binary directly:
 
 ### 3. Play Battle in Terminal
 
-**Human vs Rival Bot (PvE - Default):**
+**Human vs Rival Bot with Generated Teams (PvE - Default):**
 ```bash
 ./build/cli/pokemon_cli
+```
+
+**Human vs Rival Bot with Fixed Classic Teams:**
+```bash
+./build/cli/pokemon_cli --preset
 ```
 
 **Hotseat PvP (Human vs Human):**
@@ -149,9 +156,18 @@ Or run the GoogleTest binary directly:
 ./build/cli/pokemon_cli --mode bot --seed 1234
 ```
 
-### 4. Regenerating Game Data
-To re-extract or update the curated Pokémon and move pool from PokeAPI:
+**Replay a Specific Team Roster (with fresh in-battle RNG):**
 ```bash
-python data/scripts/fetch_data.py
+./build/cli/pokemon_cli --team-seed 1234
 ```
-Adding new Pokémon or moves is entirely data-driven: add entries to `data/pokemon.json` and `data/moves.json` without modifying C++ source code.
+
+### 4. Regenerating Full Gen 1 Game Data (PokeAPI Pipeline)
+The engine consumes normalized data from `data/pokemon.json` and `data/moves.json`. To re-fetch and validate all 151 Pokémon and their Red/Blue move pools from PokeAPI:
+```bash
+python tools/fetch_data.py
+```
+- **Caching**: Raw responses are cached in `tools/.cache/` to minimize external requests and prevent rate-limiting.
+- **Audit Reports**:
+  - [`docs/EXCLUDED_MOVES.md`](docs/EXCLUDED_MOVES.md): Explicit list of excluded moves and reasons.
+  - [`docs/GEN1_DATA_DEVIATIONS.md`](docs/GEN1_DATA_DEVIATIONS.md): Deviations between Gen 1 Special and modern Special Attack.
+  - [`data/excluded_moves.json`](data/excluded_moves.json): Machine-readable exclusion report.

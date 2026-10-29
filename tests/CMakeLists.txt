@@ -16,6 +16,9 @@ add_executable(pokemon_tests
     test_status.cpp
     test_determinism.cpp
     test_serialization.cpp
+    test_data_provider.cpp
+    test_team_generator.cpp
+    test_simulation_stress.cpp
 )
 
 target_link_libraries(pokemon_tests PRIVATE

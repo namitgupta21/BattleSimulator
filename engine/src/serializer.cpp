@@ -39,7 +39,7 @@ json serializePokemonObj(const PokemonInstance& p) {
     return j;
 }
 
-PokemonInstance deserializePokemonObj(const json& j, const GameDataRegistry& registry) {
+PokemonInstance deserializePokemonObj(const json& j, const IDataProvider& registry) {
     std::string speciesId = j.value("speciesId", "snorlax");
     int level = j.value("level", 50);
 
@@ -92,7 +92,7 @@ json serializeTeamObj(const Team& team) {
     return j;
 }
 
-Team deserializeTeamObj(const json& j, const GameDataRegistry& registry) {
+Team deserializeTeamObj(const json& j, const IDataProvider& registry) {
     Team team;
     if (j.contains("pokemon")) {
         for (const auto& pObj : j["pokemon"]) {
@@ -124,7 +124,7 @@ std::string BattleSerializer::pokemonToJson(const PokemonInstance& pokemon) {
     return serializePokemonObj(pokemon).dump(2);
 }
 
-PokemonInstance BattleSerializer::jsonToPokemon(const std::string& jsonStr, const GameDataRegistry& registry) {
+PokemonInstance BattleSerializer::jsonToPokemon(const std::string& jsonStr, const IDataProvider& registry) {
     return deserializePokemonObj(json::parse(jsonStr), registry);
 }
 
@@ -142,7 +142,7 @@ std::string BattleSerializer::stateToJson(const BattleState& state) {
     return j.dump(2);
 }
 
-BattleState BattleSerializer::jsonToState(const std::string& jsonStr, const GameDataRegistry& registry) {
+BattleState BattleSerializer::jsonToState(const std::string& jsonStr, const IDataProvider& registry) {
     json j = json::parse(jsonStr);
     BattleState state;
     state.turnNumber = j.value("turnNumber", 1);

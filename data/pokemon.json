@@ -1,313 +1,83 @@
 {
   "pokemon": [
     {
-      "id": "snorlax",
-      "name": "Snorlax",
+      "id": "bulbasaur",
+      "name": "Bulbasaur",
       "types": [
-        "Normal"
+        "Grass",
+        "Poison"
       ],
       "baseStats": {
-        "hp": 160,
-        "attack": 110,
-        "defense": 65,
+        "hp": 45,
+        "attack": 49,
+        "defense": 49,
         "special": 65,
-        "speed": 30
+        "speed": 45
       },
       "defaultMoves": [
+        "mega-drain",
+        "razor-leaf",
+        "vine-whip",
+        "body-slam"
+      ],
+      "learnset": [
         "body-slam",
-        "hyper-beam",
-        "earthquake",
-        "rest"
+        "cut",
+        "double-edge",
+        "double-team",
+        "growl",
+        "growth",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "razor-leaf",
+        "rest",
+        "sleep-powder",
+        "swords-dance",
+        "tackle",
+        "take-down",
+        "toxic",
+        "vine-whip"
       ]
     },
     {
-      "id": "alakazam",
-      "name": "Alakazam",
+      "id": "ivysaur",
+      "name": "Ivysaur",
       "types": [
-        "Psychic"
-      ],
-      "baseStats": {
-        "hp": 55,
-        "attack": 50,
-        "defense": 45,
-        "special": 135,
-        "speed": 120
-      },
-      "defaultMoves": [
-        "psychic",
-        "recover",
-        "thunder-wave",
-        "seismic-toss"
-      ]
-    },
-    {
-      "id": "tauros",
-      "name": "Tauros",
-      "types": [
-        "Normal"
-      ],
-      "baseStats": {
-        "hp": 75,
-        "attack": 100,
-        "defense": 95,
-        "special": 70,
-        "speed": 110
-      },
-      "defaultMoves": [
-        "body-slam",
-        "hyper-beam",
-        "earthquake",
-        "blizzard"
-      ]
-    },
-    {
-      "id": "chansey",
-      "name": "Chansey",
-      "types": [
-        "Normal"
-      ],
-      "baseStats": {
-        "hp": 250,
-        "attack": 5,
-        "defense": 5,
-        "special": 105,
-        "speed": 50
-      },
-      "defaultMoves": [
-        "ice-beam",
-        "soft-boiled",
-        "thunder-wave",
-        "thunderbolt"
-      ]
-    },
-    {
-      "id": "gengar",
-      "name": "Gengar",
-      "types": [
-        "Ghost",
+        "Grass",
         "Poison"
       ],
       "baseStats": {
         "hp": 60,
-        "attack": 65,
-        "defense": 60,
-        "special": 130,
-        "speed": 110
-      },
-      "defaultMoves": [
-        "hypnosis",
-        "thunderbolt",
-        "night-shade",
-        "explosion"
-      ]
-    },
-    {
-      "id": "starmie",
-      "name": "Starmie",
-      "types": [
-        "Water",
-        "Psychic"
-      ],
-      "baseStats": {
-        "hp": 60,
-        "attack": 75,
-        "defense": 85,
-        "special": 100,
-        "speed": 115
-      },
-      "defaultMoves": [
-        "blizzard",
-        "thunderbolt",
-        "recover",
-        "surf"
-      ]
-    },
-    {
-      "id": "exeggutor",
-      "name": "Exeggutor",
-      "types": [
-        "Grass",
-        "Psychic"
-      ],
-      "baseStats": {
-        "hp": 95,
-        "attack": 95,
-        "defense": 85,
-        "special": 125,
-        "speed": 55
-      },
-      "defaultMoves": [
-        "sleep-powder",
-        "psychic",
-        "mega-drain",
-        "explosion"
-      ]
-    },
-    {
-      "id": "zapdos",
-      "name": "Zapdos",
-      "types": [
-        "Electric",
-        "Flying"
-      ],
-      "baseStats": {
-        "hp": 90,
-        "attack": 90,
-        "defense": 85,
-        "special": 125,
-        "speed": 100
-      },
-      "defaultMoves": [
-        "thunderbolt",
-        "drill-peck",
-        "thunder-wave",
-        "agility"
-      ]
-    },
-    {
-      "id": "jolteon",
-      "name": "Jolteon",
-      "types": [
-        "Electric"
-      ],
-      "baseStats": {
-        "hp": 65,
-        "attack": 65,
-        "defense": 60,
-        "special": 110,
-        "speed": 130
-      },
-      "defaultMoves": [
-        "thunderbolt",
-        "thunder-wave",
-        "double-edge",
-        "agility"
-      ]
-    },
-    {
-      "id": "cloyster",
-      "name": "Cloyster",
-      "types": [
-        "Water",
-        "Ice"
-      ],
-      "baseStats": {
-        "hp": 50,
-        "attack": 95,
-        "defense": 180,
-        "special": 85,
-        "speed": 70
-      },
-      "defaultMoves": [
-        "blizzard",
-        "surf",
-        "explosion",
-        "screech"
-      ]
-    },
-    {
-      "id": "rhydon",
-      "name": "Rhydon",
-      "types": [
-        "Ground",
-        "Rock"
-      ],
-      "baseStats": {
-        "hp": 105,
-        "attack": 130,
-        "defense": 120,
-        "special": 45,
-        "speed": 40
-      },
-      "defaultMoves": [
-        "earthquake",
-        "rock-slide",
-        "body-slam",
-        "leer"
-      ]
-    },
-    {
-      "id": "jynx",
-      "name": "Jynx",
-      "types": [
-        "Ice",
-        "Psychic"
-      ],
-      "baseStats": {
-        "hp": 65,
-        "attack": 50,
-        "defense": 35,
-        "special": 95,
-        "speed": 95
-      },
-      "defaultMoves": [
-        "blizzard",
-        "psychic",
-        "hypnosis",
-        "body-slam"
-      ]
-    },
-    {
-      "id": "slowbro",
-      "name": "Slowbro",
-      "types": [
-        "Water",
-        "Psychic"
-      ],
-      "baseStats": {
-        "hp": 95,
-        "attack": 75,
-        "defense": 110,
+        "attack": 62,
+        "defense": 63,
         "special": 80,
-        "speed": 30
-      },
-      "defaultMoves": [
-        "amnesia",
-        "surf",
-        "thunder-wave",
-        "rest"
-      ]
-    },
-    {
-      "id": "dragonite",
-      "name": "Dragonite",
-      "types": [
-        "Dragon",
-        "Flying"
-      ],
-      "baseStats": {
-        "hp": 91,
-        "attack": 134,
-        "defense": 95,
-        "special": 100,
-        "speed": 80
-      },
-      "defaultMoves": [
-        "agility",
-        "blizzard",
-        "thunderbolt",
-        "hyper-beam"
-      ]
-    },
-    {
-      "id": "lapras",
-      "name": "Lapras",
-      "types": [
-        "Water",
-        "Ice"
-      ],
-      "baseStats": {
-        "hp": 130,
-        "attack": 85,
-        "defense": 80,
-        "special": 95,
         "speed": 60
       },
       "defaultMoves": [
-        "blizzard",
-        "thunderbolt",
-        "surf",
+        "mega-drain",
+        "razor-leaf",
+        "vine-whip",
         "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growl",
+        "growth",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "razor-leaf",
+        "rest",
+        "sleep-powder",
+        "swords-dance",
+        "tackle",
+        "take-down",
+        "toxic",
+        "vine-whip"
       ]
     },
     {
@@ -325,10 +95,117 @@
         "speed": 80
       },
       "defaultMoves": [
-        "sleep-powder",
+        "mega-drain",
         "razor-leaf",
-        "swords-dance",
+        "vine-whip",
         "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growl",
+        "growth",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "razor-leaf",
+        "rest",
+        "sleep-powder",
+        "swords-dance",
+        "tackle",
+        "take-down",
+        "toxic",
+        "vine-whip"
+      ]
+    },
+    {
+      "id": "charmander",
+      "name": "Charmander",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 39,
+        "attack": 52,
+        "defense": 43,
+        "special": 50,
+        "speed": 65
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "growl",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "slash",
+        "strength",
+        "submission",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "charmeleon",
+      "name": "Charmeleon",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 58,
+        "attack": 64,
+        "defense": 58,
+        "special": 65,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "growl",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "slash",
+        "strength",
+        "submission",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
       ]
     },
     {
@@ -346,10 +223,123 @@
         "speed": 100
       },
       "defaultMoves": [
+        "ember",
         "fire-blast",
-        "swords-dance",
+        "flamethrower",
+        "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
         "earthquake",
-        "slash"
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "growl",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "slash",
+        "strength",
+        "submission",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "squirtle",
+      "name": "Squirtle",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 44,
+        "attack": 48,
+        "defense": 65,
+        "special": 50,
+        "speed": 43
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "wartortle",
+      "name": "Wartortle",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 59,
+        "attack": 63,
+        "defense": 80,
+        "special": 65,
+        "speed": 58
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "withdraw"
       ]
     },
     {
@@ -366,10 +356,2569 @@
         "speed": 78
       },
       "defaultMoves": [
-        "surf",
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
         "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
         "earthquake",
+        "hydro-pump",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "caterpie",
+      "name": "Caterpie",
+      "types": [
+        "Bug"
+      ],
+      "baseStats": {
+        "hp": 45,
+        "attack": 30,
+        "defense": 35,
+        "special": 20,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "tackle",
+        "string-shot"
+      ],
+      "learnset": [
+        "string-shot",
+        "tackle"
+      ]
+    },
+    {
+      "id": "metapod",
+      "name": "Metapod",
+      "types": [
+        "Bug"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 20,
+        "defense": 55,
+        "special": 25,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "tackle",
+        "harden",
+        "string-shot"
+      ],
+      "learnset": [
+        "harden",
+        "string-shot",
+        "tackle"
+      ]
+    },
+    {
+      "id": "butterfree",
+      "name": "Butterfree",
+      "types": [
+        "Bug",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 45,
+        "defense": 50,
+        "special": 80,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "double-edge",
+        "mega-drain",
+        "psychic",
+        "rage"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "mega-drain",
+        "poison-powder",
+        "psychic",
+        "rage",
+        "razor-wind",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "weedle",
+      "name": "Weedle",
+      "types": [
+        "Bug",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 35,
+        "defense": 30,
+        "special": 20,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "poison-sting",
+        "string-shot"
+      ],
+      "learnset": [
+        "poison-sting",
+        "string-shot"
+      ]
+    },
+    {
+      "id": "kakuna",
+      "name": "Kakuna",
+      "types": [
+        "Bug",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 45,
+        "attack": 25,
+        "defense": 50,
+        "special": 25,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "poison-sting",
+        "harden",
+        "string-shot"
+      ],
+      "learnset": [
+        "harden",
+        "poison-sting",
+        "string-shot"
+      ]
+    },
+    {
+      "id": "beedrill",
+      "name": "Beedrill",
+      "types": [
+        "Bug",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 90,
+        "defense": 40,
+        "special": 45,
+        "speed": 75
+      },
+      "defaultMoves": [
+        "cut",
+        "double-edge",
+        "mega-drain",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "cut",
+        "double-edge",
+        "double-team",
+        "mega-drain",
+        "rage",
+        "rest",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "pidgey",
+      "name": "Pidgey",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 45,
+        "defense": 40,
+        "special": 35,
+        "speed": 56
+      },
+      "defaultMoves": [
+        "double-edge",
+        "gust",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "gust",
+        "quick-attack",
+        "rage",
+        "razor-wind",
+        "rest",
+        "sand-attack",
+        "swift",
+        "take-down",
+        "toxic",
+        "wing-attack"
+      ]
+    },
+    {
+      "id": "pidgeotto",
+      "name": "Pidgeotto",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 63,
+        "attack": 60,
+        "defense": 55,
+        "special": 50,
+        "speed": 71
+      },
+      "defaultMoves": [
+        "double-edge",
+        "gust",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "gust",
+        "quick-attack",
+        "rage",
+        "razor-wind",
+        "rest",
+        "sand-attack",
+        "swift",
+        "take-down",
+        "toxic",
+        "wing-attack"
+      ]
+    },
+    {
+      "id": "pidgeot",
+      "name": "Pidgeot",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 83,
+        "attack": 80,
+        "defense": 75,
+        "special": 70,
+        "speed": 101
+      },
+      "defaultMoves": [
+        "double-edge",
+        "gust",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "gust",
+        "quick-attack",
+        "rage",
+        "razor-wind",
+        "rest",
+        "sand-attack",
+        "swift",
+        "take-down",
+        "toxic",
+        "wing-attack"
+      ]
+    },
+    {
+      "id": "rattata",
+      "name": "Rattata",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 56,
+        "defense": 35,
+        "special": 25,
+        "speed": 72
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "quick-attack",
+        "rage",
+        "rest",
+        "swift",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "raticate",
+      "name": "Raticate",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 81,
+        "defense": 60,
+        "special": 50,
+        "speed": 97
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "ice-beam",
+        "quick-attack",
+        "rage",
+        "rest",
+        "swift",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "spearow",
+      "name": "Spearow",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 60,
+        "defense": 30,
+        "special": 31,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "double-edge",
+        "drill-peck",
+        "peck",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "drill-peck",
+        "growl",
+        "leer",
+        "peck",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "fearow",
+      "name": "Fearow",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 90,
+        "defense": 65,
+        "special": 61,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "double-edge",
+        "drill-peck",
+        "peck",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "drill-peck",
+        "growl",
+        "leer",
+        "peck",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "ekans",
+      "name": "Ekans",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 60,
+        "defense": 44,
+        "special": 40,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "acid",
+        "poison-sting",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "acid",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "glare",
+        "leer",
+        "mega-drain",
+        "poison-sting",
+        "rage",
+        "rest",
+        "screech",
+        "strength",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "arbok",
+      "name": "Arbok",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 95,
+        "defense": 69,
+        "special": 65,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "acid",
+        "poison-sting",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "acid",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "glare",
+        "leer",
+        "mega-drain",
+        "poison-sting",
+        "rage",
+        "rest",
+        "screech",
+        "strength",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "pikachu",
+      "name": "Pikachu",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 55,
+        "defense": 40,
+        "special": 50,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunder-shock",
+        "thunderbolt",
         "body-slam"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "growl",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "quick-attack",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "surf",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "raichu",
+      "name": "Raichu",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 90,
+        "defense": 55,
+        "special": 90,
+        "speed": 110
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunder-shock",
+        "thunderbolt",
+        "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "growl",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "sandshrew",
+      "name": "Sandshrew",
+      "types": [
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 75,
+        "defense": 85,
+        "special": 30,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "earthquake",
+        "body-slam",
+        "cut",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "poison-sting",
+        "rage",
+        "rest",
+        "sand-attack",
+        "scratch",
+        "seismic-toss",
+        "slash",
+        "strength",
+        "submission",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "sandslash",
+      "name": "Sandslash",
+      "types": [
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 75,
+        "attack": 100,
+        "defense": 110,
+        "special": 55,
+        "speed": 65
+      },
+      "defaultMoves": [
+        "earthquake",
+        "body-slam",
+        "cut",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "poison-sting",
+        "rage",
+        "rest",
+        "sand-attack",
+        "scratch",
+        "seismic-toss",
+        "slash",
+        "strength",
+        "submission",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "nidoran-f",
+      "name": "Nidoran F",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 47,
+        "defense": 52,
+        "special": 40,
+        "speed": 41
+      },
+      "defaultMoves": [
+        "poison-sting",
+        "blizzard",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "poison-sting",
+        "rage",
+        "rest",
+        "scratch",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "nidorina",
+      "name": "Nidorina",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 70,
+        "attack": 62,
+        "defense": 67,
+        "special": 55,
+        "speed": 56
+      },
+      "defaultMoves": [
+        "poison-sting",
+        "blizzard",
+        "body-slam",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "ice-beam",
+        "poison-sting",
+        "rage",
+        "rest",
+        "scratch",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "nidoqueen",
+      "name": "Nidoqueen",
+      "types": [
+        "Poison",
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 92,
+        "defense": 87,
+        "special": 75,
+        "speed": 76
+      },
+      "defaultMoves": [
+        "earthquake",
+        "poison-sting",
+        "blizzard",
+        "body-slam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "poison-sting",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "nidoran-m",
+      "name": "Nidoran M",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 46,
+        "attack": 57,
+        "defense": 40,
+        "special": 40,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "poison-sting",
+        "blizzard",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "horn-attack",
+        "leer",
+        "poison-sting",
+        "rage",
+        "rest",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "nidorino",
+      "name": "Nidorino",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 61,
+        "attack": 72,
+        "defense": 57,
+        "special": 55,
+        "speed": 65
+      },
+      "defaultMoves": [
+        "poison-sting",
+        "blizzard",
+        "body-slam",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "horn-attack",
+        "ice-beam",
+        "leer",
+        "poison-sting",
+        "rage",
+        "rest",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "nidoking",
+      "name": "Nidoking",
+      "types": [
+        "Poison",
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 81,
+        "attack": 102,
+        "defense": 77,
+        "special": 85,
+        "speed": 85
+      },
+      "defaultMoves": [
+        "earthquake",
+        "poison-sting",
+        "blizzard",
+        "body-slam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "horn-attack",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "poison-sting",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tackle",
+        "take-down",
+        "thrash",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "clefairy",
+      "name": "Clefairy",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 70,
+        "attack": 45,
+        "defense": 48,
+        "special": 60,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "mega-kick",
+        "mega-punch"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "flash",
+        "growl",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "minimize",
+        "pound",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "sing",
+        "strength",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "clefable",
+      "name": "Clefable",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 95,
+        "attack": 70,
+        "defense": 73,
+        "special": 85,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "mega-kick",
+        "mega-punch"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "flash",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "minimize",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "sing",
+        "strength",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "vulpix",
+      "name": "Vulpix",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 38,
+        "attack": 41,
+        "defense": 40,
+        "special": 65,
+        "speed": 65
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "quick-attack",
+        "rage",
+        "rest",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "ninetales",
+      "name": "Ninetales",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 73,
+        "attack": 76,
+        "defense": 75,
+        "special": 100,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "quick-attack",
+        "rage",
+        "rest",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "jigglypuff",
+      "name": "Jigglypuff",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 115,
+        "attack": 45,
+        "defense": 20,
+        "special": 25,
+        "speed": 20
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "mega-kick",
+        "mega-punch"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "flash",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pound",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "sing",
+        "strength",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "wigglytuff",
+      "name": "Wigglytuff",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 140,
+        "attack": 70,
+        "defense": 45,
+        "special": 50,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "mega-kick",
+        "mega-punch"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "flash",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "sing",
+        "strength",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "zubat",
+      "name": "Zubat",
+      "types": [
+        "Poison",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 45,
+        "defense": 35,
+        "special": 40,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "wing-attack",
+        "double-edge",
+        "leech-life",
+        "mega-drain"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "leech-life",
+        "mega-drain",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic",
+        "wing-attack"
+      ]
+    },
+    {
+      "id": "golbat",
+      "name": "Golbat",
+      "types": [
+        "Poison",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 75,
+        "attack": 80,
+        "defense": 70,
+        "special": 75,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "wing-attack",
+        "double-edge",
+        "leech-life",
+        "mega-drain"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "leech-life",
+        "mega-drain",
+        "rage",
+        "razor-wind",
+        "rest",
+        "screech",
+        "swift",
+        "take-down",
+        "toxic",
+        "wing-attack"
+      ]
+    },
+    {
+      "id": "oddish",
+      "name": "Oddish",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 45,
+        "attack": 50,
+        "defense": 55,
+        "special": 75,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "absorb",
+        "acid",
+        "mega-drain",
+        "petal-dance"
+      ],
+      "learnset": [
+        "absorb",
+        "acid",
+        "cut",
+        "double-edge",
+        "double-team",
+        "mega-drain",
+        "petal-dance",
+        "poison-powder",
+        "rage",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "gloom",
+      "name": "Gloom",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 65,
+        "defense": 70,
+        "special": 85,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "absorb",
+        "acid",
+        "mega-drain",
+        "petal-dance"
+      ],
+      "learnset": [
+        "absorb",
+        "acid",
+        "cut",
+        "double-edge",
+        "double-team",
+        "mega-drain",
+        "petal-dance",
+        "poison-powder",
+        "rage",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "vileplume",
+      "name": "Vileplume",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 75,
+        "attack": 80,
+        "defense": 85,
+        "special": 100,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "acid",
+        "mega-drain",
+        "petal-dance",
+        "body-slam"
+      ],
+      "learnset": [
+        "acid",
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "mega-drain",
+        "petal-dance",
+        "poison-powder",
+        "rage",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "paras",
+      "name": "Paras",
+      "types": [
+        "Bug",
+        "Grass"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 70,
+        "defense": 55,
+        "special": 55,
+        "speed": 25
+      },
+      "defaultMoves": [
+        "leech-life",
+        "mega-drain",
+        "body-slam",
+        "cut"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growth",
+        "leech-life",
+        "mega-drain",
+        "rage",
+        "rest",
+        "scratch",
+        "slash",
+        "spore",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "parasect",
+      "name": "Parasect",
+      "types": [
+        "Bug",
+        "Grass"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 95,
+        "defense": 80,
+        "special": 80,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "leech-life",
+        "mega-drain",
+        "body-slam",
+        "cut"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growth",
+        "leech-life",
+        "mega-drain",
+        "rage",
+        "rest",
+        "scratch",
+        "slash",
+        "spore",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "venonat",
+      "name": "Venonat",
+      "types": [
+        "Bug",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 55,
+        "defense": 50,
+        "special": 40,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "leech-life",
+        "double-edge",
+        "mega-drain",
+        "psychic"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "leech-life",
+        "mega-drain",
+        "poison-powder",
+        "psychic",
+        "rage",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "tackle",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "venomoth",
+      "name": "Venomoth",
+      "types": [
+        "Bug",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 70,
+        "attack": 65,
+        "defense": 60,
+        "special": 90,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "leech-life",
+        "double-edge",
+        "mega-drain",
+        "psychic"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "leech-life",
+        "mega-drain",
+        "poison-powder",
+        "psychic",
+        "rage",
+        "razor-wind",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "swift",
+        "tackle",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "diglett",
+      "name": "Diglett",
+      "types": [
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 10,
+        "attack": 55,
+        "defense": 25,
+        "special": 45,
+        "speed": 95
+      },
+      "defaultMoves": [
+        "earthquake",
+        "body-slam",
+        "double-edge",
+        "rage"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "growl",
+        "rage",
+        "rest",
+        "sand-attack",
+        "scratch",
+        "slash",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "dugtrio",
+      "name": "Dugtrio",
+      "types": [
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 100,
+        "defense": 50,
+        "special": 70,
+        "speed": 120
+      },
+      "defaultMoves": [
+        "earthquake",
+        "body-slam",
+        "double-edge",
+        "rage"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "growl",
+        "rage",
+        "rest",
+        "sand-attack",
+        "scratch",
+        "slash",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "meowth",
+      "name": "Meowth",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 45,
+        "defense": 35,
+        "special": 40,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "pay-day",
+        "rage"
+      ],
+      "learnset": [
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "pay-day",
+        "rage",
+        "rest",
+        "scratch",
+        "screech",
+        "slash",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "persian",
+      "name": "Persian",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 70,
+        "defense": 60,
+        "special": 65,
+        "speed": 115
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "pay-day",
+        "rage"
+      ],
+      "learnset": [
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "pay-day",
+        "rage",
+        "rest",
+        "scratch",
+        "screech",
+        "slash",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "psyduck",
+      "name": "Psyduck",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 52,
+        "defense": 48,
+        "special": 50,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "golduck",
+      "name": "Golduck",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 82,
+        "defense": 78,
+        "special": 80,
+        "speed": 85
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "mankey",
+      "name": "Mankey",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 80,
+        "defense": 35,
+        "special": 35,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "seismic-toss",
+        "submission",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "karate-chop",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "swift",
+        "take-down",
+        "thrash",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "primeape",
+      "name": "Primeape",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 105,
+        "defense": 60,
+        "special": 60,
+        "speed": 95
+      },
+      "defaultMoves": [
+        "seismic-toss",
+        "submission",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "karate-chop",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "rage",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "swift",
+        "take-down",
+        "thrash",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "growlithe",
+      "name": "Growlithe",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 70,
+        "defense": 45,
+        "special": 50,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "body-slam"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "leer",
+        "rage",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "arcanine",
+      "name": "Arcanine",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 110,
+        "defense": 80,
+        "special": 80,
+        "speed": 95
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "leer",
+        "rage",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "poliwag",
+      "name": "Poliwag",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 50,
+        "defense": 40,
+        "special": 40,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
+        "amnesia",
+        "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "hypnosis",
+        "ice-beam",
+        "psychic",
+        "rage",
+        "rest",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "poliwhirl",
+      "name": "Poliwhirl",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 65,
+        "defense": 65,
+        "special": 50,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
+        "amnesia",
+        "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "hydro-pump",
+        "hypnosis",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "poliwrath",
+      "name": "Poliwrath",
+      "types": [
+        "Water",
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 95,
+        "defense": 95,
+        "special": 70,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "seismic-toss",
+        "submission",
+        "surf"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "hypnosis",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "abra",
+      "name": "Abra",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 25,
+        "attack": 20,
+        "defense": 15,
+        "special": 105,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "psychic",
+        "body-slam",
+        "double-edge",
+        "mega-kick"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "kadabra",
+      "name": "Kadabra",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 35,
+        "defense": 30,
+        "special": 120,
+        "speed": 105
+      },
+      "defaultMoves": [
+        "psychic",
+        "body-slam",
+        "double-edge",
+        "mega-kick"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "recover",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "alakazam",
+      "name": "Alakazam",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 50,
+        "defense": 45,
+        "special": 135,
+        "speed": 120
+      },
+      "defaultMoves": [
+        "psychic",
+        "body-slam",
+        "double-edge",
+        "mega-kick"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "recover",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "machop",
+      "name": "Machop",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 70,
+        "attack": 80,
+        "defense": 50,
+        "special": 35,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "seismic-toss",
+        "submission",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "karate-chop",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "machoke",
+      "name": "Machoke",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 100,
+        "defense": 70,
+        "special": 50,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "seismic-toss",
+        "submission",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "karate-chop",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "machamp",
+      "name": "Machamp",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 130,
+        "defense": 80,
+        "special": 65,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "seismic-toss",
+        "submission",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "karate-chop",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "bellsprout",
+      "name": "Bellsprout",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 75,
+        "defense": 35,
+        "special": 70,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "acid",
+        "mega-drain",
+        "razor-leaf",
+        "vine-whip"
+      ],
+      "learnset": [
+        "acid",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growth",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "razor-leaf",
+        "rest",
+        "slam",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "vine-whip"
+      ]
+    },
+    {
+      "id": "weepinbell",
+      "name": "Weepinbell",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 90,
+        "defense": 50,
+        "special": 85,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "acid",
+        "mega-drain",
+        "razor-leaf",
+        "vine-whip"
+      ],
+      "learnset": [
+        "acid",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growth",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "razor-leaf",
+        "rest",
+        "slam",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "vine-whip"
+      ]
+    },
+    {
+      "id": "victreebel",
+      "name": "Victreebel",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 105,
+        "defense": 65,
+        "special": 100,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "acid",
+        "mega-drain",
+        "razor-leaf",
+        "body-slam"
+      ],
+      "learnset": [
+        "acid",
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "razor-leaf",
+        "rest",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "tentacool",
+      "name": "Tentacool",
+      "types": [
+        "Water",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 40,
+        "defense": 35,
+        "special": 100,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "acid",
+        "bubble-beam",
+        "hydro-pump",
+        "poison-sting"
+      ],
+      "learnset": [
+        "acid",
+        "barrier",
+        "blizzard",
+        "bubble-beam",
+        "constrict",
+        "cut",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "mega-drain",
+        "poison-sting",
+        "rage",
+        "rest",
+        "screech",
+        "surf",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "tentacruel",
+      "name": "Tentacruel",
+      "types": [
+        "Water",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 70,
+        "defense": 65,
+        "special": 120,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "acid",
+        "bubble-beam",
+        "hydro-pump",
+        "poison-sting"
+      ],
+      "learnset": [
+        "acid",
+        "barrier",
+        "blizzard",
+        "bubble-beam",
+        "constrict",
+        "cut",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "mega-drain",
+        "poison-sting",
+        "rage",
+        "rest",
+        "screech",
+        "surf",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "geodude",
+      "name": "Geodude",
+      "types": [
+        "Rock",
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 80,
+        "defense": 100,
+        "special": 30,
+        "speed": 20
+      },
+      "defaultMoves": [
+        "earthquake",
+        "rock-throw",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "explosion",
+        "fire-blast",
+        "harden",
+        "mega-punch",
+        "rage",
+        "rest",
+        "rock-throw",
+        "seismic-toss",
+        "self-destruct",
+        "strength",
+        "submission",
+        "tackle",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "graveler",
+      "name": "Graveler",
+      "types": [
+        "Rock",
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 95,
+        "defense": 115,
+        "special": 45,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "earthquake",
+        "rock-throw",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "explosion",
+        "fire-blast",
+        "harden",
+        "mega-punch",
+        "rage",
+        "rest",
+        "rock-throw",
+        "seismic-toss",
+        "self-destruct",
+        "strength",
+        "submission",
+        "tackle",
+        "take-down",
+        "toxic"
       ]
     },
     {
@@ -388,29 +2937,3013 @@
       },
       "defaultMoves": [
         "earthquake",
-        "rock-slide",
+        "rock-throw",
         "body-slam",
-        "explosion"
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "explosion",
+        "fire-blast",
+        "harden",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "rock-throw",
+        "seismic-toss",
+        "self-destruct",
+        "strength",
+        "submission",
+        "tackle",
+        "take-down",
+        "toxic"
       ]
     },
     {
-      "id": "raichu",
-      "name": "Raichu",
+      "id": "ponyta",
+      "name": "Ponyta",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 85,
+        "defense": 55,
+        "special": 65,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "growl",
+        "rage",
+        "rest",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "rapidash",
+      "name": "Rapidash",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 100,
+        "defense": 70,
+        "special": 80,
+        "speed": 105
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "growl",
+        "rage",
+        "rest",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "slowpoke",
+      "name": "Slowpoke",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 65,
+        "defense": 65,
+        "special": 40,
+        "speed": 15
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "psychic",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "amnesia",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "flash",
+        "growl",
+        "ice-beam",
+        "pay-day",
+        "psychic",
+        "rage",
+        "rest",
+        "strength",
+        "surf",
+        "swift",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "slowbro",
+      "name": "Slowbro",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 95,
+        "attack": 75,
+        "defense": 110,
+        "special": 80,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "psychic",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "amnesia",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "flash",
+        "growl",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "swift",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "magnemite",
+      "name": "Magnemite",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 25,
+        "attack": 35,
+        "defense": 70,
+        "special": 95,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunder-shock",
+        "thunderbolt",
+        "double-edge"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "flash",
+        "rage",
+        "rest",
+        "screech",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "magneton",
+      "name": "Magneton",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 60,
+        "defense": 95,
+        "special": 120,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunder-shock",
+        "thunderbolt",
+        "double-edge"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "flash",
+        "rage",
+        "rest",
+        "screech",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "farfetchd",
+      "name": "Farfetchd",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 52,
+        "attack": 90,
+        "defense": 55,
+        "special": 58,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "peck"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "leer",
+        "peck",
+        "rage",
+        "razor-wind",
+        "rest",
+        "sand-attack",
+        "slash",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "doduo",
+      "name": "Doduo",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 85,
+        "defense": 45,
+        "special": 35,
+        "speed": 75
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "drill-peck",
+        "peck"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "drill-peck",
+        "growl",
+        "peck",
+        "rage",
+        "rest",
+        "take-down",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "dodrio",
+      "name": "Dodrio",
+      "types": [
+        "Normal",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 110,
+        "defense": 70,
+        "special": 60,
+        "speed": 110
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "drill-peck",
+        "peck"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "drill-peck",
+        "growl",
+        "peck",
+        "rage",
+        "rest",
+        "take-down",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "seel",
+      "name": "Seel",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 45,
+        "defense": 55,
+        "special": 70,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "surf",
+        "water-gun",
+        "aurora-beam"
+      ],
+      "learnset": [
+        "aurora-beam",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "ice-beam",
+        "pay-day",
+        "rage",
+        "rest",
+        "strength",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "dewgong",
+      "name": "Dewgong",
+      "types": [
+        "Water",
+        "Ice"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 70,
+        "defense": 80,
+        "special": 95,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "aurora-beam",
+        "blizzard",
+        "bubble-beam",
+        "ice-beam"
+      ],
+      "learnset": [
+        "aurora-beam",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "ice-beam",
+        "pay-day",
+        "rage",
+        "rest",
+        "strength",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "grimer",
+      "name": "Grimer",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 80,
+        "defense": 50,
+        "special": 40,
+        "speed": 25
+      },
+      "defaultMoves": [
+        "sludge",
+        "body-slam",
+        "explosion",
+        "fire-blast"
+      ],
+      "learnset": [
+        "acid-armor",
+        "body-slam",
+        "double-team",
+        "explosion",
+        "fire-blast",
+        "harden",
+        "mega-drain",
+        "minimize",
+        "poison-gas",
+        "pound",
+        "rage",
+        "rest",
+        "screech",
+        "self-destruct",
+        "sludge",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "muk",
+      "name": "Muk",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 105,
+        "attack": 105,
+        "defense": 75,
+        "special": 65,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "sludge",
+        "body-slam",
+        "explosion",
+        "fire-blast"
+      ],
+      "learnset": [
+        "acid-armor",
+        "body-slam",
+        "double-team",
+        "explosion",
+        "fire-blast",
+        "harden",
+        "mega-drain",
+        "minimize",
+        "poison-gas",
+        "pound",
+        "rage",
+        "rest",
+        "screech",
+        "self-destruct",
+        "sludge",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "shellder",
+      "name": "Shellder",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 65,
+        "defense": 100,
+        "special": 45,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "surf",
+        "water-gun",
+        "aurora-beam"
+      ],
+      "learnset": [
+        "aurora-beam",
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "explosion",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "self-destruct",
+        "surf",
+        "swift",
+        "tackle",
+        "take-down",
+        "toxic",
+        "tri-attack",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "cloyster",
+      "name": "Cloyster",
+      "types": [
+        "Water",
+        "Ice"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 95,
+        "defense": 180,
+        "special": 85,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "aurora-beam",
+        "blizzard",
+        "bubble-beam",
+        "ice-beam"
+      ],
+      "learnset": [
+        "aurora-beam",
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "explosion",
+        "ice-beam",
+        "rage",
+        "rest",
+        "self-destruct",
+        "surf",
+        "swift",
+        "take-down",
+        "toxic",
+        "tri-attack",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "gastly",
+      "name": "Gastly",
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 35,
+        "defense": 30,
+        "special": 100,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "lick",
+        "night-shade",
+        "dream-eater",
+        "explosion"
+      ],
+      "learnset": [
+        "double-team",
+        "dream-eater",
+        "explosion",
+        "hypnosis",
+        "lick",
+        "mega-drain",
+        "night-shade",
+        "psychic",
+        "rage",
+        "rest",
+        "self-destruct",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "haunter",
+      "name": "Haunter",
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 45,
+        "attack": 50,
+        "defense": 45,
+        "special": 115,
+        "speed": 95
+      },
+      "defaultMoves": [
+        "lick",
+        "night-shade",
+        "dream-eater",
+        "explosion"
+      ],
+      "learnset": [
+        "double-team",
+        "dream-eater",
+        "explosion",
+        "hypnosis",
+        "lick",
+        "mega-drain",
+        "night-shade",
+        "psychic",
+        "rage",
+        "rest",
+        "self-destruct",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "gengar",
+      "name": "Gengar",
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 65,
+        "defense": 60,
+        "special": 130,
+        "speed": 110
+      },
+      "defaultMoves": [
+        "lick",
+        "night-shade",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "dream-eater",
+        "explosion",
+        "hypnosis",
+        "lick",
+        "mega-drain",
+        "mega-kick",
+        "mega-punch",
+        "night-shade",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "self-destruct",
+        "strength",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "onix",
+      "name": "Onix",
+      "types": [
+        "Rock",
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 45,
+        "defense": 160,
+        "special": 30,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "earthquake",
+        "rock-throw",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "explosion",
+        "harden",
+        "rage",
+        "rest",
+        "rock-throw",
+        "screech",
+        "self-destruct",
+        "slam",
+        "strength",
+        "tackle",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "drowzee",
+      "name": "Drowzee",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 48,
+        "defense": 45,
+        "special": 90,
+        "speed": 42
+      },
+      "defaultMoves": [
+        "dream-eater",
+        "psychic",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "dream-eater",
+        "flash",
+        "hypnosis",
+        "meditate",
+        "mega-kick",
+        "mega-punch",
+        "poison-gas",
+        "pound",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "hypno",
+      "name": "Hypno",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 85,
+        "attack": 73,
+        "defense": 70,
+        "special": 115,
+        "speed": 67
+      },
+      "defaultMoves": [
+        "dream-eater",
+        "psychic",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "dream-eater",
+        "flash",
+        "hypnosis",
+        "meditate",
+        "mega-kick",
+        "mega-punch",
+        "poison-gas",
+        "pound",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thunder-wave",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "krabby",
+      "name": "Krabby",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 105,
+        "defense": 90,
+        "special": 25,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "crabhammer",
+        "surf"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "crabhammer",
+        "cut",
+        "double-edge",
+        "double-team",
+        "harden",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "strength",
+        "surf",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "vice-grip",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "kingler",
+      "name": "Kingler",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 130,
+        "defense": 115,
+        "special": 50,
+        "speed": 75
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "crabhammer",
+        "surf"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble",
+        "bubble-beam",
+        "crabhammer",
+        "cut",
+        "double-edge",
+        "double-team",
+        "harden",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "strength",
+        "surf",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "vice-grip",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "voltorb",
+      "name": "Voltorb",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 30,
+        "defense": 50,
+        "special": 55,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunderbolt",
+        "explosion",
+        "rage"
+      ],
+      "learnset": [
+        "double-team",
+        "explosion",
+        "flash",
+        "rage",
+        "rest",
+        "screech",
+        "self-destruct",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "electrode",
+      "name": "Electrode",
       "types": [
         "Electric"
       ],
       "baseStats": {
         "hp": 60,
+        "attack": 50,
+        "defense": 70,
+        "special": 80,
+        "speed": 150
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunderbolt",
+        "explosion",
+        "rage"
+      ],
+      "learnset": [
+        "double-team",
+        "explosion",
+        "flash",
+        "rage",
+        "rest",
+        "screech",
+        "self-destruct",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "exeggcute",
+      "name": "Exeggcute",
+      "types": [
+        "Grass",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 40,
+        "defense": 80,
+        "special": 60,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "psychic",
+        "double-edge",
+        "egg-bomb",
+        "explosion"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "egg-bomb",
+        "explosion",
+        "hypnosis",
+        "poison-powder",
+        "psychic",
+        "rage",
+        "rest",
+        "self-destruct",
+        "sleep-powder",
+        "stun-spore",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "exeggutor",
+      "name": "Exeggutor",
+      "types": [
+        "Grass",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 95,
+        "attack": 95,
+        "defense": 85,
+        "special": 125,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "mega-drain",
+        "psychic",
+        "double-edge",
+        "egg-bomb"
+      ],
+      "learnset": [
+        "double-edge",
+        "double-team",
+        "egg-bomb",
+        "explosion",
+        "hypnosis",
+        "mega-drain",
+        "psychic",
+        "rage",
+        "rest",
+        "self-destruct",
+        "strength",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "cubone",
+      "name": "Cubone",
+      "types": [
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 50,
+        "defense": 95,
+        "special": 40,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "earthquake",
+        "blizzard",
+        "body-slam",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "growl",
+        "ice-beam",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "take-down",
+        "thrash",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "marowak",
+      "name": "Marowak",
+      "types": [
+        "Ground"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 80,
+        "defense": 110,
+        "special": 50,
+        "speed": 45
+      },
+      "defaultMoves": [
+        "earthquake",
+        "blizzard",
+        "body-slam",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "growl",
+        "ice-beam",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "take-down",
+        "thrash",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "hitmonlee",
+      "name": "Hitmonlee",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 120,
+        "defense": 53,
+        "special": 35,
+        "speed": 87
+      },
+      "defaultMoves": [
+        "high-jump-kick",
+        "jump-kick",
+        "seismic-toss",
+        "submission"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "high-jump-kick",
+        "jump-kick",
+        "meditate",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "hitmonchan",
+      "name": "Hitmonchan",
+      "types": [
+        "Fighting"
+      ],
+      "baseStats": {
+        "hp": 50,
+        "attack": 105,
+        "defense": 79,
+        "special": 35,
+        "speed": 76
+      },
+      "defaultMoves": [
+        "seismic-toss",
+        "submission",
+        "body-slam",
+        "double-edge"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "fire-punch",
+        "ice-punch",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "swift",
+        "take-down",
+        "thunder-punch",
+        "toxic"
+      ]
+    },
+    {
+      "id": "lickitung",
+      "name": "Lickitung",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 55,
+        "defense": 75,
+        "special": 60,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "mega-kick"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "cut",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "screech",
+        "seismic-toss",
+        "slam",
+        "strength",
+        "submission",
+        "surf",
+        "swords-dance",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "koffing",
+      "name": "Koffing",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 65,
+        "defense": 95,
+        "special": 60,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "sludge",
+        "smog",
+        "explosion",
+        "fire-blast"
+      ],
+      "learnset": [
+        "double-team",
+        "explosion",
+        "fire-blast",
+        "rage",
+        "rest",
+        "self-destruct",
+        "sludge",
+        "smog",
+        "smokescreen",
+        "tackle",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "weezing",
+      "name": "Weezing",
+      "types": [
+        "Poison"
+      ],
+      "baseStats": {
+        "hp": 65,
         "attack": 90,
+        "defense": 120,
+        "special": 85,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "sludge",
+        "smog",
+        "explosion",
+        "fire-blast"
+      ],
+      "learnset": [
+        "double-team",
+        "explosion",
+        "fire-blast",
+        "rage",
+        "rest",
+        "self-destruct",
+        "sludge",
+        "smog",
+        "smokescreen",
+        "tackle",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "rhyhorn",
+      "name": "Rhyhorn",
+      "types": [
+        "Ground",
+        "Rock"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 85,
+        "defense": 95,
+        "special": 30,
+        "speed": 25
+      },
+      "defaultMoves": [
+        "earthquake",
+        "body-slam",
+        "double-edge",
+        "fire-blast"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "horn-attack",
+        "leer",
+        "rage",
+        "rest",
+        "strength",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "rhydon",
+      "name": "Rhydon",
+      "types": [
+        "Ground",
+        "Rock"
+      ],
+      "baseStats": {
+        "hp": 105,
+        "attack": 130,
+        "defense": 120,
+        "special": 45,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "earthquake",
+        "blizzard",
+        "body-slam",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "horn-attack",
+        "ice-beam",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "chansey",
+      "name": "Chansey",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 250,
+        "attack": 5,
+        "defense": 5,
+        "special": 105,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "egg-bomb",
+        "mega-kick"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "defense-curl",
+        "double-edge",
+        "double-team",
+        "egg-bomb",
+        "fire-blast",
+        "flash",
+        "growl",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "minimize",
+        "pound",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "sing",
+        "soft-boiled",
+        "strength",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "tangela",
+      "name": "Tangela",
+      "types": [
+        "Grass"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 55,
+        "defense": 115,
+        "special": 100,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "absorb",
+        "mega-drain",
+        "body-slam",
+        "constrict"
+      ],
+      "learnset": [
+        "absorb",
+        "body-slam",
+        "constrict",
+        "cut",
+        "double-edge",
+        "double-team",
+        "growth",
+        "mega-drain",
+        "poison-powder",
+        "rage",
+        "rest",
+        "slam",
+        "sleep-powder",
+        "stun-spore",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "kangaskhan",
+      "name": "Kangaskhan",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 105,
+        "attack": 95,
+        "defense": 80,
+        "special": 40,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "mega-kick",
+        "mega-punch"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "ice-beam",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "surf",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "horsea",
+      "name": "Horsea",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 40,
+        "defense": 70,
+        "special": 70,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "smokescreen",
+        "surf",
+        "swift",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "seadra",
+      "name": "Seadra",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 65,
+        "defense": 95,
+        "special": 95,
+        "speed": 85
+      },
+      "defaultMoves": [
+        "bubble",
+        "bubble-beam",
+        "hydro-pump",
+        "surf"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "bubble",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "smokescreen",
+        "surf",
+        "swift",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "goldeen",
+      "name": "Goldeen",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 45,
+        "attack": 67,
+        "defense": 60,
+        "special": 35,
+        "speed": 63
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "surf",
+        "water-gun",
+        "waterfall"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "horn-attack",
+        "ice-beam",
+        "peck",
+        "rage",
+        "rest",
+        "surf",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "waterfall"
+      ]
+    },
+    {
+      "id": "seaking",
+      "name": "Seaking",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 92,
+        "defense": 65,
+        "special": 65,
+        "speed": 68
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "surf",
+        "water-gun",
+        "waterfall"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "horn-attack",
+        "ice-beam",
+        "peck",
+        "rage",
+        "rest",
+        "surf",
+        "swift",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "waterfall"
+      ]
+    },
+    {
+      "id": "staryu",
+      "name": "Staryu",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 45,
         "defense": 55,
-        "special": 90,
+        "special": 70,
+        "speed": 85
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "harden",
+        "hydro-pump",
+        "ice-beam",
+        "minimize",
+        "psychic",
+        "rage",
+        "recover",
+        "rest",
+        "surf",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "starmie",
+      "name": "Starmie",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 75,
+        "defense": 85,
+        "special": 100,
+        "speed": 115
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "psychic",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "harden",
+        "ice-beam",
+        "psychic",
+        "rage",
+        "rest",
+        "surf",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "mr-mime",
+      "name": "Mr Mime",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 40,
+        "attack": 45,
+        "defense": 65,
+        "special": 100,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "psychic",
+        "body-slam",
+        "double-edge",
+        "mega-kick"
+      ],
+      "learnset": [
+        "barrier",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "meditate",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "scyther",
+      "name": "Scyther",
+      "types": [
+        "Bug",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 70,
+        "attack": 110,
+        "defense": 80,
+        "special": 55,
+        "speed": 105
+      },
+      "defaultMoves": [
+        "cut",
+        "double-edge",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "cut",
+        "double-edge",
+        "double-team",
+        "leer",
+        "quick-attack",
+        "rage",
+        "rest",
+        "slash",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "jynx",
+      "name": "Jynx",
+      "types": [
+        "Ice",
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 50,
+        "defense": 35,
+        "special": 95,
+        "speed": 95
+      },
+      "defaultMoves": [
+        "blizzard",
+        "ice-beam",
+        "ice-punch",
+        "psychic"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "ice-beam",
+        "ice-punch",
+        "lick",
+        "lovely-kiss",
+        "mega-kick",
+        "mega-punch",
+        "pound",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "take-down",
+        "thrash",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "electabuzz",
+      "name": "Electabuzz",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 83,
+        "defense": 57,
+        "special": 85,
+        "speed": 105
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunder-punch",
+        "thunder-shock",
+        "thunderbolt"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "quick-attack",
+        "rage",
+        "rest",
+        "screech",
+        "seismic-toss",
+        "strength",
+        "submission",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-punch",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "magmar",
+      "name": "Magmar",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 95,
+        "defense": 57,
+        "special": 85,
+        "speed": 93
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "fire-punch",
+        "flamethrower"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "fire-punch",
+        "flamethrower",
+        "leer",
+        "mega-kick",
+        "mega-punch",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "smog",
+        "smokescreen",
+        "strength",
+        "submission",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "pinsir",
+      "name": "Pinsir",
+      "types": [
+        "Bug"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 125,
+        "defense": 100,
+        "special": 55,
+        "speed": 85
+      },
+      "defaultMoves": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "rage"
+      ],
+      "learnset": [
+        "body-slam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "harden",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "slash",
+        "strength",
+        "submission",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "vice-grip"
+      ]
+    },
+    {
+      "id": "tauros",
+      "name": "Tauros",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 75,
+        "attack": 100,
+        "defense": 95,
+        "special": 70,
         "speed": 110
       },
       "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "rage",
+        "strength"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "strength",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
         "thunderbolt",
-        "thunder-wave",
+        "toxic"
+      ]
+    },
+    {
+      "id": "magikarp",
+      "name": "Magikarp",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 20,
+        "attack": 10,
+        "defense": 55,
+        "special": 15,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "tackle"
+      ],
+      "learnset": [
+        "tackle"
+      ]
+    },
+    {
+      "id": "gyarados",
+      "name": "Gyarados",
+      "types": [
+        "Water",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 95,
+        "attack": 125,
+        "defense": 79,
+        "special": 100,
+        "speed": 81
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
         "surf",
-        "agility"
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "strength",
+        "surf",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "lapras",
+      "name": "Lapras",
+      "types": [
+        "Water",
+        "Ice"
+      ],
+      "baseStats": {
+        "hp": 130,
+        "attack": 85,
+        "defense": 80,
+        "special": 95,
+        "speed": 60
+      },
+      "defaultMoves": [
+        "blizzard",
+        "bubble-beam",
+        "hydro-pump",
+        "ice-beam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "growl",
+        "hydro-pump",
+        "ice-beam",
+        "psychic",
+        "rage",
+        "rest",
+        "sing",
+        "strength",
+        "surf",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "eevee",
+      "name": "Eevee",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 55,
+        "attack": 55,
+        "defense": 50,
+        "special": 45,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "quick-attack",
+        "rage"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "quick-attack",
+        "rage",
+        "rest",
+        "sand-attack",
+        "swift",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "vaporeon",
+      "name": "Vaporeon",
+      "types": [
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 130,
+        "attack": 65,
+        "defense": 60,
+        "special": 110,
+        "speed": 65
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "acid-armor",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "hydro-pump",
+        "ice-beam",
+        "quick-attack",
+        "rage",
+        "rest",
+        "sand-attack",
+        "surf",
+        "swift",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "jolteon",
+      "name": "Jolteon",
+      "types": [
+        "Electric"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 65,
+        "defense": 60,
+        "special": 110,
+        "speed": 130
+      },
+      "defaultMoves": [
+        "thunder",
+        "thunder-shock",
+        "thunderbolt",
+        "body-slam"
+      ],
+      "learnset": [
+        "agility",
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "flash",
+        "quick-attack",
+        "rage",
+        "rest",
+        "sand-attack",
+        "swift",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "thunder",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "flareon",
+      "name": "Flareon",
+      "types": [
+        "Fire"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 130,
+        "defense": 60,
+        "special": 110,
+        "speed": 65
+      },
+      "defaultMoves": [
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "body-slam"
+      ],
+      "learnset": [
+        "body-slam",
+        "double-edge",
+        "double-team",
+        "ember",
+        "fire-blast",
+        "flamethrower",
+        "leer",
+        "quick-attack",
+        "rage",
+        "rest",
+        "sand-attack",
+        "swift",
+        "tackle",
+        "tail-whip",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "porygon",
+      "name": "Porygon",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 65,
+        "attack": 60,
+        "defense": 70,
+        "special": 75,
+        "speed": 40
+      },
+      "defaultMoves": [
+        "double-edge",
+        "rage",
+        "swift",
+        "tackle"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "double-edge",
+        "double-team",
+        "flash",
+        "ice-beam",
+        "psychic",
+        "rage",
+        "recover",
+        "rest",
+        "sharpen",
+        "swift",
+        "tackle",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack"
+      ]
+    },
+    {
+      "id": "omanyte",
+      "name": "Omanyte",
+      "types": [
+        "Rock",
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 35,
+        "attack": 40,
+        "defense": 100,
+        "special": 90,
+        "speed": 35
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "horn-attack",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "omastar",
+      "name": "Omastar",
+      "types": [
+        "Rock",
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 70,
+        "attack": 60,
+        "defense": 125,
+        "special": 115,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "horn-attack",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "submission",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "kabuto",
+      "name": "Kabuto",
+      "types": [
+        "Rock",
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 30,
+        "attack": 80,
+        "defense": 90,
+        "special": 45,
+        "speed": 55
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "absorb",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "harden",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "scratch",
+        "slash",
+        "surf",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "kabutops",
+      "name": "Kabutops",
+      "types": [
+        "Rock",
+        "Water"
+      ],
+      "baseStats": {
+        "hp": 60,
+        "attack": 115,
+        "defense": 105,
+        "special": 70,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "bubble-beam",
+        "hydro-pump",
+        "surf",
+        "water-gun"
+      ],
+      "learnset": [
+        "absorb",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "harden",
+        "hydro-pump",
+        "ice-beam",
+        "leer",
+        "mega-kick",
+        "rage",
+        "razor-wind",
+        "rest",
+        "scratch",
+        "seismic-toss",
+        "slash",
+        "submission",
+        "surf",
+        "swords-dance",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "aerodactyl",
+      "name": "Aerodactyl",
+      "types": [
+        "Rock",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 80,
+        "attack": 105,
+        "defense": 65,
+        "special": 60,
+        "speed": 130
+      },
+      "defaultMoves": [
+        "wing-attack",
+        "double-edge",
+        "fire-blast",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic",
+        "wing-attack"
+      ]
+    },
+    {
+      "id": "snorlax",
+      "name": "Snorlax",
+      "types": [
+        "Normal"
+      ],
+      "baseStats": {
+        "hp": 160,
+        "attack": 110,
+        "defense": 65,
+        "special": 65,
+        "speed": 30
+      },
+      "defaultMoves": [
+        "body-slam",
+        "double-edge",
+        "mega-kick",
+        "mega-punch"
+      ],
+      "learnset": [
+        "amnesia",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "earthquake",
+        "fire-blast",
+        "harden",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "psychic",
+        "rage",
+        "rest",
+        "seismic-toss",
+        "self-destruct",
+        "strength",
+        "submission",
+        "surf",
+        "take-down",
+        "thunder",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "articuno",
+      "name": "Articuno",
+      "types": [
+        "Ice",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 85,
+        "defense": 100,
+        "special": 125,
+        "speed": 85
+      },
+      "defaultMoves": [
+        "blizzard",
+        "ice-beam",
+        "peck",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "ice-beam",
+        "peck",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "zapdos",
+      "name": "Zapdos",
+      "types": [
+        "Electric",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 90,
+        "defense": 85,
+        "special": 125,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "drill-peck",
+        "thunder",
+        "thunder-shock",
+        "thunderbolt"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "drill-peck",
+        "flash",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-shock",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic"
+      ]
+    },
+    {
+      "id": "moltres",
+      "name": "Moltres",
+      "types": [
+        "Fire",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 90,
+        "attack": 100,
+        "defense": 90,
+        "special": 125,
+        "speed": 90
+      },
+      "defaultMoves": [
+        "fire-blast",
+        "peck",
+        "double-edge",
+        "rage"
+      ],
+      "learnset": [
+        "agility",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "leer",
+        "peck",
+        "rage",
+        "razor-wind",
+        "rest",
+        "swift",
+        "take-down",
+        "toxic"
+      ]
+    },
+    {
+      "id": "dratini",
+      "name": "Dratini",
+      "types": [
+        "Dragon"
+      ],
+      "baseStats": {
+        "hp": 41,
+        "attack": 64,
+        "defense": 45,
+        "special": 50,
+        "speed": 50
+      },
+      "defaultMoves": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "slam",
+        "surf",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "dragonair",
+      "name": "Dragonair",
+      "types": [
+        "Dragon"
+      ],
+      "baseStats": {
+        "hp": 61,
+        "attack": 84,
+        "defense": 65,
+        "special": 70,
+        "speed": 70
+      },
+      "defaultMoves": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "ice-beam",
+        "leer",
+        "rage",
+        "rest",
+        "slam",
+        "surf",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "dragonite",
+      "name": "Dragonite",
+      "types": [
+        "Dragon",
+        "Flying"
+      ],
+      "baseStats": {
+        "hp": 91,
+        "attack": 134,
+        "defense": 95,
+        "special": 100,
+        "speed": 80
+      },
+      "defaultMoves": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge"
+      ],
+      "learnset": [
+        "agility",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "ice-beam",
+        "leer",
+        "rage",
+        "razor-wind",
+        "rest",
+        "slam",
+        "strength",
+        "surf",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "mewtwo",
+      "name": "Mewtwo",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 106,
+        "attack": 110,
+        "defense": 90,
+        "special": 154,
+        "speed": 130
+      },
+      "defaultMoves": [
+        "psychic",
+        "blizzard",
+        "body-slam",
+        "bubble-beam"
+      ],
+      "learnset": [
+        "amnesia",
+        "barrier",
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "double-edge",
+        "double-team",
+        "fire-blast",
+        "flash",
+        "ice-beam",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "psychic",
+        "rage",
+        "recover",
+        "rest",
+        "seismic-toss",
+        "self-destruct",
+        "strength",
+        "submission",
+        "swift",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
+      ]
+    },
+    {
+      "id": "mew",
+      "name": "Mew",
+      "types": [
+        "Psychic"
+      ],
+      "baseStats": {
+        "hp": 100,
+        "attack": 100,
+        "defense": 100,
+        "special": 100,
+        "speed": 100
+      },
+      "defaultMoves": [
+        "dream-eater",
+        "psychic",
+        "blizzard",
+        "body-slam"
+      ],
+      "learnset": [
+        "blizzard",
+        "body-slam",
+        "bubble-beam",
+        "cut",
+        "double-edge",
+        "double-team",
+        "dream-eater",
+        "earthquake",
+        "egg-bomb",
+        "explosion",
+        "fire-blast",
+        "flash",
+        "ice-beam",
+        "mega-drain",
+        "mega-kick",
+        "mega-punch",
+        "pay-day",
+        "pound",
+        "psychic",
+        "rage",
+        "razor-wind",
+        "rest",
+        "seismic-toss",
+        "self-destruct",
+        "soft-boiled",
+        "strength",
+        "submission",
+        "surf",
+        "swift",
+        "swords-dance",
+        "take-down",
+        "thunder",
+        "thunder-wave",
+        "thunderbolt",
+        "toxic",
+        "tri-attack",
+        "water-gun"
       ]
     }
   ]

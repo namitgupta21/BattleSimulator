@@ -63,6 +63,10 @@ engine::BattleAction HumanPlayer::chooseAction(
                 return legalActions[choice - 1];
             }
         } else {
+            if (std::cin.eof()) {
+                std::cout << "\n[EOF detected, selecting default action 1]\n";
+                return legalActions[0];
+            }
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
@@ -109,6 +113,10 @@ engine::BattleAction HumanPlayer::chooseForcedSwitch(
                 return legalSwitches[choice - 1];
             }
         } else {
+            if (std::cin.eof()) {
+                std::cout << "\n[EOF detected, selecting default switch 1]\n";
+                return legalSwitches[0];
+            }
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }

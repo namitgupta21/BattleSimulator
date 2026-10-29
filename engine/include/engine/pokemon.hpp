@@ -15,6 +15,7 @@ struct SpeciesDefinition {
     std::vector<Type> types;
     Stats baseStats;
     std::vector<std::string> defaultMoves;
+    std::vector<std::string> learnset;
 };
 
 class PokemonInstance {
