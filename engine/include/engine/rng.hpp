@@ -27,6 +27,10 @@ public:
 
 /**
  * @brief Standard seedable Mersenne Twister RNG implementation.
+ * 
+ * 🥚 Easter Egg: Named after the 24th Mersenne prime (2^19937 - 1) and Matsumoto &
+ * Nishimura's 1997 matrix-twisting algorithm. Its period of ~4.3 x 10^6001 rolls has
+ * vastly more states than the number of atoms in the observable universe!
  */
 class MersenneTwisterRNG : public IRandomGenerator {
 public:
