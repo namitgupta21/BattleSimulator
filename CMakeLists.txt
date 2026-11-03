@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Subdirectories
 add_subdirectory(engine)
-add_subdirectory(cli)
+add_subdirectory(apps/cli)
 
 # Unit Testing
 enable_testing()

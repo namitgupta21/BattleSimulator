@@ -1,0 +1,20 @@
+{
+  "name": "pokemon-project-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for Gen 1 Pokémon battle engine, protocol, binding, CLI, and multiplayer server",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build:cpp": "cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
+    "test:cpp": "ctest --test-dir build --output-on-failure",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
