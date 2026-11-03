@@ -12,3 +12,8 @@ add_subdirectory(apps/cli)
 # Unit Testing
 enable_testing()
 add_subdirectory(tests)
+
+# Node N-API Engine Binding
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/packages/engine-binding/CMakeLists.txt")
+    add_subdirectory(packages/engine-binding)
+endif()

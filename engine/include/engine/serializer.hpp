@@ -19,6 +19,9 @@ public:
 
     static std::string pokemonToJson(const PokemonInstance& pokemon);
     static PokemonInstance jsonToPokemon(const std::string& jsonStr, const IDataProvider& registry = GameDataRegistry::instance());
+
+    static std::string teamToJson(const Team& team);
+    static Team jsonToTeam(const std::string& jsonStr, const IDataProvider& registry = GameDataRegistry::instance());
 };
 
 } // namespace engine

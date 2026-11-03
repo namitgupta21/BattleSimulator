@@ -16,4 +16,9 @@ __pycache__/
 *.code-workspace
 node_modules/
 dist/
+packages/*/dist/
+apps/*/dist/
+packages/*/build/
+.cmake-dist/
+packages/*/.cmake-dist/
 *.node

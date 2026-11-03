@@ -128,6 +128,14 @@ PokemonInstance BattleSerializer::jsonToPokemon(const std::string& jsonStr, cons
     return deserializePokemonObj(json::parse(jsonStr), registry);
 }
 
+std::string BattleSerializer::teamToJson(const Team& team) {
+    return serializeTeamObj(team).dump(2);
+}
+
+Team BattleSerializer::jsonToTeam(const std::string& jsonStr, const IDataProvider& registry) {
+    return deserializeTeamObj(json::parse(jsonStr), registry);
+}
+
 std::string BattleSerializer::stateToJson(const BattleState& state) {
     json j;
     j["turnNumber"] = state.turnNumber;

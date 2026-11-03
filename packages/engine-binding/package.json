@@ -1,0 +1,22 @@
+{
+  "name": "@pokemon/engine-binding",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "N-API native binding and TypeScript EngineAdapter for Pokemon Gen 1 battle engine",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build:ts": "tsc",
+    "build": "tsc",
+    "test": "node --test dist/test/*.test.js"
+  },
+  "dependencies": {
+    "@pokemon/protocol": "*",
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "cmake-js": "^7.3.0",
+    "typescript": "^5.4.5"
+  }
+}
