@@ -1,48 +1,50 @@
-# BattleSimulator CLI
+# BattleSimulator Monorepo
 
 [![CI](https://github.com/namitgupta21/BattleSimulator/actions/workflows/ci.yml/badge.svg)](https://github.com/namitgupta21/BattleSimulator/actions/workflows/ci.yml)
 ![C++17](https://img.shields.io/badge/Language-C%2B%2B17-blue.svg?logo=cplusplus)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue.svg?logo=typescript)
+![Node.js](https://img.shields.io/badge/Platform-Node.js%2022+-green.svg?logo=node.js)
 ![CMake](https://img.shields.io/badge/Build-CMake%203.16+-orange.svg?logo=cmake)
-![Tests](https://img.shields.io/badge/Tests-GoogleTest%20(22%2F22%20Passed)-brightgreen.svg?logo=google)
+![Tests](https://img.shields.io/badge/Tests-CTest%20%26%20Node%20(45%2F45%20Passed)-brightgreen.svg)
 ![Platforms](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-A pure, deterministic, faithfully modeled Generation 1 Pokémon battle simulation engine and interactive CLI written in modern **C++17**.
+A high-performance monorepo containing a pure, deterministic Generation 1 Pokémon battle simulation engine in **C++17**, an interactive terminal CLI, and an authoritative **Node.js + TypeScript + Socket.IO** multiplayer server with N-API native bindings.
 
-Engineered following strict **SOLID design principles**, the core simulation logic is 100% decoupled from wall-clock time, filesystems, and presentation layers. It operates as a pure state-transition function:
+Engineered following strict **SOLID design principles**, the C++ core simulation logic is 100% decoupled from wall-clock time, filesystems, and presentation layers. It operates as a pure state-transition function:
 
 $$\text{step}(S_t, A_1, A_2, \text{RNG}) \longrightarrow (S_{t+1}, \vec{E})$$
 
 ---
 
-## 📑 Table of Contents
-1. [Key Features](#-key-features)
-2. [Prerequisites & System Setup](#-prerequisites--system-setup)
-3. [Building and Running](#-building-and-running)
-4. [CLI Command Reference](#-cli-command-reference)
-5. [Low-Level Design (LLD)](#-low-level-design-lld)
-   - [Component Architecture](#1-component-architecture)
-   - [Class & Interface Hierarchy](#2-class--interface-hierarchy)
-   - [Turn Execution Sequence](#3-turn-execution-sequence)
-   - [Battle Phase State Machine](#4-battle-phase-state-machine)
-6. [Gen 1 Game Mechanics Fidelity](#-gen-1-game-mechanics-fidelity)
-7. [Deterministic Replay System](#-deterministic-replay-system)
-8. [Data Pipeline (PokeAPI Ingestion)](#-data-pipeline-pokeapi-ingestion)
-9. [Automated Testing & CI](#-automated-testing--ci)
-10. [Legal Disclaimer & Credits](#️-legal-disclaimer--credits)
-11. [License](#-license)
+## 🏗️ Monorepo Architecture & Layout
+
+```text
+├── engine/                     # Core C++17 battle simulation library (pure, functional, deterministic)
+├── apps/
+│   ├── cli/                    # Standalone interactive terminal client with countdown timers
+│   └── server/                 # Authoritative Node.js + TypeScript + Socket.IO multiplayer server
+├── packages/
+│   ├── protocol/               # Shared TypeScript domain types and Zod runtime validation schemas
+│   └── engine-binding/         # N-API native C++ binding (node-addon-api) and TypeScript EngineAdapter
+├── data/                       # Gen 1 JSON data files (species, moves, type chart)
+├── tools/                      # Offline data extraction & ingestion pipelines (PokeAPI v2)
+├── tests/                      # C++ unit tests (GoogleTest, 22 test suites)
+└── docs/                       # Architecture diagrams and ROADMAP.md
+```
 
 ---
 
 ## ⚡ Key Features
 
 * **Authentic Gen 1 Mechanics**: Speed-based critical hits, unified Special stat, retro-typings, faithful type-matchup quirks (Psychic immune to Ghost; Bug/Poison mutually super-effective), and Gen 1 sleep/paralysis/freeze rules.
-* **Full 151 Pokémon Roster**: Supports all 151 Gen 1 Pokémon and over 100 combat moves normalized directly from PokeAPI v2 without any runtime API dependencies.
-* **Pure Determinism & Seeded Replays**: Bit-for-bit reproducible battles using Mersenne Twister RNG (`std::mt19937`). Any battle can be replayed identically with `--seed <uint>`.
-* **Smart Team Generator**: Deterministically generates balanced 6-Pokémon teams from a seed, guaranteeing at least one usable damaging move and prioritizing STAB coverage.
-* **Battle Turn Timer (1.5 min)**: Optional asynchronous countdown timer per turn with warning alerts at 1 min, 30s, 15s, 10s, 5s, 4s, 3s, 2s, and 1s, terminating on timeout with opponent forfeiture.
-* **Flexible Modes**: Human vs Bot (PvE), Hotseat 2-Player (PvP), and automated Bot vs Bot simulations.
-* **Zero Engine Dependencies**: The engine core compiles without external networking or UI libraries, designed for future WebAssembly (WASM) or server microservice targets.
+* **Full 151 Pokémon Roster**: Supports all 151 Gen 1 Pokémon and over 100 combat moves normalized directly from PokeAPI v2 without runtime API dependencies.
+* **Authoritative Multiplayer Server**: Room lifecycle management, 2-player matchmaking by 6-character room codes, simultaneous action resolution, and rate-limiting.
+* **Server-Owned Move Clock**: Fixed 90-second turn decision timer with automatic timeout forfeiture. Pure engine core runs completely free of wall-clock time.
+* **Strict Fog of War**: The server never transmits private opponent information (exact HP, bench species, unrevealed moves). Clients receive only HP percentage and moves revealed in combat.
+* **Resilient Reconnections**: App-level session tokens allow disconnected players to reconnect within a 30-second grace period while the turn clock keeps ticking.
+* **Pure Determinism & Seeded Replays**: Bit-for-bit reproducible battles using Mersenne Twister RNG (`std::mt19937`). Any battle can be replayed identically from the server replay log.
+* **Zero Engine Dependencies**: The engine core compiles without external networking or UI libraries.
 
 ---
 
@@ -75,33 +77,60 @@ xcode-select --install
 
 ## 🚀 Building and Running
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/namitgupta21/BattleSimulator.git
-cd BattleSimulator
-```
-
-### 2. Configure and Compile
-Using CMake (works identically on Windows, Linux, and macOS):
+### 1. C++ Engine & Standalone CLI
+To build the standalone C++ simulation engine, CLI, and GoogleTest suite:
 ```bash
 # Configure build directory in Release mode
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 
-# Compile engine library, CLI game, and GoogleTest suite
+# Compile C++ engine, CLI, and test suite
 cmake --build build --config Release
-```
 
-### 3. Run Automated Tests
-```bash
+# Run C++ unit tests
 ctest --test-dir build --output-on-failure
-```
-*(Or run the test binary directly: `./build/tests/pokemon_tests` on Linux/macOS or `.\build\tests\pokemon_tests.exe` on Windows).*
 
-### 4. Start Playing
-```bash
-# Start an interactive PvE battle (Human vs Rival Bot)
-./build/cli/pokemon_cli
+# Launch the interactive CLI
+./build/apps/cli/pokemon_cli
 ```
+*(On Windows, run `.\build\apps\cli\pokemon_cli.exe`). See [`apps/cli/README.md`](apps/cli/README.md) for full CLI documentation and options.*
+
+### 2. Node.js Authoritative Multiplayer Server
+The server is written in TypeScript and runs on Node.js 22+ using native N-API bindings to the C++ battle engine:
+```bash
+# Install all monorepo workspace dependencies
+npm install
+
+# Build C++ native addon and TypeScript packages
+npm run build
+
+# Run all TypeScript test suites (protocol, native adapter, server, integration)
+npm test
+
+# Start the multiplayer server (defaults to port 3000)
+npm start --workspace=@pokemon/server
+```
+
+### 3. Running with Docker
+A multi-stage Dockerfile builds the C++ engine binding and runs the lightweight server image:
+```bash
+# Build Docker image
+docker build -t pokemon-battle-server .
+
+# Run container exposing port 3000
+docker run -p 3000:3000 pokemon-battle-server
+```
+
+### 4. Deterministic Battle Replay System
+Every battle executed on either the CLI or multiplayer server is bit-for-bit deterministic:
+* **In CLI**: Replay any game identically using `--seed <seed_number>`:
+  ```bash
+  ./build/apps/cli/pokemon_cli --seed 42 --mode bot
+  ```
+* **On Server**: The server records the RNG seed, teams, and turn-by-turn action log for every match. Fetch the full deterministic replay via HTTP:
+  ```bash
+  curl http://localhost:3000/replay/<battleId>
+  ```
+  The returned replay record can be fed into `adapter.createBattle(record.seed, record.p1Team, record.p2Team)` to simulate and verify identical battle progression.
 
 ---
 
@@ -130,19 +159,19 @@ pokemon_cli [options]
 
 ```bash
 # 1. Standard game with 1.5-minute turn timer
-./build/cli/pokemon_cli --timer
+./build/apps/cli/pokemon_cli --timer
 
 # 2. Fast blitz game with a 15-second timer per move
-./build/cli/pokemon_cli --turn-time 15
+./build/apps/cli/pokemon_cli --turn-time 15
 
 # 3. Two-player hotseat match with iconic classic Gen 1 teams
-./build/cli/pokemon_cli --mode pvp --preset
+./build/apps/cli/pokemon_cli --mode pvp --preset
 
 # 4. Headless Bot-vs-Bot simulation with an exact replay seed
-./build/cli/pokemon_cli --mode bot --seed 1259288583660435056
+./build/apps/cli/pokemon_cli --mode bot --seed 1259288583660435056
 
 # 5. Play with the exact same Pokémon rosters but roll fresh battle RNG
-./build/cli/pokemon_cli --team-seed 1259288583660435056
+./build/apps/cli/pokemon_cli --team-seed 1259288583660435056
 ```
 
 ---

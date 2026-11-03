@@ -8,9 +8,23 @@ if(DEFINED CMAKE_JS_INC)
     set(NODE_INC ${CMAKE_JS_INC})
     set(NODE_LIB ${CMAKE_JS_LIB})
 else()
-    set(NODE_INC "${CMAKE_CURRENT_SOURCE_DIR}/.cmake-dist/include/node")
+    # Try finding node headers dynamically from current node binary (Linux, Docker, CI)
+    execute_process(
+        COMMAND node -e "console.log(require('path').resolve(process.execPath, '..', '..', 'include', 'node'))"
+        OUTPUT_VARIABLE SYSTEM_NODE_INC
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+    if(EXISTS "${SYSTEM_NODE_INC}/node_api.h")
+        set(NODE_INC "${SYSTEM_NODE_INC}")
+    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.cmake-dist/include/node/node_api.h")
+        set(NODE_INC "${CMAKE_CURRENT_SOURCE_DIR}/.cmake-dist/include/node")
+    endif()
+
     if(WIN32)
-        set(NODE_LIB "${CMAKE_CURRENT_SOURCE_DIR}/.cmake-dist/win-x64/node.lib")
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.cmake-dist/win-x64/node.lib")
+            set(NODE_LIB "${CMAKE_CURRENT_SOURCE_DIR}/.cmake-dist/win-x64/node.lib")
+        endif()
     endif()
 endif()
 
