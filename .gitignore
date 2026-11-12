@@ -22,3 +22,9 @@ packages/*/build/
 .cmake-dist/
 packages/*/.cmake-dist/
 *.node
+
+docs/phase_2_architecture_walkthrough.md
+docs/ROADMAP.md
+
+docs/phase_2_architecture_walkthrough.md
+docs/ROADMAP.md
