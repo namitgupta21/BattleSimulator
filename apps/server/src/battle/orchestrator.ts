@@ -122,6 +122,10 @@ export class BattleOrchestrator {
       throw new Error(ErrorCode.BATTLE_NOT_FOUND);
     }
 
+    if (!action || typeof action !== "object") {
+      throw new Error(ErrorCode.ACTION_ILLEGAL);
+    }
+
     const state = this.session.getState();
 
     // Check if in forced switch phase
@@ -158,7 +162,7 @@ export class BattleOrchestrator {
   }
 
   submitForcedSwitch(side: PlayerSide, action: Action): void {
-    if (action.type !== "switch") {
+    if (!action || typeof action !== "object" || action.type !== "switch") {
       throw new Error(ErrorCode.ACTION_ILLEGAL);
     }
 
@@ -386,6 +390,15 @@ export class BattleOrchestrator {
     const s2 = this.pendingSwitches.p2 ?? null;
 
     const result = this.session.resolveForcedSwitches(s1, s2);
+
+    this.turnLogs.push({
+      turnNumber: result.nextState.turnNumber,
+      actions: {
+        p1: s1 ? { type: s1.type, index: s1.index } : undefined,
+        p2: s2 ? { type: s2.type, index: s2.index } : undefined,
+      },
+      events: result.events,
+    });
 
     this.emitTurnResult(result.nextState, result.events);
 

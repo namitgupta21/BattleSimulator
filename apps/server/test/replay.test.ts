@@ -45,13 +45,13 @@ describe("Deterministic Battle Replay", () => {
 
     orchestrator.start();
 
-    // Play 3 turns
+    // Play up to 3 rounds of actions/switches
     for (let t = 0; t < 3; t++) {
       if (orchestrator.isBattleFinished()) break;
-      const act1 = promptsP1[promptsP1.length - 1].legalActions[0];
-      const act2 = promptsP2[promptsP2.length - 1].legalActions[0];
-      orchestrator.submitAction("p1", act1);
-      orchestrator.submitAction("p2", act2);
+      const act1 = promptsP1[promptsP1.length - 1]?.legalActions?.[0];
+      const act2 = promptsP2[promptsP2.length - 1]?.legalActions?.[0];
+      if (act1) orchestrator.submitAction("p1", act1);
+      if (act2) orchestrator.submitAction("p2", act2);
     }
 
     // Forfeit to conclude and record
@@ -67,17 +67,27 @@ describe("Deterministic Battle Replay", () => {
     const replaySession = adapter.createBattle(record.seed, record.p1Team, record.p2Team);
 
     for (const turn of record.turns) {
-      if (turn.actions.p1 && turn.actions.p2) {
-        const replayRes = replaySession.step(
+      const state = replaySession.getState();
+      let replayRes: any;
+      if (state.phase.startsWith("ForcedSwitch")) {
+        replayRes = replaySession.resolveForcedSwitches(
+          (turn.actions.p1 as any) ?? null,
+          (turn.actions.p2 as any) ?? null
+        );
+      } else if (turn.actions.p1 && turn.actions.p2) {
+        replayRes = replaySession.step(
           turn.actions.p1 as any,
           turn.actions.p2 as any
         );
-        // Assert event counts and types match turn-for-turn
-        assert.strictEqual(replayRes.events.length, turn.events.length);
-        for (let i = 0; i < replayRes.events.length; i++) {
-          assert.strictEqual(replayRes.events[i].type, turn.events[i].type);
-          assert.strictEqual(replayRes.events[i].side, turn.events[i].side);
-        }
+      } else {
+        continue;
+      }
+
+      // Assert event counts and types match turn-for-turn
+      assert.strictEqual(replayRes.events.length, turn.events.length);
+      for (let i = 0; i < replayRes.events.length; i++) {
+        assert.strictEqual(replayRes.events[i].type, turn.events[i].type);
+        assert.strictEqual(replayRes.events[i].side, turn.events[i].side);
       }
     }
   });
