@@ -10,9 +10,9 @@
   "scripts": {
     "build:cpp": "cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
     "test:cpp": "ctest --test-dir build --output-on-failure",
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build --workspace=@pokemon/protocol && npm run build --workspace=@pokemon/engine-binding && npm run build --workspace=@pokemon/server",
     "start": "npm start --workspace=@pokemon/server",
-    "test": "npm run test --workspaces --if-present",
+    "test": "npm run test --workspace=@pokemon/protocol && npm run test --workspace=@pokemon/engine-binding && npm run test --workspace=@pokemon/server",
     "client": "node tools/client.mjs",
     "lint": "npm run lint --workspaces --if-present"
   },
