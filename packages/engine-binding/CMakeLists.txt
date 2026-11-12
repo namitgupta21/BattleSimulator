@@ -35,6 +35,16 @@ find_path(NODE_ADDON_API_DIR "napi.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../node_modules/node-addon-api"
 )
 
+if(NOT NODE_ADDON_API_DIR)
+    message(STATUS "node-addon-api not found. Skipping pokemon_engine_binding.")
+    return()
+endif()
+
+if(NOT NODE_INC OR NOT EXISTS "${NODE_INC}/node_api.h")
+    message(STATUS "Node.js headers not found. Skipping pokemon_engine_binding.")
+    return()
+endif()
+
 add_library(pokemon_engine_binding MODULE
     src/binding.cpp
 )
