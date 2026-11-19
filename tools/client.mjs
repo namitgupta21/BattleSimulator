@@ -9,9 +9,15 @@
 import { io } from "socket.io-client";
 import readline from "node:readline";
 
-const SERVER_URL = process.env.SERVER_URL || "http://127.0.0.1:3000";
-const playerName = process.argv[2] || `Player_${Math.floor(Math.random() * 1000)}`;
-const targetRoomCode = process.argv[3]?.toUpperCase();
+const args = process.argv.slice(2);
+const urlFlag = args.find((a) => a.startsWith("--url=") || a.startsWith("--server="));
+const SERVER_URL = urlFlag
+  ? urlFlag.split("=")[1]
+  : process.env.SERVER_URL || "http://127.0.0.1:3000";
+
+const positionalArgs = args.filter((a) => !a.startsWith("--"));
+const playerName = positionalArgs[0] || `Player_${Math.floor(Math.random() * 1000)}`;
+const targetRoomCode = positionalArgs[1]?.toUpperCase();
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -32,10 +38,23 @@ let currentSide = null;
 let currentSessionToken = null;
 let currentRoomCode = null;
 let lastPrompt = null;
+let currentPrompt = null;
 let myTeam = [];
+let activePokemonIndex = 0;
+let isMatchEnded = false;
 
 socket.on("connect", () => {
   console.log(`[Connected to Server] Socket ID: ${socket.id}`);
+
+  // If we already joined a room and have a session token, this is a RECONNECT!
+  if (currentSessionToken && currentRoomCode) {
+    console.log(`[Reconnecting] Reclaiming seat in room [${currentRoomCode}]...`);
+    socket.emit("room:reconnect", {
+      roomCode: currentRoomCode,
+      sessionToken: currentSessionToken,
+    });
+    return;
+  }
 
   if (targetRoomCode) {
     console.log(`Joining room [${targetRoomCode}]...`);
@@ -54,9 +73,15 @@ socket.on("connect", () => {
 });
 
 socket.on("room:joined", (data) => {
+  const isReconnect = Boolean(currentSessionToken);
   currentSide = data.playerSide;
   currentRoomCode = data.roomCode;
   currentSessionToken = data.sessionToken;
+
+  if (isReconnect) {
+    console.log(`\n>> Successfully reconnected to room [${data.roomCode}] as ${data.playerSide.toUpperCase()}! Resuming match...\n`);
+    return;
+  }
 
   console.log("\n------------------------------------------------------------");
   console.log(`ROOM CODE     : ${data.roomCode}`);
@@ -82,6 +107,7 @@ socket.on("room:state", (data) => {
 
 socket.on("battle:start", (data) => {
   myTeam = data.team;
+  activePokemonIndex = 0;
   console.log("\n============================================================");
   console.log("                  BATTLE HAS COMMENCED!                     ");
   console.log("============================================================");
@@ -100,8 +126,12 @@ socket.on("battle:start", (data) => {
   console.log("------------------------------------------------------------\n");
 });
 
+let isPrompting = false;
+
 socket.on("turn:prompt", (prompt) => {
   lastPrompt = prompt;
+  currentPrompt = prompt;
+  isPrompting = false;
 
   console.log(`\n================== TURN ${prompt.turnNumber} [${prompt.phase}] ==================`);
   if (prompt.deadline) {
@@ -109,10 +139,20 @@ socket.on("turn:prompt", (prompt) => {
     console.log(`Turn Countdown : ${remainingSec}s remaining`);
   }
 
+  // If there are no legal actions for this side (e.g. opponent is doing a forced switch)
+  if (!prompt.legalActions || prompt.legalActions.length === 0) {
+    if (prompt.phase.startsWith("ForcedSwitch")) {
+      console.log("\n>> Foe's Pokémon fainted! Waiting for opponent to send in a Pokémon...\n");
+    } else {
+      console.log("\n>> No action required. Waiting for opponent...\n");
+    }
+    return;
+  }
+
   console.log("\nLegal Options:");
   prompt.legalActions.forEach((act, idx) => {
     if (act.type === "move") {
-      const activePokemon = myTeam[0];
+      const activePokemon = myTeam[activePokemonIndex] || myTeam[0];
       const move = activePokemon?.moves?.[act.index];
       const moveName = move ? `${move.name} (${move.currentPp}/${move.maxPp} PP)` : `Move slot ${act.index}`;
       console.log(`  [${idx + 1}] Attack: ${moveName}`);
@@ -123,29 +163,54 @@ socket.on("turn:prompt", (prompt) => {
     }
   });
 
-  askForAction(prompt);
+  promptUser();
 });
 
-function askForAction(prompt) {
-  rl.question("\nEnter your choice number (or 'forfeit'): ", (answer) => {
+function promptUser() {
+  if (isPrompting) return;
+  if (!currentPrompt || !currentPrompt.legalActions || currentPrompt.legalActions.length === 0) {
+    return;
+  }
+
+  isPrompting = true;
+  rl.question("\nEnter your choice number (or 'forfeit', 'dc'): ", (answer) => {
+    isPrompting = false;
+    const prompt = currentPrompt;
+    if (!prompt || !prompt.legalActions || prompt.legalActions.length === 0) {
+      return;
+    }
+
     const trimmed = answer.trim().toLowerCase();
     if (trimmed === "forfeit" || trimmed === "f") {
       console.log("Submitting match forfeit...");
+      currentPrompt = null;
       socket.emit("battle:forfeit", {});
+      return;
+    }
+
+    if (trimmed === "dc" || trimmed === "disconnect") {
+      console.log("\n[Simulating 3-second network disconnect...]");
+      socket.disconnect();
+      setTimeout(() => {
+        console.log("[Re-connecting to server...]");
+        socket.connect();
+      }, 3000);
       return;
     }
 
     const choiceIdx = parseInt(trimmed, 10) - 1;
     if (isNaN(choiceIdx) || choiceIdx < 0 || choiceIdx >= prompt.legalActions.length) {
       console.log("Invalid choice number. Please choose from the list.");
-      askForAction(prompt);
+      promptUser();
       return;
     }
 
     const chosenAction = prompt.legalActions[choiceIdx];
+    const isForced = prompt.phase.startsWith("ForcedSwitch");
+    currentPrompt = null; // Clear so duplicate inputs are ignored
     console.log(`>> Selected: ${chosenAction.type.toUpperCase()} (Index: ${chosenAction.index}). Waiting for opponent...`);
 
-    if (prompt.phase.startsWith("ForcedSwitch")) {
+    if (isForced) {
       socket.emit("battle:switch", { index: chosenAction.index });
     } else {
       socket.emit("battle:action", { action: chosenAction });
@@ -168,6 +233,12 @@ socket.on("turn:result", (result) => {
       console.log(`☠ ${sideLabel} ${evt.pokemon} fainted!`);
     } else if (evt.type === "SwitchedIn") {
       console.log(`* ${sideLabel} sent out ${evt.pokemon}!`);
+      if (evt.side === currentSide) {
+        const idx = myTeam.findIndex(
+          (p) => p.name.toLowerCase() === evt.pokemon.toLowerCase()
+        );
+        if (idx !== -1) activePokemonIndex = idx;
+      }
     } else if (evt.type === "StatusApplied") {
       console.log(`  -> ${sideLabel} was afflicted with ${evt.status}!`);
     } else if (evt.message) {
@@ -185,6 +256,9 @@ socket.on("turn:result", (result) => {
 });
 
 socket.on("battle:end", (data) => {
+  isMatchEnded = true;
+  currentSessionToken = null;
+  currentRoomCode = null;
   console.log("\n============================================================");
   console.log("                       MATCH FINISHED                       ");
   console.log("============================================================");
@@ -208,7 +282,10 @@ socket.on("error", (err) => {
   console.error(`\n[Server Error ${err.code}]: ${err.message}`);
 });
 
-socket.on("disconnect", () => {
-  console.log("\n[Disconnected from server]");
+socket.on("disconnect", (reason) => {
+  isPrompting = false;
+  if (!isMatchEnded && reason !== "io client disconnect") {
+    console.log("\n[Disconnected from server. Attempting to reconnect...]");
+  }
 });
 

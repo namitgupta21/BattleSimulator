@@ -341,6 +341,9 @@ export class SocketHandler {
         onBattleEnd: (payload) => {
           this.io.to(room.id).emit(ServerEvents.BATTLE_END, payload);
           this.broadcastRoomState(room);
+          this.clock.setTimeout(() => {
+            this.orchestrators.delete(room.id);
+          }, 30000);
         },
       },
       injectedSeed
