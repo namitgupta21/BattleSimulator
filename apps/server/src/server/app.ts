@@ -22,6 +22,18 @@ export function createServer(options: ServerInstanceOptions = {}) {
   const app = express();
   app.use(express.json());
 
+  // Enable CORS for HTTP routes (/replay, /health)
+  app.use((_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    if (_req.method === "OPTIONS") {
+      res.sendStatus(200);
+      return;
+    }
+    next();
+  });
+
   const httpServer = http.createServer(app);
   const io = new Server(httpServer, {
     cors: { origin: "*" },

@@ -28,6 +28,8 @@ export interface TurnPromptData {
 
 export interface TurnResultData {
   turnNumber: number;
+  playerSide?: PlayerSide;
+  activeIndex: number;
   events: BattleEventData[];
   yourTeam: any[];
   opponentPublic: any;
@@ -35,6 +37,8 @@ export interface TurnResultData {
 
 export interface BattleStartData {
   seed: number;
+  playerSide?: PlayerSide;
+  activeIndex: number;
   team: any[];
   opponentPublic: any;
 }
@@ -63,8 +67,8 @@ export class BattleOrchestrator {
   private p1Team: EngineTeamData;
   private p2Team: EngineTeamData;
 
-  private revealedMovesP1 = new Set<string>();
-  private revealedMovesP2 = new Set<string>();
+  private revealedMovesP1 = new Map<string, Set<string>>();
+  private revealedMovesP2 = new Map<string, Set<string>>();
 
   private pendingActions: { p1?: Action; p2?: Action } = {};
   private pendingSwitches: { p1?: Action; p2?: Action } = {};
@@ -159,6 +163,17 @@ export class BattleOrchestrator {
       this.clearTurnTimer();
       this.resolveTurn();
     }
+  }
+
+  cancelAction(side: PlayerSide): boolean {
+    if (this.isFinished) return false;
+    const state = this.session.getState();
+    if (state.phase !== "ActionSelection") return false;
+    if (this.pendingActions[side]) {
+      delete this.pendingActions[side];
+      return true;
+    }
+    return false;
   }
 
   submitForcedSwitch(side: PlayerSide, action: Action): void {
@@ -290,6 +305,8 @@ export class BattleOrchestrator {
 
     this.callbacks.onBattleStart(side, {
       seed: this.seed,
+      playerSide: side,
+      activeIndex: ownTeamData.activeIndex ?? 0,
       team: yourTeam,
       opponentPublic,
     });
@@ -357,14 +374,15 @@ export class BattleOrchestrator {
 
     const result = this.session.step(action1, action2);
 
-    // Update revealed moves for opponent public fog-of-war
+    // Update revealed moves for opponent public fog-of-war per pokemon
     for (const event of result.events) {
       if (event.type === "MoveUsed" && event.move) {
-        if (event.side === "p1") {
-          this.revealedMovesP1.add(event.move);
-        } else {
-          this.revealedMovesP2.add(event.move);
+        const moveMap = event.side === "p1" ? this.revealedMovesP1 : this.revealedMovesP2;
+        const pokeName = event.pokemon || "unknown";
+        if (!moveMap.has(pokeName)) {
+          moveMap.set(pokeName, new Set());
         }
+        moveMap.get(pokeName)!.add(event.move);
       }
     }
 
@@ -425,6 +443,8 @@ export class BattleOrchestrator {
 
       this.callbacks.onTurnResult(side, {
         turnNumber: state.turnNumber,
+        playerSide: side,
+        activeIndex: ownTeamData.activeIndex ?? 0,
         events,
         yourTeam,
         opponentPublic,

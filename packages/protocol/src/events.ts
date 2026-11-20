@@ -4,9 +4,11 @@ import * as schemas from "./schemas.js";
 export const ClientEvents = {
   ROOM_CREATE: "room:create",
   ROOM_JOIN: "room:join",
+  ROOM_LEAVE: "room:leave",
   ROOM_RECONNECT: "room:reconnect",
   PLAYER_READY: "player:ready",
   BATTLE_ACTION: "battle:action",
+  BATTLE_CANCEL_ACTION: "battle:cancel_action",
   BATTLE_SWITCH: "battle:switch",
   BATTLE_FORFEIT: "battle:forfeit",
 } as const;
@@ -24,9 +26,11 @@ export const ServerEvents = {
 export type ClientEventMap = {
   [ClientEvents.ROOM_CREATE]: z.infer<typeof schemas.RoomCreateSchema>;
   [ClientEvents.ROOM_JOIN]: z.infer<typeof schemas.RoomJoinSchema>;
+  [ClientEvents.ROOM_LEAVE]: z.infer<typeof schemas.RoomLeaveSchema>;
   [ClientEvents.ROOM_RECONNECT]: z.infer<typeof schemas.RoomReconnectSchema>;
   [ClientEvents.PLAYER_READY]: z.infer<typeof schemas.PlayerReadySchema>;
   [ClientEvents.BATTLE_ACTION]: z.infer<typeof schemas.BattleActionSchema>;
+  [ClientEvents.BATTLE_CANCEL_ACTION]: z.infer<typeof schemas.BattleCancelActionSchema>;
   [ClientEvents.BATTLE_SWITCH]: z.infer<typeof schemas.BattleSwitchSchema>;
   [ClientEvents.BATTLE_FORFEIT]: z.infer<typeof schemas.BattleForfeitSchema>;
 };

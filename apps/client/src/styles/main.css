@@ -1,0 +1,65 @@
+@import "@fontsource/press-start-2p";
+@import "./tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Crisp pixel rendering */
+.pixelated {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* CRT scanlines effect */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    var(--lcd-scanline) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+/* LCD screen glow */
+.lcd-screen {
+  background-color: var(--lcd-bg);
+  color: var(--lcd-fg);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.08);
+}
+
+/* Tactile button press simulation */
+.btn-press:active,
+.btn-press.active {
+  transform: translateY(2px);
+  filter: brightness(0.9);
+}
+
+/* Beveled borders */
+.chassis-bevel {
+  box-shadow: inset 2px 2px 0px rgba(255, 255, 255, 0.35),
+              inset -2px -2px 0px rgba(0, 0, 0, 0.4);
+}
+
+.bezel-bevel {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.7),
+              inset -2px -2px 4px rgba(255, 255, 255, 0.15);
+}
+
+.lcd-inset {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.45);
+}
+
+/* Disable animations under prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -39,7 +39,7 @@ export class BattleSanitizer {
    */
   static getOpponentPublicState(
     team: EngineTeamData,
-    revealedMoves: Set<string>
+    revealedMoves: Set<string> | Map<string, Set<string>>
   ): OpponentPublicState {
     const totalTeamSize = team.pokemon.length;
     const aliveCount = team.pokemon.filter((p) => p.currentHp > 0).length;
@@ -48,11 +48,19 @@ export class BattleSanitizer {
     const activeMember = team.pokemon[team.activeIndex];
     let active: OpponentPublicPokemon | null = null;
 
-    if (activeMember && activeMember.currentHp > 0) {
+    if (activeMember) {
       const hpPercent = Math.max(
         0,
         Math.min(100, Math.ceil((activeMember.currentHp / activeMember.maxHp) * 100))
       );
+
+      let movesList: string[] = [];
+      if (revealedMoves instanceof Map) {
+        const pMoves = revealedMoves.get(activeMember.name);
+        movesList = pMoves ? Array.from(pMoves) : [];
+      } else {
+        movesList = Array.from(revealedMoves);
+      }
 
       active = {
         speciesId: activeMember.speciesId,
@@ -62,7 +70,7 @@ export class BattleSanitizer {
         hpPercent,
         status: activeMember.status as StatusEffect,
         statStages: { ...activeMember.statStages },
-        revealedMoves: Array.from(revealedMoves),
+        revealedMoves: movesList,
       };
     }
 

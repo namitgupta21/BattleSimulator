@@ -289,56 +289,7 @@ classDiagram
 
 ---
 
-### 3. Turn Execution Sequence
-The resolution pipeline within `BattleEngine::step()` faithfully matches Gen 1 battle rounds:
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Client as Main Game Loop
-    participant Eng as BattleEngine
-    participant DMG as Gen1DamageCalculator
-    participant EFF as MoveEffectDispatcher
-
-    Client->>Eng: step(state, actionP1, actionP2, rng)
-    Note over Eng: 1. Determine Turn Priority<br/>(Switches First > Priority Moves > Natural Speed)
-    
-    opt Any player chose Switch
-        Eng->>Eng: Perform Switch action(s)
-    end
-
-    rect rgba(56, 189, 248, 0.10)
-    Note over Eng: 2. First Combatant Action
-    Eng->>Eng: Status Check (Sleep / Freeze / 25% Full Paralysis / Confusion)
-    opt Able to act
-        Eng->>Eng: Accuracy Roll (1..255 RNG check)
-        opt Move Hits
-            Eng->>DMG: calculateDamage(attacker, defender, move, rng)
-            DMG-->>Eng: damage, isCritical, effectiveness
-            Eng->>Eng: Apply damage to Defender HP
-            Eng->>EFF: applyEffects(move, attacker, defender, damage, rng)
-            EFF-->>Eng: stat modifiers, ailments, recoil, drain
-            Eng->>Eng: Check Defender Fainted
-        end
-    end
-    end
-
-    rect rgba(251, 146, 60, 0.10)
-    Note over Eng: 3. Second Combatant Action (if not fainted)
-    opt Second combatant still alive
-        Eng->>Eng: Execute Move sequence (Status -> Accuracy -> Damage -> Effects)
-    end
-    end
-
-    Note over Eng: 4. End-of-Turn Residuals<br/>(Poison / Burn tick, Toxic counter increase)
-    Note over Eng: 5. Transition Phase<br/>(ActionSelection, ForcedSwitch, or GameOver)
-    
-    Eng-->>Client: StepResult (nextState, events)
-```
-
----
-
-### 4. Battle Phase State Machine
+### 3. Battle Phase State Machine
 Battles transition through strict deterministic phases:
 
 ```mermaid
@@ -462,20 +413,60 @@ The suite contains **22 GoogleTest test suites** verifying 100% of core engine f
 
 ---
 
+## 📱 Phase 3: Pokédex Web Client (`apps/client`)
+
+A handheld, clamshell Pokédex-style web client built with **React**, **TypeScript**, and **Tailwind CSS**, connected directly to the authoritative multiplayer Socket.IO backend.
+
+### Quick Start (Server + Web Client)
+
+1. **Start the Authoritative Server** (Port 3000):
+   ```bash
+   npm run start
+   ```
+2. **Start the Pokédex Client Dev Server** (Port 5173):
+   ```bash
+   npm run dev:client
+   ```
+   Open `http://localhost:5173` in your browser.
+
+### Layout & Pokédex Handheld Interface
+
+* **Left Screen (Main Battle View & Controls)**:
+  * Handheld CRT/LCD bezel with stereo sound slits, glowing camera scanner lens, and RGB status LEDs (🔴 DC/Warning, 🟡 Waiting, 🟢 Ready).
+  * **4 Type-Coded Move Tabs**: Displays move name, canonical Gen 1 type color badge, and PP counter.
+  * **Switch Pokémon Button**: Opens the team roster view showing active/fainted states, HP bars, and status ailments.
+  * **Controls**: Physical cross D-Pad (Up/Down/Left/Right), <kbd>A</kbd> / **ENTER** (Confirm / Advance Dialogue), <kbd>B</kbd> / **BACK** (Cancel / Return to Moves), and **SCANLINES** / **LCD COLOR** toggles.
+  * **Keyboard & Touch Parity**: Full keyboard navigation (Arrows = D-Pad, Enter/Space = A, Escape/Backspace = B) with visible button-press feedback and direct touchscreen support.
+* **Right Screen (Battle Intel & Event Log)**:
+  * On desktop and tablet viewports ($\ge 768\text{px}$), renders side-by-side with the center hinge.
+  * On mobile phones ($< 768\text{px}$), accessible via the **"LOG"** slide-over drawer button with an unread badge counter.
+* **Deterministic Event Playback**: Server turns play out sequentially in a typewriter dialogue box with skippable fast-forward.
+* **Clock-Skew Corrected 90s Timer**: Accurately computes $\Delta_{\text{skew}}$ against server timestamps; hidden when timer is disabled.
+* **Visual Assets & Sprite Architecture**:
+  * **Main Battle Sprites**: Gen 5 Black/White animated GIFs (front & back) with crisp integer pixel scaling (`image-rendering: pixelated`).
+  * **Static & Reduced-Motion Fallbacks**: Gen 1 Red/Blue transparent static sprites used during load, on image failure, or whenever `prefers-reduced-motion` is active (reacts live to OS settings).
+  * **Final Fallback**: Original high-contrast vector LCD token badge.
+  * **Party Icons**: Gen 5 32x32 bench tokens with Gen 1 HP threshold borders (Green $>50\%$, Yellow $21\text{--}50\%$, Red $\le 20\%$), active indicator, status badges, and red cross faint overlay. Fallback to original SVG tokens.
+  * **Strict Hidden Information**: Opponent reserve bench shows only neutral count tokens with zero leaked identities or network requests until revealed by the server.
+  * **Zero Sprites in Git**: Sprites are strictly excluded from git tracking. Self-host locally via `node tools/download-sprites.mjs` (see [SPRITE_SELF_HOSTING.md](docs/SPRITE_SELF_HOSTING.md)).
+  * **Configurable CDN Templates**: Driven by `VITE_ANIMATED_SPRITE_URL_TEMPLATE`, `VITE_STATIC_SPRITE_URL_TEMPLATE`, and `VITE_PARTY_ICON_URL_TEMPLATE`.
+
+---
+
 ## ⚖️ Legal Disclaimer & Credits
 
 ### Trademark & Copyright Notice
-* **Pokémon**, Pokémon character names, Pokémon Red, Pokémon Blue, Pokémon Yellow, move names, and related indicia are trademarks, registered trademarks, and copyrights of **Nintendo Co., Ltd.**, **Creatures Inc.**, and **GAME FREAK inc.**
-* This repository is an **independent, non-commercial, open-source educational project** developed solely to study and demonstrate game engine architecture, deterministic state machines, and clean C++17 design patterns.
+* **Pokémon**, Pokémon character names, Pokémon Red, Pokémon Blue, Pokémon Yellow, Pokémon Black, Pokémon White, and related indicia are trademarks, registered trademarks, and copyrights of **Nintendo Co., Ltd.**, **Creatures Inc.**, and **GAME FREAK inc.**
+* This repository is an **independent, non-commercial, fan-funded portfolio project** created strictly for non-commercial educational and architectural portfolio purposes.
 * This project is **not** affiliated with, endorsed by, or sponsored by Nintendo, Game Freak, or Creatures Inc.
-* **No Copyrighted Game Assets**: This codebase does **not** include, distribute, or require proprietary ROMs, official sprites, textures, audio files, or game binaries. All data structures are normalized numeric statistics and string definitions.
+* **No Copyrighted Sprite Assets Committed**: This repository does **not** host or commit proprietary sprite binaries. Visual assets are sourced dynamically from PokeAPI/sprites or can be downloaded locally for personal self-hosting.
 
 ### Credits & Acknowledgments
-* **Nintendo & GAME FREAK**: For creating the original Pokémon Generation 1 battle system that inspired this architectural study.
-* **[PokeAPI](https://pokeapi.co/)**: For maintaining the open-source Pokémon REST API consumed by our offline data pipeline (`tools/fetch_data.py`).
-* **[Smogon](https://www.smogon.com/) & [Pokémon Showdown](https://pokemonshowdown.com/)**: For extensive research and comprehensive technical documentation on Gen 1 cartridge battle mechanics, damage formulas, and type quirks.
-* **[nlohmann/json](https://github.com/nlohmann/json)**: JSON for Modern C++ by Niels Lohmann (Licensed under the MIT License).
-* **[GoogleTest](https://github.com/google/googletest)**: C++ testing framework by Google LLC (Licensed under the BSD 3-Clause License).
+* **Nintendo, GAME FREAK & Creatures Inc.**: For creating Pokémon and the original Generation 1 battle engine that inspired this project.
+* **[PokeAPI](https://pokeapi.co/) & [PokeAPI/sprites](https://github.com/PokeAPI/sprites)**: For open-source Pokémon game data and community sprite archives.
+* **[Smogon](https://www.smogon.com/) & [Pokémon Showdown](https://pokemonshowdown.com/)**: For comprehensive documentation on Gen 1 cartridge battle mechanics and damage formulas.
+* **[nlohmann/json](https://github.com/nlohmann/json)**: JSON for Modern C++ by Niels Lohmann (MIT License).
+* **[GoogleTest](https://github.com/google/googletest)**: C++ testing framework by Google LLC (BSD 3-Clause License).
 
 ---
 

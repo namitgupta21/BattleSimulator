@@ -26,5 +26,7 @@ packages/*/.cmake-dist/
 docs/phase_2_architecture_walkthrough.md
 docs/ROADMAP.md
 
-docs/phase_2_architecture_walkthrough.md
-docs/ROADMAP.md
+apps/client/public/sprites/
+test-results/
+playwright-report/
+.playwright/

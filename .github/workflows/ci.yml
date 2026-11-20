@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  schedule:
+    - cron: '0 0 * * 0' # Weekly Sunday at 00:00 UTC
+  workflow_dispatch:
 
 jobs:
   changes:
@@ -30,15 +33,40 @@ jobs:
             node:
               - 'packages/**'
               - 'apps/server/**'
+              - 'apps/client/**'
+              - 'engine/**'
+              - 'data/**'
+              - 'CMakeLists.txt'
               - 'package.json'
               - 'package-lock.json'
               - 'Dockerfile'
               - '.github/workflows/ci.yml'
 
+  repo-guard:
+    name: Repo Compliance & Asset Guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Assert No Committed Pokémon Sprites
+        run: |
+          TRACKED_IMAGES=$(git ls-files | grep -E '\.(png|gif|webp|jpg|jpeg)$' || true)
+          ALLOWLIST="apps/client/public/favicon.ico"
+          for img in $TRACKED_IMAGES; do
+            if [ "$img" != "$ALLOWLIST" ]; then
+              echo "ERROR: Forbidden image file committed to repository: $img"
+              echo "Per licensing policy, Pokémon sprites must NEVER be committed to Git."
+              echo "Self-host using tools/download-sprites.mjs into git-ignored public/sprites/ instead."
+              exit 1
+            fi
+          done
+          echo "Repository asset guard passed: 0 forbidden image binaries tracked in Git."
+
   cpp-build-and-test:
     name: C++ Build & Test (${{ matrix.os }})
     needs: changes
-    if: ${{ needs.changes.outputs.cpp == 'true' || github.event_name == 'push' }}
+    if: ${{ needs.changes.outputs.cpp == 'true' || github.event_name == 'push' || github.event_name == 'schedule' }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -87,8 +115,8 @@ jobs:
 
   node-build-and-test:
     name: Node Server & Protocol (${{ matrix.os }})
-    needs: changes
-    if: ${{ needs.changes.outputs.node == 'true' || github.event_name == 'push' }}
+    needs: [changes, repo-guard]
+    if: ${{ needs.changes.outputs.node == 'true' || github.event_name == 'push' || github.event_name == 'schedule' }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -126,3 +154,24 @@ jobs:
 
       - name: Run All JS/TS Tests
         run: npm test
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/client
+
+      - name: Run Playwright E2E Tests
+        run: npm run test:e2e --workspace=@pokemon/client
+
+  verify-sprites-upstream:
+    name: Weekly Upstream PokeAPI Sprite Verification
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: Verify Upstream PokeAPI Sprite Coverage (1-151)
+        run: node tools/verify-sprites.mjs

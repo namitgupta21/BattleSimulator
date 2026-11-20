@@ -101,6 +101,28 @@ export class Room {
     this._state = "Abandoned";
   }
 
+  removePlayer(socketId: string): boolean {
+    let removed = false;
+    if (this.p1?.socketId === socketId) {
+      delete this.p1;
+      removed = true;
+    }
+    if (this.p2?.socketId === socketId) {
+      delete this.p2;
+      removed = true;
+    }
+    if (removed) {
+      if (!this.p1 && !this.p2) {
+        this._state = "Abandoned";
+      } else {
+        this._state = "WaitingForPlayers";
+        if (this.p1) this.p1.isReady = false;
+        if (this.p2) this.p2.isReady = false;
+      }
+    }
+    return removed;
+  }
+
   getPlayerByToken(token: string): RoomPlayer | undefined {
     if (this.p1?.sessionToken === token) return this.p1;
     if (this.p2?.sessionToken === token) return this.p2;

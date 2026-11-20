@@ -109,5 +109,6 @@ export interface BattleEventData {
   intValue2?: number;
   doubleValue?: number;
   status?: string;
+  stat?: string;
   message?: string;
 }

@@ -1,0 +1,24 @@
+:root {
+  --pokedex-red: #dc2626;
+  --pokedex-darkred: #991b1b;
+  --pokedex-lightred: #ef4444;
+  --pokedex-shadow: #7f1d1d;
+  --pokedex-highlight: #f87171;
+  --bezel-dark: #1e293b;
+  --bezel-border: #334155;
+
+  /* Theme: Classic Olive Green LCD (default) */
+  --lcd-bg: #8bac0f;
+  --lcd-bg-dark: #9bbc0f;
+  --lcd-fg: #0f380f;
+  --lcd-dim: #306230;
+  --lcd-scanline: rgba(15, 56, 15, 0.15);
+}
+
+[data-theme="cyber"] {
+  --lcd-bg: #cbd5e1;
+  --lcd-bg-dark: #94a3b8;
+  --lcd-fg: #0f172a;
+  --lcd-dim: #475569;
+  --lcd-scanline: rgba(15, 23, 42, 0.12);
+}

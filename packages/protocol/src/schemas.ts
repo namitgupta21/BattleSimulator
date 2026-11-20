@@ -13,6 +13,8 @@ export const RoomJoinSchema = z.object({
   playerName: z.string().trim().min(1, "Player name cannot be empty").max(30, "Player name too long"),
 });
 
+export const RoomLeaveSchema = z.object({}).optional();
+
 export const RoomReconnectSchema = z.object({
   roomCode: z.string().trim().toUpperCase().min(3).max(12),
   sessionToken: z.string().trim().min(1, "Session token required"),
@@ -32,6 +34,8 @@ export const BattleActionSchema = z.object({
 export const BattleSwitchSchema = z.object({
   index: z.number().int().min(0).max(5),
 });
+
+export const BattleCancelActionSchema = z.object({}).optional();
 
 export const BattleForfeitSchema = z.object({}).optional();
 
@@ -112,6 +116,8 @@ export const OpponentPublicStateSchema = z.object({
 
 export const BattleStartPayloadSchema = z.object({
   seed: z.number(),
+  playerSide: z.enum(["p1", "p2"]).optional(),
+  activeIndex: z.number().int().default(0),
   team: z.array(PlayerPokemonSchema),
   opponentPublic: OpponentPublicStateSchema,
 });
@@ -139,11 +145,14 @@ export const BattleEventSchema = z.object({
   intValue2: z.number().optional(),
   doubleValue: z.number().optional(),
   status: z.string().optional(),
+  stat: z.string().optional(),
   message: z.string().optional(),
 });
 
 export const TurnResultPayloadSchema = z.object({
   turnNumber: z.number().int(),
+  playerSide: z.enum(["p1", "p2"]).optional(),
+  activeIndex: z.number().int().default(0),
   events: z.array(BattleEventSchema),
   yourTeam: z.array(PlayerPokemonSchema),
   opponentPublic: OpponentPublicStateSchema,
@@ -159,3 +168,7 @@ export const ProtocolErrorSchema = z.object({
   code: z.nativeEnum(ErrorCode),
   message: z.string(),
 });
+
+export type TurnPromptPayload = z.infer<typeof TurnPromptPayloadSchema>;
+export type TurnResultPayload = z.infer<typeof TurnResultPayloadSchema>;
+export type BattleEndPayload = z.infer<typeof BattleEndPayloadSchema>;

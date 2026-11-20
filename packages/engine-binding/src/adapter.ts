@@ -152,6 +152,7 @@ function normalizeEvents(rawEvents: any[]): BattleEventData[] {
     intValue2: e.intValue2,
     doubleValue: e.doubleValue,
     status: e.status,
+    stat: e.stat,
     message: e.message,
   }));
 }

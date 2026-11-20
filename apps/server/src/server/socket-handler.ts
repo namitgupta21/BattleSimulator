@@ -59,8 +59,14 @@ export class SocketHandler {
 
       const { playerName, teamSize, timerEnabled } = parsed.data;
       let roomCode = generateRoomCode();
-      while (this.roomStore.get(roomCode)) {
+      let existing = this.roomStore.get(roomCode);
+      while (existing && existing.state !== "Finished" && existing.state !== "Abandoned") {
         roomCode = generateRoomCode();
+        existing = this.roomStore.get(roomCode);
+      }
+      if (existing) {
+        this.roomStore.delete(roomCode);
+        this.orchestrators.delete(roomCode);
       }
 
       const room = new Room(roomCode, { teamSize, timerEnabled });
@@ -71,7 +77,7 @@ export class SocketHandler {
 
       socket.emit(ServerEvents.ROOM_JOINED, {
         roomCode: room.id,
-        playerSide: "p1",
+        playerSide: p1.side,
         sessionToken: p1.sessionToken,
         config: room.config,
       });
@@ -99,6 +105,16 @@ export class SocketHandler {
         return;
       }
 
+      if (room.state === "Finished" || room.state === "Abandoned") {
+        this.roomStore.delete(room.id);
+        this.orchestrators.delete(room.id);
+        socket.emit(ServerEvents.ERROR, {
+          code: ErrorCode.ROOM_NOT_FOUND,
+          message: `Room ${roomCode} has concluded and is no longer active`,
+        });
+        return;
+      }
+
       if (room.isFull()) {
         socket.emit(ServerEvents.ERROR, {
           code: ErrorCode.ROOM_FULL,
@@ -115,7 +131,7 @@ export class SocketHandler {
 
         socket.emit(ServerEvents.ROOM_JOINED, {
           roomCode: room.id,
-          playerSide: "p2",
+          playerSide: p2.side,
           sessionToken: p2.sessionToken,
           config: room.config,
         });
@@ -212,6 +228,20 @@ export class SocketHandler {
       }
     });
 
+    socket.on(ClientEvents.ROOM_LEAVE, () => {
+      const room = this.roomStore.findBySocketId(socket.id);
+      if (!room) return;
+      socket.leave(room.id);
+      room.removePlayer(socket.id);
+      if (!room.p1 && !room.p2) {
+        this.roomStore.delete(room.id);
+        this.orchestrators.delete(room.id);
+      } else {
+        this.roomStore.save(room);
+        this.broadcastRoomState(room);
+      }
+    });
+
     socket.on(ClientEvents.BATTLE_ACTION, (rawPayload: unknown) => {
       const parsed = BattleActionSchema.safeParse(rawPayload);
       if (!parsed.success) {
@@ -284,6 +314,18 @@ export class SocketHandler {
       }
     });
 
+    socket.on(ClientEvents.BATTLE_CANCEL_ACTION, () => {
+      const room = this.roomStore.findBySocketId(socket.id);
+      if (!room) return;
+      const player = room.getPlayerBySocketId(socket.id);
+      if (!player) return;
+
+      const orchestrator = this.orchestrators.get(room.id);
+      if (orchestrator && !orchestrator.isBattleFinished()) {
+        orchestrator.cancelAction(player.side);
+      }
+    });
+
     socket.on(ClientEvents.BATTLE_FORFEIT, () => {
       const room = this.roomStore.findBySocketId(socket.id);
       if (!room) return;
@@ -309,6 +351,13 @@ export class SocketHandler {
       const orchestrator = this.orchestrators.get(room.id);
       if (orchestrator && !orchestrator.isBattleFinished()) {
         orchestrator.handleDisconnect(player.side);
+      } else {
+        const p1Connected = room.p1?.isConnected ?? false;
+        const p2Connected = room.p2?.isConnected ?? false;
+        if (!p1Connected && !p2Connected) {
+          this.orchestrators.delete(room.id);
+          this.roomStore.delete(room.id);
+        }
       }
     });
   }
@@ -343,7 +392,8 @@ export class SocketHandler {
           this.broadcastRoomState(room);
           this.clock.setTimeout(() => {
             this.orchestrators.delete(room.id);
-          }, 30000);
+            this.roomStore.delete(room.id);
+          }, 15000);
         },
       },
       injectedSeed

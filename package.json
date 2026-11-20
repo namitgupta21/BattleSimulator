@@ -10,10 +10,14 @@
   "scripts": {
     "build:cpp": "cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
     "test:cpp": "ctest --test-dir build --output-on-failure",
-    "build": "npm run build --workspace=@pokemon/protocol && npm run build --workspace=@pokemon/engine-binding && npm run build --workspace=@pokemon/server",
+    "build": "npm run build --workspace=@pokemon/protocol && npm run build --workspace=@pokemon/engine-binding && npm run build --workspace=@pokemon/server && npm run build --workspace=@pokemon/client",
     "start": "npm start --workspace=@pokemon/server",
-    "test": "npm run test --workspace=@pokemon/protocol && npm run test --workspace=@pokemon/engine-binding && npm run test --workspace=@pokemon/server",
+    "dev:client": "npm run dev --workspace=@pokemon/client",
+    "test": "npm run test --workspace=@pokemon/protocol && npm run test --workspace=@pokemon/engine-binding && npm run test --workspace=@pokemon/server && npm run test --workspace=@pokemon/client",
     "client": "node tools/client.mjs",
+    "replay": "node tools/replay.mjs",
+    "download:sprites": "node tools/download-sprites.mjs",
+    "test:e2e": "npm run test:e2e --workspace=@pokemon/client",
     "lint": "npm run lint --workspaces --if-present"
   },
   "devDependencies": {
