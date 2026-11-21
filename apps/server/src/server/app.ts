@@ -16,27 +16,64 @@ export interface ServerInstanceOptions {
   clock?: Clock;
   roomStore?: RoomStore;
   logStore?: BattleLogStore;
+  corsOrigin?: string | string[] | boolean;
 }
+
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function createServer(options: ServerInstanceOptions = {}) {
   const app = express();
+  app.set("trust proxy", 1);
   app.use(express.json());
 
-  // Enable CORS for HTTP routes (/replay, /health)
-  app.use((_req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    if (_req.method === "OPTIONS") {
-      res.sendStatus(200);
-      return;
-    }
-    next();
-  });
+  // Conditional CORS: default to same-origin only (Caddy handles reverse proxy);
+  // enable CORS only when CORS_ORIGIN is explicitly configured (e.g. staging or local dev).
+  const corsConfig = options.corsOrigin ?? process.env.CORS_ORIGIN;
+
+  if (corsConfig) {
+    const allowedList: string[] =
+      typeof corsConfig === "string"
+        ? corsConfig.split(",").map((s) => s.trim())
+        : Array.isArray(corsConfig)
+          ? corsConfig
+          : [];
+
+    const isWildcard = typeof corsConfig === "string" && corsConfig.trim() === "*";
+
+    app.use((req, res, next) => {
+      const origin = req.headers.origin;
+      if (
+        origin &&
+        (isWildcard || allowedList.includes("*") || allowedList.includes(origin))
+      ) {
+        res.header("Access-Control-Allow-Origin", origin);
+        res.header(
+          "Access-Control-Allow-Headers",
+          "Origin, X-Requested-With, Content-Type, Accept"
+        );
+        res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      }
+      if (req.method === "OPTIONS") {
+        res.sendStatus(200);
+        return;
+      }
+      next();
+    });
+  }
 
   const httpServer = http.createServer(app);
   const io = new Server(httpServer, {
-    cors: { origin: "*" },
+    cors: corsConfig
+      ? {
+          origin:
+            typeof corsConfig === "string"
+              ? corsConfig.includes(",")
+                ? corsConfig.split(",").map((s) => s.trim())
+                : corsConfig.trim()
+              : (corsConfig as any),
+        }
+      : undefined,
   });
 
   const clock = options.clock ?? new SystemClock();
@@ -52,16 +89,37 @@ export function createServer(options: ServerInstanceOptions = {}) {
     socketHandler.registerSocket(socket);
   });
 
+  app.get("/healthz", (_req, res) => {
+    res.json({
+      status: "ok",
+      uptime: process.uptime(),
+      version: process.env.GIT_SHA || process.env.npm_package_version || "dev",
+    });
+  });
+
   app.get("/health", (_req, res) => {
     res.json({ status: "ok", uptime: process.uptime() });
   });
 
-  app.get("/replay/:battleId", (req, res) => {
-    const record = logStore.get(req.params.battleId);
+  app.get("/replay/:battleId", async (req, res) => {
+    const { battleId } = req.params;
+    if (!UUID_REGEX.test(battleId)) {
+      res.status(400).json({ error: "Invalid battle ID format: must be a valid UUID" });
+      return;
+    }
+
+    const record = await logStore.get(battleId);
     if (!record) {
       res.status(404).json({ error: "Replay not found" });
       return;
     }
+
+    // Must strictly serve finished battles only, never in-progress battles
+    if (!record.endedAt || !record.endReason) {
+      res.status(403).json({ error: "Battle is still in progress" });
+      return;
+    }
+
     res.json(record);
   });
 

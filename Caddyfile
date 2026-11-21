@@ -1,0 +1,46 @@
+{$DOMAIN:localhost} {
+    # Modern compression for text/json/svg assets
+    encode gzip zstd
+
+    # Production HTTP Security Headers
+    header {
+        # HTTP Strict Transport Security (HSTS)
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        # Prevent MIME type sniffing
+        X-Content-Type-Options "nosniff"
+        # Prevent embedding in iframes (clickjacking protection)
+        X-Frame-Options "DENY"
+        # Control referrer leakage
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    # Cache Policy for immutable hashed Vite assets (/assets/*)
+    @assets path /assets/*
+    header @assets Cache-Control "public, max-age=31536000, immutable"
+
+    # Cache Policy for index.html (SPA entry point must always revalidate)
+    @html path / /index.html
+    header @html Cache-Control "no-cache, no-store, must-revalidate"
+
+    # Public Healthcheck endpoint (route ONLY /healthz, NOT internal /health)
+    handle /healthz {
+        reverse_proxy {$SERVER_UPSTREAM:server:3000}
+    }
+
+    # Public Battle Replay API endpoint
+    handle /replay/* {
+        reverse_proxy {$SERVER_UPSTREAM:server:3000}
+    }
+
+    # Socket.IO WebSocket & HTTP Long-Polling
+    handle /socket.io/* {
+        reverse_proxy {$SERVER_UPSTREAM:server:3000}
+    }
+
+    # Static Single-Page Application (SPA) with fallback to /index.html
+    handle {
+        root * /srv/client
+        try_files {path} /index.html
+        file_server
+    }
+}

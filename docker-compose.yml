@@ -1,0 +1,73 @@
+services:
+  server:
+    image: ghcr.io/${GHCR_OWNER:-antigravity}/pokemon-battle-server:${SERVER_IMAGE_TAG:?SERVER_IMAGE_TAG must be set to a commit SHA}
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - GIT_SHA=${SERVER_IMAGE_TAG}
+      - CORS_ORIGIN=${CORS_ORIGIN:-}
+    mem_limit: 450m
+    mem_reservation: 200m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - internal
+
+  caddy:
+    image: ghcr.io/${GHCR_OWNER:-antigravity}/pokemon-battle-web:${WEB_IMAGE_TAG:?WEB_IMAGE_TAG must be set to a commit SHA}
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:?DOMAIN is required}
+      - SERVER_UPSTREAM=server:3000
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    mem_limit: 80m
+    mem_reservation: 30m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

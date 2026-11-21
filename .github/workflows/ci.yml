@@ -175,3 +175,105 @@ jobs:
           node-version: 22.x
       - name: Verify Upstream PokeAPI Sprite Coverage (1-151)
         run: node tools/verify-sprites.mjs
+
+  build-and-push:
+    name: Build & Push Production Images (GHCR)
+    needs: [repo-guard, cpp-build-and-test, node-build-and-test]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (for smoke test)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Downcase Repository Owner
+        id: repo_owner
+        run: echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_OUTPUT
+
+      # 1. Build and Smoke-Test Server Container
+      - name: Build Server Image (linux/amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          load: true
+          tags: |
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-server:${{ github.sha }}
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-server:latest
+          cache-from: type=gha,scope=server
+          cache-to: type=gha,mode=max,scope=server
+
+      - name: Smoke-Test Built Server Container
+        run: |
+          docker run -d --name smoke-server -p 3000:3000 \
+            -e NODE_ENV=production \
+            -e GIT_SHA=${{ github.sha }} \
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-server:${{ github.sha }}
+
+          # Wait for container healthz to report commit SHA
+          timeout 30s bash -c 'until curl -sf http://127.0.0.1:3000/healthz | grep -q "${{ github.sha }}"; do sleep 1; done'
+
+          # Run automated multi-client battle smoke test
+          SERVER_URL=http://127.0.0.1:3000 EXPECTED_SHA=${{ github.sha }} node tools/smoke-test.mjs
+
+          # Teardown smoke test container
+          docker stop smoke-server && docker rm smoke-server
+
+      - name: Push Server Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          push: true
+          tags: |
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-server:${{ github.sha }}
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-server:latest
+          cache-from: type=gha,scope=server
+
+      # 2. Build and Push Web (Caddy + SPA) Container
+      - name: Build and Push Web Image (linux/amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.web
+          platforms: linux/amd64
+          build-args: |
+            VITE_SERVER_URL=${{ vars.VITE_SERVER_URL || '' }}
+            VITE_ANIMATED_SPRITE_URL_TEMPLATE=${{ vars.VITE_ANIMATED_SPRITE_URL_TEMPLATE || '' }}
+            VITE_STATIC_SPRITE_URL_TEMPLATE=${{ vars.VITE_STATIC_SPRITE_URL_TEMPLATE || '' }}
+            VITE_PARTY_ICON_URL_TEMPLATE=${{ vars.VITE_PARTY_ICON_URL_TEMPLATE || '' }}
+            VITE_LOCAL_SPRITES_ENABLED=${{ vars.VITE_LOCAL_SPRITES_ENABLED || 'false' }}
+          push: true
+          tags: |
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-web:${{ github.sha }}
+            ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-web:latest
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web

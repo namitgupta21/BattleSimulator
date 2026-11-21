@@ -1,0 +1,47 @@
+# ==============================================================================
+# Stage 1: Build React SPA
+# ==============================================================================
+FROM --platform=linux/amd64 node:22-bookworm-slim AS client-builder
+
+WORKDIR /app
+
+# Build arguments for Vite (embedded into client bundle at build-time)
+ARG VITE_SERVER_URL=""
+ARG VITE_ANIMATED_SPRITE_URL_TEMPLATE
+ARG VITE_STATIC_SPRITE_URL_TEMPLATE
+ARG VITE_PARTY_ICON_URL_TEMPLATE
+ARG VITE_LOCAL_SPRITES_ENABLED="false"
+
+ENV VITE_SERVER_URL=${VITE_SERVER_URL} \
+    VITE_ANIMATED_SPRITE_URL_TEMPLATE=${VITE_ANIMATED_SPRITE_URL_TEMPLATE} \
+    VITE_STATIC_SPRITE_URL_TEMPLATE=${VITE_STATIC_SPRITE_URL_TEMPLATE} \
+    VITE_PARTY_ICON_URL_TEMPLATE=${VITE_PARTY_ICON_URL_TEMPLATE} \
+    VITE_LOCAL_SPRITES_ENABLED=${VITE_LOCAL_SPRITES_ENABLED}
+
+# Copy package manifests for layer caching
+COPY package*.json ./
+COPY packages/protocol/package.json ./packages/protocol/
+COPY apps/client/package.json ./apps/client/
+
+RUN npm ci
+
+# Copy sources needed for client
+COPY packages/protocol/ ./packages/protocol/
+COPY apps/client/ ./apps/client/
+
+# Build protocol dependency and client SPA
+RUN npm run build --workspace=@pokemon/protocol \
+    && npm run build --workspace=@pokemon/client
+
+# ==============================================================================
+# Stage 2: Caddy Production Web Server
+# ==============================================================================
+FROM --platform=linux/amd64 caddy:2.8-alpine AS runner
+
+# Copy built SPA static files to webroot
+COPY --from=client-builder /app/apps/client/dist /srv/client
+
+# Copy Caddy configuration
+COPY Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 80 443

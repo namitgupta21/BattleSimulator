@@ -27,8 +27,20 @@ function generateRoomCode(): string {
   return result;
 }
 
+export function getClientIp(socket: Socket): string {
+  const forwarded = socket.handshake.headers["x-forwarded-for"];
+  if (typeof forwarded === "string") {
+    return forwarded.split(",")[0].trim();
+  }
+  if (Array.isArray(forwarded) && forwarded.length > 0) {
+    return forwarded[0].split(",")[0].trim();
+  }
+  return socket.handshake.address;
+}
+
 export class SocketHandler {
   private orchestrators = new Map<string, BattleOrchestrator>();
+  private isShuttingDown = false;
 
   constructor(
     private readonly io: Server,
@@ -37,6 +49,14 @@ export class SocketHandler {
     private readonly adapter: EngineAdapter,
     private readonly clock: Clock
   ) {}
+
+  setShuttingDown(val: boolean): void {
+    this.isShuttingDown = val;
+  }
+
+  isShutdown(): boolean {
+    return this.isShuttingDown;
+  }
 
   getOrchestrator(roomId: string): BattleOrchestrator | undefined {
     return this.orchestrators.get(roomId.toUpperCase());
@@ -48,6 +68,13 @@ export class SocketHandler {
 
   registerSocket(socket: Socket): void {
     socket.on(ClientEvents.ROOM_CREATE, (rawPayload: unknown) => {
+      if (this.isShuttingDown) {
+        socket.emit(ServerEvents.ERROR, {
+          code: ErrorCode.ROOM_NOT_JOINABLE,
+          message: "Server is restarting for maintenance. Cannot create new rooms.",
+        });
+        return;
+      }
       const parsed = RoomCreateSchema.safeParse(rawPayload);
       if (!parsed.success) {
         socket.emit(ServerEvents.ERROR, {
