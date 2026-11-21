@@ -23,15 +23,15 @@ test.describe("Sprites, Bench Strip & Hidden Information E2E", () => {
     expect(typeof hasStaticImg).toBe("boolean");
 
     // Stage 3: Block both GIF and PNG to assert LCD badge fallback
-    await page.route("**/*.png", (route) => route.abort());
-    const failedImg = await page.evaluate(async () => {
+    await page.route("**/*.png*", (route) => route.abort());
+    const failedImg = await page.evaluate(async (url) => {
       const img = new Image();
-      img.src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent/25.png";
       return new Promise<boolean>((resolve) => {
         img.onload = () => resolve(true);
         img.onerror = () => resolve(false);
+        img.src = url;
       });
-    });
+    }, `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent/25.png?nocache=${Date.now()}`);
     expect(failedImg).toBe(false);
   });
 

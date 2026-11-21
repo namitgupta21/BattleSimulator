@@ -54,7 +54,7 @@ export const MobileLogDrawer: React.FC<MobileLogDrawerProps> = ({
             ref={closeBtnRef}
             type="button"
             onClick={onClose}
-            aria-label="Close Battle Log"
+            aria-label="Close Battle Log (CLOSE [B])"
             className="px-2 py-1 text-[10px] bg-red-600 hover:bg-red-500 text-white font-bold rounded border border-slate-950 active:scale-95"
           >
             CLOSE [B]

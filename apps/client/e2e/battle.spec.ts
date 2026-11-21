@@ -54,8 +54,8 @@ test.describe("Pokédex Battle Simulator E2E", () => {
     if (await p1.locator("div[role='button']").isVisible()) {
       await p1.locator("div[role='button']").click();
     }
-    if (await p2.locator("div[role='button']").click()) {
-      // dismissed
+    if (await p2.locator("div[role='button']").isVisible()) {
+      await p2.locator("div[role='button']").click();
     }
 
     // Both players select first available legal move
@@ -105,7 +105,7 @@ test.describe("Pokédex Battle Simulator E2E", () => {
     await expect(page.getByRole("dialog", { name: "Battle Log" })).toBeVisible();
 
     // Clicking CLOSE [B] closes the drawer
-    await page.getByRole("button", { name: /CLOSE \[B\]/i }).click();
+    await page.getByRole("button", { name: /CLOSE \[B\]|Close Battle Log/i }).click();
     await expect(page.getByRole("dialog", { name: "Battle Log" })).not.toBeVisible();
 
     await context.close();

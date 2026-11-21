@@ -54,7 +54,12 @@ export const ArenaView: React.FC<ArenaViewProps> = ({
             >
               <span className="font-bold text-[7px] tracking-tight text-slate-800">FOE BENCH:</span>
               <div className="flex items-center gap-0.5">
-                {Array.from({ length: opponentPublic.aliveCount }).map((_, i) => (
+                {Array.from({
+                  length: Math.max(
+                    0,
+                    opponentPublic.aliveCount - (oppActive && oppActive.hpPercent > 0 ? 1 : 0)
+                  ),
+                }).map((_, i) => (
                   <PartyIcon
                     key={`opp-alive-${i}`}
                     isAnonymous={true}
@@ -62,7 +67,12 @@ export const ArenaView: React.FC<ArenaViewProps> = ({
                     className="w-5 h-5 !rounded-full"
                   />
                 ))}
-                {Array.from({ length: opponentPublic.faintedCount }).map((_, i) => (
+                {Array.from({
+                  length: Math.max(
+                    0,
+                    opponentPublic.faintedCount - (oppActive && oppActive.hpPercent <= 0 ? 1 : 0)
+                  ),
+                }).map((_, i) => (
                   <PartyIcon
                     key={`opp-faint-${i}`}
                     isAnonymous={true}
