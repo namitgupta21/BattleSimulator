@@ -49,13 +49,13 @@ async function runSmokeTest() {
     p1.on("room:joined", (data) => {
       console.log(`[Smoke Test] Room created: ${data.roomCode}. Readying P1 and joining P2...`);
       roomCode = data.roomCode;
-      p1.emit("player:ready", { isReady: true });
+      p1.emit("player:ready", { ready: true });
       p2.emit("room:join", { roomCode, playerName: "SmokeP2" });
     });
 
     p2.on("room:joined", () => {
       console.log("[Smoke Test] P2 joined room. Readying P2...");
-      p2.emit("player:ready", { isReady: true });
+      p2.emit("player:ready", { ready: true });
     });
 
     p1.on("battle:start", () => {
@@ -65,20 +65,20 @@ async function runSmokeTest() {
     p1.on("turn:prompt", (prompt) => {
       if (prompt.legalActions && prompt.legalActions.length > 0) {
         console.log("[Smoke Test] P1 submitting action...");
-        p1.emit("battle:action", prompt.legalActions[0]);
+        p1.emit("battle:action", { action: prompt.legalActions[0] });
       }
     });
 
     p2.on("turn:prompt", (prompt) => {
       if (prompt.legalActions && prompt.legalActions.length > 0) {
         console.log("[Smoke Test] P2 submitting action...");
-        p2.emit("battle:action", prompt.legalActions[0]);
+        p2.emit("battle:action", { action: prompt.legalActions[0] });
       }
     });
 
     p1.on("turn:result", () => {
       console.log("[Smoke Test] Turn resolved! Forfeiting match to conclude and record...");
-      p1.emit("battle:forfeit");
+      p1.emit("battle:forfeit", {});
     });
 
     p1.on("battle:end", async (endData) => {
