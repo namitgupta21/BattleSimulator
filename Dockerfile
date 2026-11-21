@@ -1,7 +1,7 @@
 # ==============================================================================
 # Stage 1: Build C++ Native Engine & TypeScript Workspaces
 # ==============================================================================
-FROM --platform=linux/amd64 node:22-bookworm-slim AS builder
+FROM node:22-bookworm-slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
@@ -16,6 +16,7 @@ COPY package*.json ./
 COPY packages/protocol/package.json ./packages/protocol/
 COPY packages/engine-binding/package.json ./packages/engine-binding/
 COPY apps/server/package.json ./apps/server/
+COPY apps/client/package.json ./apps/client/
 
 RUN npm ci
 
@@ -32,9 +33,11 @@ COPY apps/server/ ./apps/server/
 RUN cmake -B build -DCMAKE_BUILD_TYPE=Release \
     && cmake --build build --target pokemon_engine_binding
 
-# Ensure native addon binary is copied to engine-binding output folder
+# Ensure native addon binary is present in engine-binding output folder
 RUN mkdir -p packages/engine-binding/build \
-    && cp build/packages/engine-binding/pokemon_engine_binding.node packages/engine-binding/build/
+    && (test -f packages/engine-binding/build/pokemon_engine_binding.node \
+        || find build -name "pokemon_engine_binding.node" -exec cp {} packages/engine-binding/build/ \;) \
+    && ls -la packages/engine-binding/build/pokemon_engine_binding.node
 
 # Build TypeScript workspaces in topological order
 RUN npm run build --workspace=@pokemon/protocol \
@@ -47,7 +50,7 @@ RUN npm prune --production
 # ==============================================================================
 # Stage 2: Minimal Production Runtime
 # ==============================================================================
-FROM --platform=linux/amd64 node:22-bookworm-slim AS runner
+FROM node:22-bookworm-slim AS runner
 
 ARG GIT_SHA=dev
 ENV NODE_ENV=production \
