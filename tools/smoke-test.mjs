@@ -32,51 +32,52 @@ async function runSmokeTest() {
   // 2. Multi-client Socket.IO battle check
   console.log("[Smoke Test] Connecting Socket.IO test clients...");
 
-  const p1 = io(SERVER_URL, { transports: ["websocket"], timeout: 5000 });
-  const p2 = io(SERVER_URL, { transports: ["websocket"], timeout: 5000 });
+  const p1 = io(SERVER_URL, { transports: ["websocket", "polling"], timeout: 5000 });
+  const p2 = io(SERVER_URL, { transports: ["websocket", "polling"], timeout: 5000 });
 
   await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error("Timeout waiting for battle")), 15000);
 
     let roomCode = "";
     let battleId = "";
-    let p1Ready = false;
-    let p2Ready = false;
 
     p1.on("connect", () => {
+      console.log("[Smoke Test] P1 connected, creating room...");
       p1.emit("room:create", { playerName: "SmokeP1", teamSize: 3, timerEnabled: false });
     });
 
-    p1.on("room:created", (data) => {
+    p1.on("room:joined", (data) => {
+      console.log(`[Smoke Test] Room created: ${data.roomCode}. Readying P1 and joining P2...`);
       roomCode = data.roomCode;
-      p1Ready = true;
       p1.emit("player:ready", { isReady: true });
       p2.emit("room:join", { roomCode, playerName: "SmokeP2" });
     });
 
     p2.on("room:joined", () => {
-      p2Ready = true;
+      console.log("[Smoke Test] P2 joined room. Readying P2...");
       p2.emit("player:ready", { isReady: true });
     });
 
     p1.on("battle:start", () => {
-      // Battle commenced
+      console.log("[Smoke Test] Battle started!");
     });
 
     p1.on("turn:prompt", (prompt) => {
       if (prompt.legalActions && prompt.legalActions.length > 0) {
+        console.log("[Smoke Test] P1 submitting action...");
         p1.emit("battle:action", prompt.legalActions[0]);
       }
     });
 
     p2.on("turn:prompt", (prompt) => {
       if (prompt.legalActions && prompt.legalActions.length > 0) {
+        console.log("[Smoke Test] P2 submitting action...");
         p2.emit("battle:action", prompt.legalActions[0]);
       }
     });
 
     p1.on("turn:result", () => {
-      // Submit forfeit to cleanly conclude the match
+      console.log("[Smoke Test] Turn resolved! Forfeiting match to conclude and record...");
       p1.emit("battle:forfeit");
     });
 
@@ -108,18 +109,32 @@ async function runSmokeTest() {
       }
     });
 
+    p1.on("connect_error", (err) => {
+      clearTimeout(timer);
+      p1.disconnect();
+      p2.disconnect();
+      reject(new Error(`P1 connect_error: ${err.message}`));
+    });
+
+    p2.on("connect_error", (err) => {
+      clearTimeout(timer);
+      p1.disconnect();
+      p2.disconnect();
+      reject(new Error(`P2 connect_error: ${err.message}`));
+    });
+
     p1.on("error", (err) => {
       clearTimeout(timer);
       p1.disconnect();
       p2.disconnect();
-      reject(new Error(`P1 error: ${JSON.stringify(err)}`));
+      reject(new Error(`P1 protocol error: ${JSON.stringify(err)}`));
     });
 
     p2.on("error", (err) => {
       clearTimeout(timer);
       p1.disconnect();
       p2.disconnect();
-      reject(new Error(`P2 error: ${JSON.stringify(err)}`));
+      reject(new Error(`P2 protocol error: ${JSON.stringify(err)}`));
     });
   });
 
