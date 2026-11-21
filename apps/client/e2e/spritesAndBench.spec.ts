@@ -84,7 +84,7 @@ test.describe("Sprites, Bench Strip & Hidden Information E2E", () => {
     // Assert Player Bench in DOM shows player's full team
     const playerBenchStrip = p1.getByTestId("player-bench-strip");
     await expect(playerBenchStrip).toBeVisible();
-    const playerIcons = playerBenchStrip.locator("button[role='img'], div[role='img']");
+    const playerIcons = playerBenchStrip.locator("[data-testid='party-icon-root']");
     await expect(playerIcons).toHaveCount(3);
 
     await context1.close();
