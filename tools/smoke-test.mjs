@@ -40,6 +40,7 @@ async function runSmokeTest() {
 
     let roomCode = "";
     let battleId = "";
+    let battleEnding = false;
 
     p1.on("connect", () => {
       console.log("[Smoke Test] P1 connected, creating room...");
@@ -63,22 +64,25 @@ async function runSmokeTest() {
     });
 
     p1.on("turn:prompt", (prompt) => {
-      if (prompt.legalActions && prompt.legalActions.length > 0) {
+      if (!battleEnding && prompt.legalActions && prompt.legalActions.length > 0) {
         console.log("[Smoke Test] P1 submitting action...");
         p1.emit("battle:action", { action: prompt.legalActions[0] });
       }
     });
 
     p2.on("turn:prompt", (prompt) => {
-      if (prompt.legalActions && prompt.legalActions.length > 0) {
+      if (!battleEnding && prompt.legalActions && prompt.legalActions.length > 0) {
         console.log("[Smoke Test] P2 submitting action...");
         p2.emit("battle:action", { action: prompt.legalActions[0] });
       }
     });
 
     p1.on("turn:result", () => {
-      console.log("[Smoke Test] Turn resolved! Forfeiting match to conclude and record...");
-      p1.emit("battle:forfeit", {});
+      if (!battleEnding) {
+        battleEnding = true;
+        console.log("[Smoke Test] Turn resolved! Forfeiting match to conclude and record...");
+        p1.emit("battle:forfeit", {});
+      }
     });
 
     p1.on("battle:end", async (endData) => {
@@ -124,6 +128,7 @@ async function runSmokeTest() {
     });
 
     p1.on("error", (err) => {
+      if (battleEnding) return;
       clearTimeout(timer);
       p1.disconnect();
       p2.disconnect();
@@ -131,6 +136,7 @@ async function runSmokeTest() {
     });
 
     p2.on("error", (err) => {
+      if (battleEnding) return;
       clearTimeout(timer);
       p1.disconnect();
       p2.disconnect();
