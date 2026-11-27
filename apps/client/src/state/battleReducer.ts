@@ -279,16 +279,15 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
 
     case "TURN_RESULT": {
       const resolvedSide = action.payload.playerSide ?? state.room.playerSide;
-      const allowedLogTypes = ["MoveUsed", "DamageDealt", "Fainted", "SwitchedIn"];
       const newLogs: LogEntry[] = action.payload.events
-        .filter((evt) => allowedLogTypes.includes(evt.type))
         .map((evt, idx) => ({
           id: `turn-${action.payload.turnNumber}-${idx}-${Date.now()}`,
           turnNumber: action.payload.turnNumber,
           text: formatEventText(evt, resolvedSide),
           side: evt.side,
           type: evt.type,
-        }));
+        }))
+        .filter((entry) => Boolean(entry.text));
 
       // Authoritative active index from server
       let newActiveIndex =

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ClientEvents,
   type ClientEventMap,
@@ -6,7 +6,7 @@ import {
 import { useGame } from "../state/GameContext.js";
 import { useRegisterNav } from "../navigation/NavigationContext.js";
 import { ArenaView } from "../battle/ArenaView.js";
-import { DialogueBox } from "../battle/DialogueBox.js";
+import { DialogueBox, type DialogueBoxHandle } from "../battle/DialogueBox.js";
 import { MoveGrid } from "../battle/MoveGrid.js";
 import { SwitchMenu } from "../battle/SwitchMenu.js";
 import { TurnCountdown } from "../battle/TurnCountdown.js";
@@ -17,6 +17,7 @@ export const BattleScreen: React.FC = () => {
   const [showForfeitModal, setShowForfeitModal] = useState(false);
   const [moveCursorIdx, setMoveCursorIdx] = useState(0);
   const [switchCursorIdx, setSwitchCursorIdx] = useState(0);
+  const dialogueBoxRef = useRef<DialogueBoxHandle>(null);
 
   let effectiveActiveIndex = state.battle.activePokemonIndex;
   const rawActive = state.battle.myTeam[effectiveActiveIndex];
@@ -35,6 +36,10 @@ export const BattleScreen: React.FC = () => {
 
   const activePoke = state.battle.myTeam[effectiveActiveIndex];
   const legalActions = state.battle.turnPrompt?.legalActions || [];
+
+  const isMoveLegal = (moveIdx: number) => {
+    return legalActions.some((a) => a.type === "move" && a.index === moveIdx);
+  };
 
   // Auto-select first legal alive bench Pokémon when entering switch menu or forced switch
   useEffect(() => {
@@ -65,6 +70,7 @@ export const BattleScreen: React.FC = () => {
 
   const handleSelectMove = (moveIdx: number) => {
     if (state.battle.isSubmitting || state.battle.waitingForOpponent) return;
+    if (!isMoveLegal(moveIdx)) return;
 
     dispatch({ type: "ACTION_SUBMITTED" });
     const payload: ClientEventMap[typeof ClientEvents.BATTLE_ACTION] = {
@@ -79,9 +85,11 @@ export const BattleScreen: React.FC = () => {
   const handleConfirmSwitch = (slotIdx: number) => {
     if (state.battle.isSubmitting || state.battle.waitingForOpponent) return;
     const targetPoke = state.battle.myTeam[slotIdx];
-    if (!targetPoke || targetPoke.currentHp <= 0 || slotIdx === state.battle.activePokemonIndex) {
+    if (!targetPoke || targetPoke.currentHp <= 0 || slotIdx === effectiveActiveIndex) {
       return;
     }
+    const isLegal = legalActions.some((a) => a.type === "switch" && a.index === slotIdx);
+    if (!isLegal) return;
 
     dispatch({ type: "ACTION_SUBMITTED" });
     if (isForcedSwitch) {
@@ -107,7 +115,11 @@ export const BattleScreen: React.FC = () => {
 
   const handleAdvanceDialogue = () => {
     if (state.battle.waitingForOpponent) return;
-    dispatch({ type: "ADVANCE_EVENT" });
+    if (dialogueBoxRef.current) {
+      dialogueBoxRef.current.advance();
+    } else {
+      dispatch({ type: "ADVANCE_EVENT" });
+    }
   };
 
   const handleCancelAction = () => {
@@ -294,6 +306,7 @@ export const BattleScreen: React.FC = () => {
       <div className="flex flex-col w-full p-1 bg-slate-900/10 rounded border-t border-slate-900/30 flex-shrink-0">
         {state.battle.currentDialogue ? (
           <DialogueBox
+            ref={dialogueBoxRef}
             message={state.battle.currentDialogue}
             onAdvance={handleAdvanceDialogue}
             onCancel={state.battle.waitingForOpponent ? handleCancelAction : undefined}
@@ -301,6 +314,7 @@ export const BattleScreen: React.FC = () => {
           />
         ) : state.battle.waitingForOpponent || (legalActions.length === 0 && !isForcedSwitch) ? (
           <DialogueBox
+            ref={dialogueBoxRef}
             message="Waiting for opponent..."
             onCancel={state.battle.waitingForOpponent ? handleCancelAction : undefined}
             isWaiting={true}

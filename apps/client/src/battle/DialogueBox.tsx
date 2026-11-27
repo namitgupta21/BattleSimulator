@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
+
+export interface DialogueBoxHandle {
+  advance: () => void;
+}
 
 interface DialogueBoxProps {
   message: string | null;
@@ -7,12 +11,12 @@ interface DialogueBoxProps {
   isWaiting?: boolean;
 }
 
-export const DialogueBox: React.FC<DialogueBoxProps> = ({
+export const DialogueBox = forwardRef<DialogueBoxHandle, DialogueBoxProps>(({
   message,
   onAdvance,
   onCancel,
   isWaiting = false,
-}) => {
+}, ref) => {
   const [displayedLength, setDisplayedLength] = useState<number>(0);
 
   useEffect(() => {
@@ -32,17 +36,21 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
     return () => clearInterval(interval);
   }, [message]);
 
-  if (!message) return null;
-
-  const isComplete = displayedLength >= message.length;
+  const isComplete = !message || displayedLength >= message.length;
 
   const handleClick = () => {
-    if (!isComplete) {
+    if (!isComplete && message) {
       setDisplayedLength(message.length);
     } else if (!isWaiting) {
       onAdvance?.();
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    advance: handleClick,
+  }), [isComplete, isWaiting, message, onAdvance]);
+
+  if (!message) return null;
 
   return (
     <div
@@ -50,12 +58,6 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       aria-live="polite"
       tabIndex={0}
       onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          handleClick();
-        }
-      }}
       className="relative flex items-center justify-between w-full min-h-[44px] px-3 py-2 rounded bg-slate-900/80 border-2 border-slate-950 text-slate-100 text-[10px] leading-relaxed cursor-pointer shadow-sm select-none"
     >
       <div className="flex-1 pr-2">
@@ -86,4 +88,6 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       )}
     </div>
   );
-};
+});
+
+DialogueBox.displayName = "DialogueBox";

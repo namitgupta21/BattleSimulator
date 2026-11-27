@@ -122,6 +122,48 @@ describe("battleReducer", () => {
     expect(state.battle.logEntries[1].text).toContain("You took 25 damage");
   });
 
+  it("captures full event spectrum (critical hit, effectiveness, status, stats) in log entries", () => {
+    let state: BattleViewState = {
+      ...initialBattleViewState,
+      screen: "battle",
+      room: {
+        ...initialBattleViewState.room,
+        playerSide: "p1",
+      },
+      battle: {
+        ...initialBattleViewState.battle,
+        myTeam: [mockPokemon],
+        opponentPublic: mockOpponent,
+      },
+    };
+
+    state = battleReducer(state, {
+      type: "TURN_RESULT",
+      payload: {
+        turnNumber: 1,
+        events: [
+          { type: "TurnStarted", side: "p1" },
+          { type: "MoveUsed", side: "p1", pokemon: "Pikachu", move: "thunderbolt" },
+          { type: "CriticalHit", side: "p1" },
+          { type: "Effectiveness", side: "p2", intValue1: 200 },
+          { type: "DamageDealt", side: "p2", intValue1: 80 },
+          { type: "StatusApplied", side: "p2", pokemon: "Squirtle", status: "PAR" },
+          { type: "StatStageChanged", side: "p1", pokemon: "Pikachu", stat: "speed", intValue1: 1 },
+          { type: "TurnEnded", side: "p1" },
+        ],
+        yourTeam: [mockPokemon],
+        opponentPublic: mockOpponent,
+      },
+    });
+
+    // TurnStarted and TurnEnded return empty strings and must be omitted from log entries
+    expect(state.battle.logEntries).toHaveLength(6);
+    expect(state.battle.logEntries.some((l) => l.text.includes("critical hit"))).toBe(true);
+    expect(state.battle.logEntries.some((l) => l.text.includes("super effective"))).toBe(true);
+    expect(state.battle.logEntries.some((l) => l.text.includes("afflicted with PAR"))).toBe(true);
+    expect(state.battle.logEntries.some((l) => l.text.includes("speed rose"))).toBe(true);
+  });
+
   it("updates activePokemonIndex on SwitchedIn event for own side", () => {
     const secondPokemon: PlayerPokemon = {
       ...mockPokemon,

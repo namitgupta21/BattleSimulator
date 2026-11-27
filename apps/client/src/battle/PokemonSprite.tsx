@@ -89,7 +89,7 @@ export const PokemonSprite: React.FC<PokemonSpriteProps> = ({
         alt={`${name} (${variant} view)`}
         data-testid="pokemon-sprite-image"
         data-candidate-index={candidateIndex}
-        className={`w-28 h-28 sm:w-32 sm:h-32 object-contain transition-opacity duration-200 [image-rendering:pixelated] [image-rendering:-moz-crisp-edges] [image-rendering:crisp-edges] ${
+        className={`w-full h-full max-w-[128px] max-h-[128px] object-contain transition-opacity duration-200 [image-rendering:pixelated] [image-rendering:-moz-crisp-edges] [image-rendering:crisp-edges] ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setLoaded(true)}

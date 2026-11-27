@@ -1,3 +1,4 @@
+import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { DialogueBox } from "../src/battle/DialogueBox.js";
@@ -31,6 +32,32 @@ describe("Enhanced Features & Bug Fixes", () => {
 
       // Clicking again once complete triggers onAdvance
       fireEvent.click(box);
+      expect(onAdvance).toHaveBeenCalledTimes(1);
+
+      vi.useRealTimers();
+    });
+
+    it("supports imperative handle to reveal text then advance (simulating Enter/A key)", () => {
+      vi.useFakeTimers();
+      const onAdvance = vi.fn();
+      const message = "Foe Charizard was afflicted with PAR!";
+      const handleRef = React.createRef<any>();
+
+      render(
+        <DialogueBox ref={handleRef} message={message} onAdvance={onAdvance} />
+      );
+
+      // First advance call while typing reveals full text
+      act(() => {
+        handleRef.current?.advance();
+      });
+      expect(screen.getByText(message)).toBeInTheDocument();
+      expect(onAdvance).not.toHaveBeenCalled();
+
+      // Second advance call triggers onAdvance
+      act(() => {
+        handleRef.current?.advance();
+      });
       expect(onAdvance).toHaveBeenCalledTimes(1);
 
       vi.useRealTimers();

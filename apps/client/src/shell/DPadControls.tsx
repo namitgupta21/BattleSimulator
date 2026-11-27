@@ -63,7 +63,7 @@ export const DPadControls: React.FC<DPadControlsProps> = ({
             type="button"
             onClick={onToggleLog}
             aria-label="Toggle Battle Log Panel"
-            className="relative px-2.5 sm:px-3 py-0.5 sm:py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded shadow border border-amber-600 active:scale-95 transition-all text-[8px] sm:text-[10px] md:hidden"
+            className="relative px-3 sm:px-3.5 py-1 sm:py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded shadow border border-amber-600 active:scale-95 transition-all text-[9px] sm:text-[10px] md:hidden"
           >
             {isLogOpen ? "CLOSE LOG" : "LOG"}
             {unreadLogCount > 0 && !isLogOpen && (

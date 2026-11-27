@@ -134,7 +134,7 @@ export const LobbyScreen: React.FC = () => {
         <button
           type="button"
           onClick={handleLeave}
-          className="flex-1 py-2 rounded-lg border-2 border-red-900/60 bg-red-100 hover:bg-red-200 text-red-900 font-bold text-[9px] active:scale-95"
+          className="flex-1 py-2.5 sm:py-3 rounded-lg border-2 border-red-900/60 bg-red-100 hover:bg-red-200 text-red-900 font-bold text-[9px] sm:text-[10px] active:scale-95 transition-all"
         >
           LEAVE
         </button>
@@ -142,7 +142,7 @@ export const LobbyScreen: React.FC = () => {
         <button
           type="button"
           onClick={handleToggleReady}
-          className={`flex-[2] py-2 rounded-lg border-2 border-slate-950 font-bold text-[10px] text-white shadow transition-all active:scale-95 ${
+          className={`flex-[2] py-2.5 sm:py-3 rounded-lg border-2 border-slate-950 font-bold text-[10px] text-white shadow transition-all active:scale-95 ${
             isReady
               ? "bg-amber-600 hover:bg-amber-500"
               : "bg-emerald-600 hover:bg-emerald-500"
