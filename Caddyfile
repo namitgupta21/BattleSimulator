@@ -37,6 +37,13 @@
         reverse_proxy {$SERVER_UPSTREAM:server:3000}
     }
 
+    # Self-hosted Pokémon sprites (static files only, NO SPA fallback, 7-day cache)
+    handle /sprites/* {
+        root * /srv/client
+        header Cache-Control "public, max-age=604800"
+        file_server
+    }
+
     # Static Single-Page Application (SPA) with fallback to /index.html
     handle {
         root * /srv/client

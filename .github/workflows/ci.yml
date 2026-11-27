@@ -270,7 +270,7 @@ jobs:
             VITE_ANIMATED_SPRITE_URL_TEMPLATE=${{ vars.VITE_ANIMATED_SPRITE_URL_TEMPLATE || '' }}
             VITE_STATIC_SPRITE_URL_TEMPLATE=${{ vars.VITE_STATIC_SPRITE_URL_TEMPLATE || '' }}
             VITE_PARTY_ICON_URL_TEMPLATE=${{ vars.VITE_PARTY_ICON_URL_TEMPLATE || '' }}
-            VITE_LOCAL_SPRITES_ENABLED=${{ vars.VITE_LOCAL_SPRITES_ENABLED || 'false' }}
+            VITE_LOCAL_SPRITES_ENABLED=${{ vars.VITE_LOCAL_SPRITES_ENABLED || 'true' }}
           push: true
           tags: |
             ghcr.io/${{ steps.repo_owner.outputs.owner }}/pokemon-battle-web:${{ github.sha }}

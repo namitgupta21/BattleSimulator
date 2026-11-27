@@ -29,32 +29,48 @@ export const DEFAULT_DEV_STATIC_TEMPLATE =
 export const DEFAULT_DEV_ICON_TEMPLATE =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/icons/{id}.png";
 
-function resolveEnv(key: string, fallback: string): string {
+function resolveTemplateEnv(key: string, devFallback: string): string {
   try {
-    if (typeof import.meta !== "undefined" && import.meta.env && import.meta.env[key]) {
-      return import.meta.env[key];
+    if (typeof import.meta !== "undefined" && import.meta.env) {
+      const val = import.meta.env[key];
+      if (typeof val === "string" && val.trim() !== "") {
+        return val.trim();
+      }
+      // In production mode, do NOT fall back to PokeAPI/GitHub defaults unless explicitly set
+      if (import.meta.env.PROD) {
+        return "";
+      }
     }
   } catch {}
-  return fallback;
+  return devFallback;
+}
+
+function resolveBooleanEnv(key: string, defaultVal: boolean): boolean {
+  try {
+    if (typeof import.meta !== "undefined" && import.meta.env && import.meta.env[key] !== undefined) {
+      return String(import.meta.env[key]).toLowerCase() !== "false";
+    }
+  } catch {}
+  return defaultVal;
 }
 
 export class SpriteUrlResolver {
-  private static animatedTemplate = resolveEnv(
+  private static animatedTemplate = resolveTemplateEnv(
     "VITE_ANIMATED_SPRITE_URL_TEMPLATE",
     DEFAULT_DEV_ANIMATED_TEMPLATE
   );
 
-  private static staticTemplate = resolveEnv(
+  private static staticTemplate = resolveTemplateEnv(
     "VITE_STATIC_SPRITE_URL_TEMPLATE",
     DEFAULT_DEV_STATIC_TEMPLATE
   );
 
-  private static partyIconTemplate = resolveEnv(
+  private static partyIconTemplate = resolveTemplateEnv(
     "VITE_PARTY_ICON_URL_TEMPLATE",
     DEFAULT_DEV_ICON_TEMPLATE
   );
 
-  private static localEnabled = resolveEnv("VITE_LOCAL_SPRITES_ENABLED", "true") !== "false";
+  private static localEnabled = resolveBooleanEnv("VITE_LOCAL_SPRITES_ENABLED", true);
 
   /**
    * For testing or dynamic runtime reconfiguration.
@@ -75,19 +91,19 @@ export class SpriteUrlResolver {
   }
 
   static resetDefaults(): void {
-    this.animatedTemplate = resolveEnv(
+    this.animatedTemplate = resolveTemplateEnv(
       "VITE_ANIMATED_SPRITE_URL_TEMPLATE",
       DEFAULT_DEV_ANIMATED_TEMPLATE
     );
-    this.staticTemplate = resolveEnv(
+    this.staticTemplate = resolveTemplateEnv(
       "VITE_STATIC_SPRITE_URL_TEMPLATE",
       DEFAULT_DEV_STATIC_TEMPLATE
     );
-    this.partyIconTemplate = resolveEnv(
+    this.partyIconTemplate = resolveTemplateEnv(
       "VITE_PARTY_ICON_URL_TEMPLATE",
       DEFAULT_DEV_ICON_TEMPLATE
     );
-    this.localEnabled = resolveEnv("VITE_LOCAL_SPRITES_ENABLED", "true") !== "false";
+    this.localEnabled = resolveBooleanEnv("VITE_LOCAL_SPRITES_ENABLED", true);
   }
 
   /**
@@ -108,6 +124,7 @@ export class SpriteUrlResolver {
    * Builds the remote animated GIF URL.
    */
   static getAnimatedSpriteUrl(identifier: number | string, view: SpriteView): string {
+    if (!this.animatedTemplate) return "";
     const id = this.resolveDexId(identifier);
     const viewPath = view === "back" ? "back/" : "";
     return this.animatedTemplate
@@ -129,6 +146,7 @@ export class SpriteUrlResolver {
    * Builds the remote Gen 1 static transparent fallback URL.
    */
   static getStaticSpriteUrl(identifier: number | string, view: SpriteView): string {
+    if (!this.staticTemplate) return "";
     const id = this.resolveDexId(identifier);
     const viewPath = view === "back" ? "back/" : "";
     return this.staticTemplate
@@ -150,6 +168,7 @@ export class SpriteUrlResolver {
    * Builds the remote Gen 5 Party Icon URL.
    */
   static getPartyIconUrl(identifier: number | string): string {
+    if (!this.partyIconTemplate) return "";
     const id = this.resolveDexId(identifier);
     return this.partyIconTemplate.replace("{id}", String(id));
   }
@@ -164,9 +183,9 @@ export class SpriteUrlResolver {
 
   /**
    * Returns an ordered candidate list of URLs for battle sprites:
-   * When prefersReducedMotion is true:
-   *   [localStatic, remoteStatic]
-   * When prefersReducedMotion is false:
+   * In production (default):
+   *   [localAnimated, localStatic] (or [localStatic] if prefersReducedMotion)
+   * In development (default):
    *   [localAnimated, remoteAnimated, localStatic, remoteStatic]
    */
   static getBattleSpriteCandidates(
@@ -180,33 +199,46 @@ export class SpriteUrlResolver {
       if (this.localEnabled) {
         candidates.push(this.getLocalStaticSpriteUrl(identifier, view));
       }
-      candidates.push(this.getStaticSpriteUrl(identifier, view));
+      const remoteStatic = this.getStaticSpriteUrl(identifier, view);
+      if (remoteStatic) {
+        candidates.push(remoteStatic);
+      }
       return candidates;
     }
 
     if (this.localEnabled) {
       candidates.push(this.getLocalAnimatedSpriteUrl(identifier, view));
     }
-    candidates.push(this.getAnimatedSpriteUrl(identifier, view));
+    const remoteAnimated = this.getAnimatedSpriteUrl(identifier, view);
+    if (remoteAnimated) {
+      candidates.push(remoteAnimated);
+    }
 
     if (this.localEnabled) {
       candidates.push(this.getLocalStaticSpriteUrl(identifier, view));
     }
-    candidates.push(this.getStaticSpriteUrl(identifier, view));
+    const remoteStatic = this.getStaticSpriteUrl(identifier, view);
+    if (remoteStatic) {
+      candidates.push(remoteStatic);
+    }
 
     return candidates;
   }
 
   /**
    * Returns an ordered candidate list of URLs for Party Icons:
-   * [localIcon, remoteIcon]
+   * In production (default): [localIcon]
+   * In development (default): [localIcon, remoteIcon]
    */
   static getPartyIconCandidates(identifier: number | string): string[] {
     const candidates: string[] = [];
     if (this.localEnabled) {
       candidates.push(this.getLocalPartyIconUrl(identifier));
     }
-    candidates.push(this.getPartyIconUrl(identifier));
+    const remoteIcon = this.getPartyIconUrl(identifier);
+    if (remoteIcon) {
+      candidates.push(remoteIcon);
+    }
     return candidates;
   }
 }

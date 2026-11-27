@@ -51,6 +51,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - ./sprites:/srv/client/sprites:ro
     mem_limit: 80m
     mem_reservation: 30m
     logging:

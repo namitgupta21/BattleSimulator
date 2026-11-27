@@ -69,6 +69,29 @@ describe("SpriteUrlResolver", () => {
     expect(normalCandidates.some((url) => url.endsWith(".gif"))).toBe(true);
     expect(reducedCandidates.every((url) => url.endsWith(".png"))).toBe(true);
   });
+
+  it("produces strictly local sprite candidates when remote templates are empty (production mode)", () => {
+    SpriteUrlResolver.configure({
+      animatedTemplate: "",
+      staticTemplate: "",
+      partyIconTemplate: "",
+      localSpritesEnabled: true,
+    });
+
+    const battleCandidates = SpriteUrlResolver.getBattleSpriteCandidates(25, "front", false);
+    expect(battleCandidates).toEqual([
+      "/sprites/animated/25.gif",
+      "/sprites/transparent/25.png",
+    ]);
+    expect(battleCandidates.some((u) => u.includes("github") || u.includes("pokeapi"))).toBe(false);
+
+    const reducedCandidates = SpriteUrlResolver.getBattleSpriteCandidates(25, "front", true);
+    expect(reducedCandidates).toEqual(["/sprites/transparent/25.png"]);
+
+    const iconCandidates = SpriteUrlResolver.getPartyIconCandidates(25);
+    expect(iconCandidates).toEqual(["/sprites/icons/25.png"]);
+    expect(iconCandidates.some((u) => u.includes("github") || u.includes("pokeapi"))).toBe(false);
+  });
 });
 
 describe("PokemonSprite Component", () => {
