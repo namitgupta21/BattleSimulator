@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ClientEvents } from "@pokemon/protocol";
-import { useGame } from "../state/GameContext.js";
+import { useGame, safeRemoveSession } from "../state/GameContext.js";
 import { useRegisterNav } from "../navigation/NavigationContext.js";
 
 export const ResultScreen: React.FC = () => {
@@ -15,6 +15,7 @@ export const ResultScreen: React.FC = () => {
     try {
       connection.emit(ClientEvents.ROOM_LEAVE, {});
     } catch {}
+    safeRemoveSession();
     dispatch({ type: "RESET_BATTLE" });
   };
 

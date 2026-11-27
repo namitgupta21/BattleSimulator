@@ -251,15 +251,18 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
         ((state.room.playerSide === "p1" && action.payload.phase !== "ForcedSwitchP2") ||
           (state.room.playerSide === "p2" && action.payload.phase !== "ForcedSwitchP1"));
 
-      const hasPendingDialogue =
-        state.battle.eventQueue.length > 0 || state.battle.currentDialogue !== null;
+      const hasPendingEvents = state.battle.eventQueue.length > 0;
 
       // If events are still playing, do not overwrite current dialogue
       let nextDialogue = state.battle.currentDialogue;
-      if (!hasPendingDialogue) {
-        nextDialogue = !isForcedSwitch && action.payload.legalActions.length === 0
-          ? "Waiting for opponent..."
-          : null;
+      if (!hasPendingEvents) {
+        if (isForcedSwitch) {
+          nextDialogue = null;
+        } else if (action.payload.legalActions.length === 0) {
+          nextDialogue = "Waiting for opponent...";
+        } else if (action.payload.turnNumber > 1 || state.battle.turnNumber > 1) {
+          nextDialogue = null;
+        }
       }
 
       return {
@@ -363,12 +366,13 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
         text: `Match Ended! Winner: ${action.payload.winner.toUpperCase()} (${action.payload.reason})`,
       };
 
+      // Only hold on the battle screen if there are real battle animation events waiting to be replayed
       const hasEventsPlaying =
-        state.battle.eventQueue.length > 0 || state.battle.currentDialogue !== null;
+        action.payload.reason === "knockout" && state.battle.eventQueue.length > 0;
 
       return {
         ...state,
-        // If dialogue is playing, let player finish reading before switching to result
+        // Immediately show result on disconnect/forfeit/timeout or when no events are queued
         screen: hasEventsPlaying ? state.screen : "result",
         battle: {
           ...state.battle,
@@ -377,6 +381,9 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
           replayLogId: action.payload.replayLogId,
           isSubmitting: false,
           waitingForOpponent: false,
+          opponentDisconnected: false,
+          opponentGraceDeadline: null,
+          currentDialogue: hasEventsPlaying ? state.battle.currentDialogue : null,
           logEntries: [...state.battle.logEntries, endLog],
           unreadLogCount: state.battle.isLogOpen ? 0 : state.battle.unreadLogCount + 1,
         },

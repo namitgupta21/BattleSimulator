@@ -257,6 +257,9 @@ export class BattleOrchestrator {
 
     this.callbacks.onPlayerReconnected?.(side);
 
+    // Send authoritative current battle state to the reconnecting player
+    this.sendBattleStart(side);
+
     // Re-send current turn prompt with remaining time and full state
     this.sendTurnPrompt(side);
   }

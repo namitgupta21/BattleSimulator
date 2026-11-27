@@ -23,6 +23,7 @@ describe("Disconnect & Reconnect Grace Period", () => {
     let disconnectNotified = false;
     let reconnectNotified = false;
     let resPrompt: TurnPromptData | undefined;
+    let reconnectedBattleStart: any = undefined;
 
     const orchestrator = new BattleOrchestrator(
       room,
@@ -30,7 +31,11 @@ describe("Disconnect & Reconnect Grace Period", () => {
       clock,
       new InMemoryBattleLogStore(),
       {
-        onBattleStart: () => {},
+        onBattleStart: (side, p) => {
+          if (side === "p2" && reconnectNotified) {
+            reconnectedBattleStart = p;
+          }
+        },
         onTurnPrompt: (side, p) => {
           if (side === "p2") resPrompt = p;
         },
@@ -65,6 +70,11 @@ describe("Disconnect & Reconnect Grace Period", () => {
     // P2 receives refreshed prompt with remaining time
     assert.ok(resPrompt !== undefined);
     assert.strictEqual(resPrompt.remainingMs, 80000); // 90000 - 10000
+
+    // P2 also receives fresh battle state on reconnect
+    assert.ok(reconnectedBattleStart !== undefined);
+    assert.strictEqual(reconnectedBattleStart.playerSide, "p2");
+    assert.strictEqual(reconnectedBattleStart.team.length, 3);
   });
 
   it("forfeits player if grace period expires during disconnect", () => {

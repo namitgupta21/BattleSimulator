@@ -302,4 +302,63 @@ describe("battleReducer", () => {
     expect(state.battle.opponentDisconnected).toBe(true);
     expect(state.battle.opponentGraceDeadline).toBeGreaterThan(Date.now());
   });
+
+  it("immediately transitions to result screen and clears disconnect state on BATTLE_END by disconnect even with currentDialogue active", () => {
+    let state: BattleViewState = {
+      ...initialBattleViewState,
+      screen: "battle",
+      room: {
+        ...initialBattleViewState.room,
+        playerSide: "p1",
+      },
+      battle: {
+        ...initialBattleViewState.battle,
+        opponentDisconnected: true,
+        opponentGraceDeadline: Date.now() + 25000,
+        currentDialogue: "Battle has begun! What will you do?",
+        eventQueue: [],
+      },
+    };
+
+    state = battleReducer(state, {
+      type: "BATTLE_END",
+      payload: {
+        winner: "p1",
+        reason: "disconnect",
+        replayLogId: "replay-dc-1234",
+      },
+    });
+
+    expect(state.screen).toBe("result");
+    expect(state.battle.winner).toBe("p1");
+    expect(state.battle.endReason).toBe("disconnect");
+    expect(state.battle.opponentDisconnected).toBe(false);
+    expect(state.battle.opponentGraceDeadline).toBeNull();
+    expect(state.battle.currentDialogue).toBeNull();
+  });
+
+  it("advances to result screen on ADVANCE_EVENT if winner is set even with empty eventQueue", () => {
+    let state: BattleViewState = {
+      ...initialBattleViewState,
+      screen: "battle",
+      room: {
+        ...initialBattleViewState.room,
+        playerSide: "p1",
+      },
+      battle: {
+        ...initialBattleViewState.battle,
+        winner: "p2",
+        endReason: "knockout",
+        currentDialogue: "Foe Pikachu fainted!",
+        eventQueue: [],
+      },
+    };
+
+    state = battleReducer(state, {
+      type: "ADVANCE_EVENT",
+    });
+
+    expect(state.screen).toBe("result");
+    expect(state.battle.currentDialogue).toBeNull();
+  });
 });

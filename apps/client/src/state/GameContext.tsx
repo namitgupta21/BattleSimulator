@@ -21,7 +21,7 @@ export interface StoredSession {
   sessionToken: string;
 }
 
-function safeGetSession(): StoredSession | null {
+export function safeGetSession(): StoredSession | null {
   try {
     if (typeof window === "undefined" || !window.sessionStorage) return null;
     const raw = sessionStorage.getItem(STORAGE_SESSION_KEY);
@@ -32,7 +32,7 @@ function safeGetSession(): StoredSession | null {
   }
 }
 
-function safeSetSession(session: StoredSession): void {
+export function safeSetSession(session: StoredSession): void {
   try {
     if (typeof window !== "undefined" && window.sessionStorage) {
       sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(session));
@@ -40,7 +40,7 @@ function safeSetSession(session: StoredSession): void {
   } catch {}
 }
 
-function safeRemoveSession(): void {
+export function safeRemoveSession(): void {
   try {
     if (typeof window !== "undefined" && window.sessionStorage) {
       sessionStorage.removeItem(STORAGE_SESSION_KEY);
@@ -73,14 +73,12 @@ export function GameProvider({
     }
   }, [state.room.roomCode, state.room.sessionToken, state.room.playerSide]);
 
-  // Clean up session storage on match end or returning to home
+  // Clean up session storage on match end
   useEffect(() => {
-    if (state.screen === "result" || state.screen === "home") {
-      if (state.battle.winner || state.room.roomCode === null) {
-        safeRemoveSession();
-      }
+    if (state.battle.winner !== null && (state.screen === "result" || state.screen === "home")) {
+      safeRemoveSession();
     }
-  }, [state.screen, state.battle.winner, state.room.roomCode]);
+  }, [state.screen, state.battle.winner]);
 
   // Setup connection event listeners
   useEffect(() => {
@@ -103,6 +101,10 @@ export function GameProvider({
         attemptReconnect();
       }
     });
+
+    if (conn.getStatus() === "connected") {
+      attemptReconnect();
+    }
 
     const unsubJoined = conn.on(ServerEvents.ROOM_JOINED, (payload) => {
       dispatch({ type: "ROOM_JOINED", payload });
@@ -130,7 +132,12 @@ export function GameProvider({
 
     const unsubError = conn.on(ServerEvents.ERROR, (payload) => {
       dispatch({ type: "ERROR_RECEIVED", payload });
-      if (payload.code === "ROOM_NOT_FOUND" || payload.code === "UNAUTHORIZED") {
+      if (
+        payload.code === "ROOM_NOT_FOUND" ||
+        payload.code === "UNAUTHORIZED" ||
+        payload.code === "ROOM_FULL" ||
+        payload.code === "BATTLE_NOT_FOUND"
+      ) {
         safeRemoveSession();
       }
     });
