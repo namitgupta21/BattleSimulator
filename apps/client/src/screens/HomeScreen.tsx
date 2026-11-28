@@ -3,6 +3,8 @@ import { useGame } from "../state/GameContext.js";
 import { useMenuNavigation } from "../navigation/useMenuNavigation.js";
 import { useRegisterNav } from "../navigation/NavigationContext.js";
 
+const DISABLED_MENU_INDICES = [1]; // Single Player is coming soon
+
 export const HomeScreen: React.FC = () => {
   const { state, dispatch } = useGame();
   const [name, setName] = useState(state.playerName);
@@ -16,7 +18,7 @@ export const HomeScreen: React.FC = () => {
   const menu = useMenuNavigation({
     itemCount: 2,
     columns: 1,
-    disabledIndices: [1], // Single Player is coming soon
+    disabledIndices: DISABLED_MENU_INDICES,
     onSelect: (idx) => {
       if (idx === 0) {
         dispatch({ type: "SET_SCREEN", screen: "create-join" });

@@ -128,4 +128,23 @@ describe("PartyIcon Component", () => {
     expect(screen.queryByText(/pikachu/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/#/)).not.toBeInTheDocument();
   });
+
+  it("includes colored hover tooltip displaying level and HP without native browser title", () => {
+    render(
+      <PartyIcon
+        speciesId="22"
+        name="Fearow"
+        level={50}
+        hpPercent={72}
+        tooltipPosition="bottom"
+      />
+    );
+
+    const root = screen.getByRole("img", { name: "Fearow, 72% HP" });
+    expect(root).not.toHaveAttribute("title");
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip).toHaveTextContent("Fearow");
+    expect(tooltip).toHaveTextContent("Lv.50");
+    expect(tooltip).toHaveTextContent("HP: ~72%");
+  });
 });

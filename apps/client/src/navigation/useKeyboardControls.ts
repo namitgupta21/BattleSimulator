@@ -35,6 +35,7 @@ export function useKeyboardControls(handlers: KeyboardControlHandlers) {
 
       if (isInput && e.key !== "Escape") {
         if (e.key === "Enter" && h.onEnter) {
+          e.preventDefault();
           h.onEnter();
         }
         return;

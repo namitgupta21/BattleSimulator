@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface MenuNavigationOptions {
   itemCount: number;
@@ -28,6 +28,13 @@ export function useMenuNavigation({
     return Math.min(Math.max(0, initialIndex), Math.max(0, itemCount - 1));
   });
 
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+  const onCancelRef = useRef(onCancel);
+  onCancelRef.current = onCancel;
+  const disabledRef = useRef(disabledIndices);
+  disabledRef.current = disabledIndices;
+
   useEffect(() => {
     if (itemCount > 0 && selectedIndex >= itemCount) {
       setSelectedIndex(itemCount - 1);
@@ -35,8 +42,8 @@ export function useMenuNavigation({
   }, [itemCount, selectedIndex]);
 
   const isIndexDisabled = useCallback(
-    (idx: number) => disabledIndices.includes(idx),
-    [disabledIndices]
+    (idx: number) => disabledRef.current.includes(idx),
+    []
   );
 
   const findNextValid = useCallback(
@@ -78,14 +85,14 @@ export function useMenuNavigation({
   }, [findNextValid]);
 
   const select = useCallback(() => {
-    if (!isIndexDisabled(selectedIndex) && onSelect) {
-      onSelect(selectedIndex);
+    if (!isIndexDisabled(selectedIndex)) {
+      onSelectRef.current?.(selectedIndex);
     }
-  }, [isIndexDisabled, selectedIndex, onSelect]);
+  }, [isIndexDisabled, selectedIndex]);
 
   const cancel = useCallback(() => {
-    onCancel?.();
-  }, [onCancel]);
+    onCancelRef.current?.();
+  }, []);
 
   return {
     selectedIndex,

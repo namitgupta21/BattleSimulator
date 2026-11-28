@@ -7,7 +7,7 @@ interface MoveGridProps {
   legalActions: Action[];
   selectedIndex: number;
   onSelectIndex: (idx: number) => void;
-  onConfirm: () => void;
+  onConfirm: (moveIdx: number) => void;
   onOpenSwitch: () => void;
   onForfeit?: () => void;
   disabled?: boolean;
@@ -48,7 +48,7 @@ export const MoveGrid: React.FC<MoveGridProps> = ({
               disabled={!legal}
               onClick={() => {
                 onSelectIndex(idx);
-                if (legal) onConfirm();
+                if (legal) onConfirm(idx);
               }}
               aria-label={`Move ${idx + 1}: ${move.name}, ${move.type} type, ${move.currentPp} of ${move.maxPp} PP`}
               className={`relative flex flex-col justify-between p-2 rounded-lg border-2 text-left transition-all min-h-[52px] ${

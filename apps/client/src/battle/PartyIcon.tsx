@@ -18,12 +18,13 @@ export interface PartyIconProps {
   onClick?: () => void;
   className?: string;
   size?: "sm" | "md" | "lg";
+  tooltipPosition?: "top" | "bottom";
 }
 
 export const PartyIcon: React.FC<PartyIconProps> = ({
   speciesId,
   name = "Pokémon",
-  level: _level = 50,
+  level = 50,
   currentHp,
   maxHp,
   hpPercent,
@@ -36,6 +37,7 @@ export const PartyIcon: React.FC<PartyIconProps> = ({
   onClick,
   className = "",
   size = "md",
+  tooltipPosition = "top",
 }) => {
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
@@ -183,14 +185,37 @@ export const PartyIcon: React.FC<PartyIconProps> = ({
       data-testid="party-icon-root"
       data-active={isActive}
       data-fainted={actuallyFainted}
-      className={`relative inline-flex items-center justify-center rounded-lg border-2 bg-slate-900/80 transition-all ${sizeClasses} ${hpRingColor} ${
+      className={`group relative inline-flex items-center justify-center rounded-lg border-2 bg-slate-900/80 transition-all ${sizeClasses} ${hpRingColor} ${
         isFocused
           ? "ring-2 ring-cyan-400 border-cyan-300 scale-105 shadow-md z-20"
-          : "hover:scale-[1.02]"
+          : "hover:scale-[1.02] hover:z-30"
       } ${actuallyFainted ? "opacity-45 grayscale" : "opacity-100"} ${
         onClick ? "cursor-pointer" : "cursor-default"
       } ${className}`}
     >
+      {/* Hover Tooltip with Pokémon Name, Level & HP */}
+      {!isAnonymous && (
+        <div
+          role="tooltip"
+          className={`pointer-events-none hidden group-hover:flex flex-col items-start whitespace-nowrap px-2 py-1 rounded bg-slate-950/95 text-white border border-slate-700 shadow-lg z-40 text-[8px] font-mono leading-tight ${
+            tooltipPosition === "bottom"
+              ? "absolute top-full left-0 mt-1"
+              : "absolute bottom-full right-0 mb-1"
+          }`}
+        >
+          <span className="font-bold uppercase text-cyan-300">
+            {name} <span className="text-slate-300">Lv.{level}</span>
+          </span>
+          <span className={actuallyFainted ? "text-red-400 font-bold" : "text-emerald-300"}>
+            {actuallyFainted
+              ? "FAINTED (0% HP)"
+              : currentHp !== undefined && maxHp !== undefined
+              ? `HP: ${currentHp}/${maxHp} (${Math.round(calcHpPercent)}%)`
+              : `HP: ~${Math.round(calcHpPercent)}%`}
+            {statusInfo ? ` [${statusInfo.label}]` : ""}
+          </span>
+        </div>
+      )}
       {/* Icon Graphic */}
       <div className="relative flex items-center justify-center w-full h-full p-0.5 overflow-hidden">
         {isAnonymous ? (
@@ -229,7 +254,6 @@ export const PartyIcon: React.FC<PartyIconProps> = ({
       {isActive && (
         <span
           data-testid="party-icon-active-badge"
-          title="Active Pokémon"
           className="absolute -top-1 -right-1 px-1 py-0.2 rounded-full bg-cyan-400 text-slate-950 text-[6px] font-black uppercase tracking-tighter border border-slate-900 shadow-sm"
           aria-hidden="true"
         >
