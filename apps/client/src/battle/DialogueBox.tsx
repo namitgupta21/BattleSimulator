@@ -7,6 +7,7 @@ export interface DialogueBoxHandle {
 interface DialogueBoxProps {
   message: string | null;
   onAdvance?: () => void;
+  onSkip?: () => void;
   onCancel?: () => void;
   isWaiting?: boolean;
 }
@@ -14,6 +15,7 @@ interface DialogueBoxProps {
 export const DialogueBox = forwardRef<DialogueBoxHandle, DialogueBoxProps>(({
   message,
   onAdvance,
+  onSkip,
   onCancel,
   isWaiting = false,
 }, ref) => {
@@ -81,11 +83,27 @@ export const DialogueBox = forwardRef<DialogueBoxHandle, DialogueBoxProps>(({
         </button>
       )}
 
-      {onAdvance && !isWaiting && isComplete && (
-        <span aria-hidden="true" className="text-[10px] text-cyan-400 animate-bounce">
-          ▼
-        </span>
-      )}
+      <div className="flex items-center gap-2 flex-shrink-0">
+        {!isWaiting && onSkip && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSkip();
+            }}
+            aria-label="Skip remaining turn dialogue"
+            className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-cyan-300 rounded text-[8px] font-bold border border-slate-700 transition-all"
+          >
+            SKIP ⏭
+          </button>
+        )}
+
+        {onAdvance && !isWaiting && isComplete && (
+          <span aria-hidden="true" className="text-[10px] text-cyan-400 animate-bounce">
+            ▼
+          </span>
+        )}
+      </div>
     </div>
   );
 });

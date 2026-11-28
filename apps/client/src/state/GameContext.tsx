@@ -37,7 +37,7 @@ export function safeSetSession(session: StoredSession): void {
     if (typeof window !== "undefined" && window.sessionStorage) {
       sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(session));
     }
-  } catch {}
+  } catch { }
 }
 
 export function safeRemoveSession(): void {
@@ -45,7 +45,7 @@ export function safeRemoveSession(): void {
     if (typeof window !== "undefined" && window.sessionStorage) {
       sessionStorage.removeItem(STORAGE_SESSION_KEY);
     }
-  } catch {}
+  } catch { }
 }
 
 export function GameProvider({
@@ -85,13 +85,14 @@ export function GameProvider({
     const attemptReconnect = () => {
       const session = safeGetSession();
       if (session && session.roomCode && session.sessionToken) {
+        dispatch({ type: "MARK_RECONNECTING" });
         const reconnectPayload: ClientEventMap[typeof ClientEvents.ROOM_RECONNECT] = {
           roomCode: session.roomCode,
           sessionToken: session.sessionToken,
         };
         try {
           conn.emit(ClientEvents.ROOM_RECONNECT, reconnectPayload);
-        } catch {}
+        } catch { }
       }
     };
 

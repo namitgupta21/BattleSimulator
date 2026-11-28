@@ -56,9 +56,7 @@ To build and run this project on any machine, ensure you have a modern **C++17 c
 1. **Compiler**: Install [Visual Studio 2022](https://visualstudio.microsoft.com/) (select **"Desktop development with C++"**) **OR** install [MinGW-w64](https://www.mingw-w64.org/) / [MSYS2](https://www.msys2.org/).
 2. **CMake**: Install [CMake](https://cmake.org/download/) (select *"Add CMake to the system PATH"*).
 3. **Git**: Install [Git for Windows](https://git-scm.com/).
-4. **Python**: Install [Python 3.10+](https://www.python.org/downloads/) (check *"Add Python to PATH"*).
-
-### 🐧 Ubuntu / Debian Linux
+4. **Python**: Install [Python 3.10+](https://www.python.org/downloads/) (check *"Add Python to PATH"*).### 🐧 Ubuntu / Debian Linux
 Run the following in your terminal:
 ```bash
 sudo apt-get update
@@ -440,7 +438,7 @@ A handheld, clamshell Pokédex-style web client built with **React**, **TypeScri
 * **Right Screen (Battle Intel & Event Log)**:
   * On desktop and tablet viewports ($\ge 768\text{px}$), renders side-by-side with the center hinge.
   * On mobile phones ($< 768\text{px}$), accessible via the **"LOG"** slide-over drawer button with an unread badge counter.
-* **Deterministic Event Playback**: Server turns play out sequentially in a typewriter dialogue box with skippable fast-forward.
+* **Deterministic Event Playback & Battle Animations**: Server turns play out sequentially with GPU-composited retro-LCD sprite animations (entrance, switch-out, damage shake/dim, faint drop synced with HP bar drain, and sprite-ready preload gating). Playback remains skippable, honors `prefers-reduced-motion` (short opacity fade only, no movement/scaling), and supports speed multiplier overrides (`0` = instant) synced via CSS custom properties.
 * **Clock-Skew Corrected 90s Timer**: Accurately computes $\Delta_{\text{skew}}$ against server timestamps; hidden when timer is disabled.
 * **Visual Assets & Sprite Architecture**:
   * **Main Battle Sprites**: Gen 5 Black/White animated GIFs (front & back) with crisp integer pixel scaling (`image-rendering: pixelated`).

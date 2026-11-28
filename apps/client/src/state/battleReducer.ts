@@ -1,5 +1,54 @@
-import type { BattleEventData, RoomPlayerInfo } from "@pokemon/protocol";
+import type { BattleEventData, OpponentPublicPokemon, OpponentPublicState, RoomPlayerInfo } from "@pokemon/protocol";
 import type { BattleAction, BattleViewState, LcdTheme, LogEntry } from "./types.js";
+
+/**
+ * Merges server `revealedBench` (if present) with previously observed opponent active Pokémon
+ * from earlier turns so revealed foe bench members always stay visible (while strictly obeying Fog of War).
+ */
+function normalizeOpponentPublic(
+  incoming: OpponentPublicState,
+  previous: OpponentPublicState | null,
+  events: BattleEventData[],
+  mySide: "p1" | "p2" | null
+): OpponentPublicState {
+  if (incoming.revealedBench !== undefined) {
+    return incoming;
+  }
+
+  const seenBySpecies = new Map<string, OpponentPublicPokemon>();
+  for (const prevBench of previous?.revealedBench ?? []) {
+    seenBySpecies.set(prevBench.speciesId.toLowerCase(), { ...prevBench });
+  }
+  if (previous?.active) {
+    seenBySpecies.set(previous.active.speciesId.toLowerCase(), { ...previous.active });
+  }
+
+  // Apply faint status from turn events (e.g. if previous active fainted before switching)
+  for (const evt of events) {
+    if (evt.type === "Fainted" && evt.side !== mySide && evt.pokemon) {
+      const targetName = evt.pokemon.toLowerCase();
+      for (const [key, mon] of seenBySpecies.entries()) {
+        if (mon.name.toLowerCase() === targetName || key === targetName) {
+          seenBySpecies.set(key, { ...mon, hpPercent: 0 });
+        }
+      }
+    }
+  }
+
+  // Exclude the currently active opponent Pokémon from the bench list
+  const activeId = incoming.active?.speciesId.toLowerCase();
+  const revealedBench: OpponentPublicPokemon[] = [];
+  for (const [key, mon] of seenBySpecies.entries()) {
+    if (key !== activeId) {
+      revealedBench.push(mon);
+    }
+  }
+
+  return {
+    ...incoming,
+    revealedBench,
+  };
+}
 
 function safeGetStorage(key: string, fallback: string): string {
   try {
@@ -33,6 +82,7 @@ export const initialBattleViewState: BattleViewState = {
     config: null,
     state: null,
     players: [],
+    isReconnecting: false,
   },
 
   battle: {
@@ -56,6 +106,10 @@ export const initialBattleViewState: BattleViewState = {
     opponentDisconnected: false,
     opponentGraceDeadline: null,
     activeTab: "moves",
+    isResync: false,
+    battleStartSeq: 0,
+    turnResultSeq: 0,
+    lastTurnEvents: [],
   },
 
   ui: {
@@ -115,6 +169,15 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
       return {
         ...state,
         connectionStatus: action.status,
+      };
+
+    case "MARK_RECONNECTING":
+      return {
+        ...state,
+        room: {
+          ...state.room,
+          isReconnecting: true,
+        },
       };
 
     case "SET_PLAYER_NAME":
@@ -205,6 +268,13 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
 
     case "BATTLE_START": {
       const resolvedSide = action.payload.playerSide ?? state.room.playerSide;
+      const isResync = Boolean(state.room.isReconnecting);
+      const startOppPublic = normalizeOpponentPublic(
+        action.payload.opponentPublic,
+        null,
+        [],
+        resolvedSide
+      );
       const startLog: LogEntry = {
         id: `start-${Date.now()}`,
         turnNumber: 0,
@@ -217,26 +287,30 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
         room: {
           ...state.room,
           playerSide: resolvedSide,
+          isReconnecting: false,
         },
         battle: {
           ...state.battle,
           seed: action.payload.seed,
           myTeam: action.payload.team,
           activePokemonIndex: action.payload.activeIndex ?? 0,
-          opponentPublic: action.payload.opponentPublic,
+          opponentPublic: startOppPublic,
           turnNumber: 1,
           phase: "ActionSelection",
           turnPrompt: null,
           isSubmitting: false,
           waitingForOpponent: false,
           eventQueue: [],
-          currentDialogue: "Battle has begun! What will you do?",
+          currentDialogue: isResync ? null : "Battle has begun! What will you do?",
           logEntries: [startLog],
           unreadLogCount: state.battle.isLogOpen ? 0 : 1,
           winner: null,
           endReason: null,
           replayLogId: null,
           activeTab: "moves",
+          isResync,
+          battleStartSeq: state.battle.battleStartSeq + 1,
+          lastTurnEvents: [],
         },
         ui: {
           ...state.ui,
@@ -251,18 +325,21 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
         ((state.room.playerSide === "p1" && action.payload.phase !== "ForcedSwitchP2") ||
           (state.room.playerSide === "p2" && action.payload.phase !== "ForcedSwitchP1"));
 
-      const hasPendingEvents = state.battle.eventQueue.length > 0;
+      const isReconnectGreeting =
+        state.battle.currentDialogue === "Battle has begun! What will you do?" &&
+        (action.payload.turnNumber > 1 || state.battle.turnNumber > 1);
+      const isStaleWaiting = state.battle.currentDialogue === "Waiting for opponent...";
 
-      // If events are still playing, do not overwrite current dialogue
-      let nextDialogue = state.battle.currentDialogue;
-      if (!hasPendingEvents) {
-        if (isForcedSwitch) {
-          nextDialogue = null;
-        } else if (action.payload.legalActions.length === 0) {
-          nextDialogue = "Waiting for opponent...";
-        } else if (action.payload.turnNumber > 1 || state.battle.turnNumber > 1) {
-          nextDialogue = null;
-        }
+      const hasPendingDialogue =
+        state.battle.eventQueue.length > 0 ||
+        (state.battle.currentDialogue !== null && !isReconnectGreeting && !isStaleWaiting);
+
+      // If events or turn dialogue are still playing, do not overwrite current dialogue
+      let nextDialogue = isReconnectGreeting || isStaleWaiting ? null : state.battle.currentDialogue;
+      if (!hasPendingDialogue) {
+        nextDialogue = !isForcedSwitch && action.payload.legalActions.length === 0
+          ? "Waiting for opponent..."
+          : null;
       }
 
       return {
@@ -275,7 +352,7 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
           isSubmitting: false,
           waitingForOpponent: !isForcedSwitch && action.payload.legalActions.length === 0,
           activeTab: isForcedSwitch ? "switch" : state.battle.activeTab,
-          currentDialogue: isForcedSwitch ? null : nextDialogue,
+          currentDialogue: isForcedSwitch && !hasPendingDialogue ? null : nextDialogue,
         },
       };
     }
@@ -324,7 +401,12 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
         : null;
 
       // Preserve previous opponent active with 0% HP if server sent null (e.g. knocked out this turn)
-      let resolvedOpponentPublic = action.payload.opponentPublic;
+      let resolvedOpponentPublic = normalizeOpponentPublic(
+        action.payload.opponentPublic,
+        state.battle.opponentPublic,
+        action.payload.events,
+        resolvedSide
+      );
       if (!resolvedOpponentPublic.active && state.battle.opponentPublic?.active) {
         resolvedOpponentPublic = {
           ...resolvedOpponentPublic,
@@ -355,6 +437,9 @@ export function battleReducer(state: BattleViewState, action: BattleAction): Bat
             : state.battle.unreadLogCount + newLogs.length,
           waitingForOpponent: false,
           isSubmitting: false,
+          isResync: false,
+          turnResultSeq: state.battle.turnResultSeq + 1,
+          lastTurnEvents: action.payload.events,
         },
       };
     }

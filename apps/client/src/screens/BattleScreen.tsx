@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   ClientEvents,
   type ClientEventMap,
+  type OpponentPublicState,
+  type PlayerPokemon,
 } from "@pokemon/protocol";
 import { useGame } from "../state/GameContext.js";
 import { useRegisterNav } from "../navigation/NavigationContext.js";
@@ -11,16 +14,183 @@ import { MoveGrid } from "../battle/MoveGrid.js";
 import { SwitchMenu } from "../battle/SwitchMenu.js";
 import { TurnCountdown } from "../battle/TurnCountdown.js";
 import { preloadPokemonSprites } from "../battle/spritePreloader.js";
+import { usePrefersReducedMotion } from "../battle/usePrefersReducedMotion.js";
+import { getAnimationSpeedMultiplier } from "../battle/animationConfig.js";
+import { BattleEventSequencer, type VisualPlaybackSnapshot } from "../battle/eventSequencer.js";
 
 export const BattleScreen: React.FC = () => {
   const { state, dispatch, connection } = useGame();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [showForfeitModal, setShowForfeitModal] = useState(false);
   const [moveCursorIdx, setMoveCursorIdx] = useState(0);
   const [switchCursorIdx, setSwitchCursorIdx] = useState(0);
   const dialogueBoxRef = useRef<DialogueBoxHandle>(null);
 
-  let effectiveActiveIndex = state.battle.activePokemonIndex;
-  const rawActive = state.battle.myTeam[effectiveActiveIndex];
+  const [playbackSnap, setPlaybackSnap] = useState<VisualPlaybackSnapshot | null>(null);
+  const sequencerRef = useRef<BattleEventSequencer | null>(null);
+  if (!sequencerRef.current) {
+    sequencerRef.current = new BattleEventSequencer((snap) => setPlaybackSnap({ ...snap }));
+  }
+
+  const lastBattleStartSeqRef = useRef<number>(0);
+  const lastTurnResultSeqRef = useRef<number>(0);
+  const prevSettledRef = useRef<{
+    playerTeam: PlayerPokemon[];
+    playerActiveIndex: number;
+    opponentPublic: OpponentPublicState | null;
+  }>({
+    playerTeam: state.battle.myTeam,
+    playerActiveIndex: state.battle.activePokemonIndex,
+    opponentPublic: state.battle.opponentPublic,
+  });
+  const pendingTargetRef = useRef<{
+    playerTeam: PlayerPokemon[];
+    playerActiveIndex: number;
+    opponentPublic: OpponentPublicState | null;
+  } | null>(null);
+
+  // Keep latest state snapshot in a ref so playback trigger effects only depend on seq counters
+  const latestBattleRef = useRef({
+    myTeam: state.battle.myTeam,
+    activePokemonIndex: state.battle.activePokemonIndex,
+    opponentPublic: state.battle.opponentPublic,
+    lastTurnEvents: state.battle.lastTurnEvents,
+    isResync: state.battle.isResync,
+    playerSide: state.room.playerSide,
+    prefersReducedMotion,
+  });
+  latestBattleRef.current = {
+    myTeam: state.battle.myTeam,
+    activePokemonIndex: state.battle.activePokemonIndex,
+    opponentPublic: state.battle.opponentPublic,
+    lastTurnEvents: state.battle.lastTurnEvents,
+    isResync: state.battle.isResync,
+    playerSide: state.room.playerSide,
+    prefersReducedMotion,
+  };
+
+  useEffect(() => {
+    const seq = sequencerRef.current;
+    seq?.revive();
+    return () => {
+      seq?.destroy();
+    };
+  }, []);
+
+  // Trigger entrance playback on battle start (StrictMode-safe cleanup allows remount re-run)
+  useEffect(() => {
+    const seqNum = state.battle.battleStartSeq;
+    if (seqNum <= 0 || seqNum === lastBattleStartSeqRef.current) {
+      return;
+    }
+
+    const latest = latestBattleRef.current;
+    prevSettledRef.current = {
+      playerTeam: latest.myTeam,
+      playerActiveIndex: latest.activePokemonIndex,
+      opponentPublic: latest.opponentPublic,
+    };
+    pendingTargetRef.current = null;
+
+    const seq = sequencerRef.current;
+    seq?.revive();
+    seq?.playBattleStart({
+      playerTeam: latest.myTeam,
+      playerActiveIndex: latest.activePokemonIndex,
+      opponentPublic: latest.opponentPublic,
+      isResync: latest.isResync,
+      prefersReducedMotion: latest.prefersReducedMotion,
+      autoAdvance: false,
+      onComplete: () => {
+        lastBattleStartSeqRef.current = seqNum;
+        dispatch({ type: "SKIP_EVENTS" });
+      },
+    });
+
+    return () => {
+      if (lastBattleStartSeqRef.current !== seqNum) {
+        seq?.cancel();
+      }
+    };
+  }, [state.battle.battleStartSeq, dispatch]);
+
+  // Trigger turn result playback when new events arrive (auto-cancelling any mid-flight prior turn)
+  useEffect(() => {
+    const seqNum = state.battle.turnResultSeq;
+    if (seqNum <= 0 || seqNum === lastTurnResultSeqRef.current) {
+      return;
+    }
+
+    const latest = latestBattleRef.current;
+    // If previous turn was interrupted mid-playback, start from its committed target state
+    const prev = pendingTargetRef.current ?? prevSettledRef.current;
+    const nextTarget = {
+      playerTeam: latest.myTeam,
+      playerActiveIndex: latest.activePokemonIndex,
+      opponentPublic: latest.opponentPublic,
+    };
+    pendingTargetRef.current = nextTarget;
+
+    const seq = sequencerRef.current;
+    seq?.revive();
+    seq?.playTurnResult({
+      prevPlayerTeam: prev.playerTeam,
+      prevPlayerActiveIndex: prev.playerActiveIndex,
+      prevOpponentPublic: prev.opponentPublic,
+      nextPlayerTeam: nextTarget.playerTeam,
+      nextPlayerActiveIndex: nextTarget.playerActiveIndex,
+      nextOpponentPublic: nextTarget.opponentPublic,
+      events: latest.lastTurnEvents,
+      mySide: latest.playerSide,
+      prefersReducedMotion: latest.prefersReducedMotion,
+      autoAdvance: false,
+      onComplete: () => {
+        lastTurnResultSeqRef.current = seqNum;
+        prevSettledRef.current = nextTarget;
+        pendingTargetRef.current = null;
+        dispatch({ type: "SKIP_EVENTS" });
+      },
+    });
+
+    return () => {
+      if (lastTurnResultSeqRef.current !== seqNum) {
+        seq?.cancel();
+      }
+    };
+  }, [state.battle.turnResultSeq, dispatch]);
+
+  // Hold previous settled HPs on the initial TURN_RESULT render pass before useEffect starts
+  // sequential playback, preventing both HealthBars from draining simultaneously on frame 1.
+  const hasPendingTurnPlayback =
+    !playbackSnap?.isPlaying &&
+    state.battle.turnResultSeq > 0 &&
+    state.battle.turnResultSeq !== lastTurnResultSeqRef.current &&
+    getAnimationSpeedMultiplier() > 0 &&
+    state.battle.lastTurnEvents.some((e) => e.type !== "TurnStarted" && e.type !== "TurnEnded");
+
+  const isPlaybackActive = Boolean(playbackSnap?.isPlaying) || hasPendingTurnPlayback;
+  const displayedTeam = hasPendingTurnPlayback
+    ? prevSettledRef.current.playerTeam
+    : isPlaybackActive && playbackSnap
+    ? playbackSnap.playerTeam
+    : state.battle.myTeam;
+  const displayedOpponent = hasPendingTurnPlayback
+    ? prevSettledRef.current.opponentPublic
+    : isPlaybackActive && playbackSnap
+    ? playbackSnap.opponentPublic
+    : state.battle.opponentPublic;
+  const activeDialogue = hasPendingTurnPlayback
+    ? state.battle.currentDialogue
+    : isPlaybackActive && playbackSnap?.currentDialogue
+    ? playbackSnap.currentDialogue
+    : state.battle.currentDialogue;
+
+  let effectiveActiveIndex = hasPendingTurnPlayback
+    ? prevSettledRef.current.playerActiveIndex
+    : isPlaybackActive && playbackSnap
+    ? playbackSnap.playerActiveIndex
+    : state.battle.activePokemonIndex;
+  const rawActive = displayedTeam[effectiveActiveIndex];
   const isForcedSwitch =
     state.battle.phase.startsWith("ForcedSwitch") &&
     ((state.room.playerSide === "p1" && state.battle.phase !== "ForcedSwitchP2") ||
@@ -28,13 +198,13 @@ export const BattleScreen: React.FC = () => {
 
   // If in ActionSelection and active Pokémon has fainted, automatically use first living Pokémon
   if (!isForcedSwitch && rawActive && rawActive.currentHp <= 0) {
-    const aliveIdx = state.battle.myTeam.findIndex((p) => p.currentHp > 0);
+    const aliveIdx = displayedTeam.findIndex((p) => p.currentHp > 0);
     if (aliveIdx !== -1) {
       effectiveActiveIndex = aliveIdx;
     }
   }
 
-  const activePoke = state.battle.myTeam[effectiveActiveIndex];
+  const activePoke = displayedTeam[effectiveActiveIndex];
   const legalActions = state.battle.turnPrompt?.legalActions || [];
 
   const isMoveLegal = (moveIdx: number) => {
@@ -44,14 +214,19 @@ export const BattleScreen: React.FC = () => {
   // Auto-select first legal alive bench Pokémon when entering switch menu or forced switch
   useEffect(() => {
     if (isForcedSwitch || state.battle.activeTab === "switch") {
-      const firstValidIdx = state.battle.myTeam.findIndex(
-        (p, idx) => idx !== state.battle.activePokemonIndex && p.currentHp > 0
-      );
-      if (firstValidIdx !== -1) {
-        setSwitchCursorIdx(firstValidIdx);
+      const currentTarget = state.battle.myTeam[switchCursorIdx];
+      const currentIsValid =
+        currentTarget && currentTarget.currentHp > 0 && switchCursorIdx !== effectiveActiveIndex;
+      if (!currentIsValid) {
+        const firstValidIdx = state.battle.myTeam.findIndex(
+          (p, idx) => idx !== effectiveActiveIndex && p.currentHp > 0
+        );
+        if (firstValidIdx !== -1) {
+          setSwitchCursorIdx(firstValidIdx);
+        }
       }
     }
-  }, [isForcedSwitch, state.battle.activeTab, state.battle.activePokemonIndex, state.battle.myTeam]);
+  }, [isForcedSwitch, state.battle.activeTab, effectiveActiveIndex, state.battle.myTeam, switchCursorIdx]);
 
   // Preload local team battle sprites & icons on battle start
   useEffect(() => {
@@ -113,6 +288,21 @@ export const BattleScreen: React.FC = () => {
     setShowForfeitModal(false);
   };
 
+  const dispatchAdvanceEvent = () => {
+    if (state.battle.waitingForOpponent) return;
+    if (sequencerRef.current?.getSnapshot().isPlaying) {
+      sequencerRef.current.advance();
+    } else {
+      dispatch({ type: "ADVANCE_EVENT" });
+    }
+  };
+
+  const handleSkipPlayback = () => {
+    if (state.battle.waitingForOpponent) return;
+    sequencerRef.current?.skip();
+    dispatch({ type: "SKIP_EVENTS" });
+  };
+
   const handleAdvanceDialogue = () => {
     if (state.battle.waitingForOpponent) return;
     if (dialogueBoxRef.current) {
@@ -131,7 +321,7 @@ export const BattleScreen: React.FC = () => {
   useRegisterNav({
     onUp: () => {
       if (showForfeitModal) return;
-      if (state.battle.currentDialogue) return;
+      if (activeDialogue) return;
       if (state.battle.activeTab === "switch" || isForcedSwitch) {
         const teamLen = state.battle.myTeam.length;
         if (teamLen === 0) return;
@@ -151,7 +341,7 @@ export const BattleScreen: React.FC = () => {
     },
     onDown: () => {
       if (showForfeitModal) return;
-      if (state.battle.currentDialogue) return;
+      if (activeDialogue) return;
       if (state.battle.activeTab === "switch" || isForcedSwitch) {
         const teamLen = state.battle.myTeam.length;
         if (teamLen === 0) return;
@@ -171,7 +361,7 @@ export const BattleScreen: React.FC = () => {
     },
     onLeft: () => {
       if (showForfeitModal) return;
-      if (state.battle.currentDialogue) return;
+      if (activeDialogue) return;
       if (state.battle.activeTab === "switch" || isForcedSwitch) {
         const teamLen = state.battle.myTeam.length;
         if (teamLen === 0) return;
@@ -191,7 +381,7 @@ export const BattleScreen: React.FC = () => {
     },
     onRight: () => {
       if (showForfeitModal) return;
-      if (state.battle.currentDialogue) return;
+      if (activeDialogue) return;
       if (state.battle.activeTab === "switch" || isForcedSwitch) {
         const teamLen = state.battle.myTeam.length;
         if (teamLen === 0) return;
@@ -219,7 +409,7 @@ export const BattleScreen: React.FC = () => {
       if (state.battle.waitingForOpponent) {
         return;
       }
-      if (state.battle.currentDialogue) {
+      if (activeDialogue) {
         handleAdvanceDialogue();
         return;
       }
@@ -256,7 +446,9 @@ export const BattleScreen: React.FC = () => {
     switchCursorIdx,
     showForfeitModal,
     activePoke,
-    state.battle.myTeam.length,
+    effectiveActiveIndex,
+    state.battle.myTeam,
+    state.battle.turnPrompt,
     state.battle.isSubmitting,
     state.battle.waitingForOpponent,
   ]);
@@ -288,12 +480,20 @@ export const BattleScreen: React.FC = () => {
         turnDurationSeconds={state.room.config?.turnDurationSeconds}
       />
 
-      {/* Arena Graphic View with animated sprites and bench reserve strips */}
+      {/* Arena Graphic View with animated sprites, playback states, and bench reserve strips */}
       <ArenaView
         playerPokemon={activePoke}
-        playerTeam={state.battle.myTeam}
+        playerTeam={displayedTeam}
         activePokemonIndex={effectiveActiveIndex}
-        opponentPublic={state.battle.opponentPublic}
+        opponentPublic={displayedOpponent}
+        playerAnimState={playbackSnap?.playerAnimState ?? "idle"}
+        opponentAnimState={playbackSnap?.opponentAnimState ?? "idle"}
+        playerHit={playbackSnap?.playerHit ?? false}
+        opponentHit={playbackSnap?.opponentHit ?? false}
+        playerEntrySeq={playbackSnap?.playerEntrySeq ?? 0}
+        opponentEntrySeq={playbackSnap?.opponentEntrySeq ?? 0}
+        playerHpOverride={!hasPendingTurnPlayback && isPlaybackActive ? playbackSnap?.playerActiveHpOverride : undefined}
+        opponentHpPercentOverride={!hasPendingTurnPlayback && isPlaybackActive ? playbackSnap?.opponentActiveHpOverride : undefined}
         onSelectBenchSlot={(idx) => {
           if (!isForcedSwitch) {
             dispatch({ type: "SET_ACTIVE_TAB", tab: "switch" });
@@ -304,11 +504,12 @@ export const BattleScreen: React.FC = () => {
 
       {/* Interactive Lower Controls: Dialogue Box, Switch Menu, or Move Grid */}
       <div className="flex flex-col w-full p-1 bg-slate-900/10 rounded border-t border-slate-900/30 flex-shrink-0">
-        {state.battle.currentDialogue ? (
+        {activeDialogue ? (
           <DialogueBox
             ref={dialogueBoxRef}
-            message={state.battle.currentDialogue}
-            onAdvance={handleAdvanceDialogue}
+            message={activeDialogue}
+            onAdvance={dispatchAdvanceEvent}
+            onSkip={!state.battle.waitingForOpponent ? handleSkipPlayback : undefined}
             onCancel={state.battle.waitingForOpponent ? handleCancelAction : undefined}
             isWaiting={state.battle.waitingForOpponent}
           />
@@ -336,7 +537,7 @@ export const BattleScreen: React.FC = () => {
             legalActions={legalActions}
             selectedIndex={moveCursorIdx}
             onSelectIndex={setMoveCursorIdx}
-            onConfirm={() => handleSelectMove(moveCursorIdx)}
+            onConfirm={handleSelectMove}
             onOpenSwitch={() => dispatch({ type: "SET_ACTIVE_TAB", tab: "switch" })}
             onForfeit={() => setShowForfeitModal(true)}
             disabled={state.battle.isSubmitting || state.battle.waitingForOpponent}
@@ -344,37 +545,40 @@ export const BattleScreen: React.FC = () => {
         )}
       </div>
 
-      {/* Forfeit Confirmation Modal */}
-      {showForfeitModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
-        >
-          <div className="flex flex-col gap-3 p-4 rounded-xl bg-pokedex-darkred border-2 border-slate-950 text-white max-w-xs text-center shadow-2xl">
-            <h3 className="text-xs font-bold text-amber-300">CONFIRM FORFEIT?</h3>
-            <p className="text-[9px] leading-relaxed">
-              Are you sure you want to surrender this battle? The victory will be awarded to your opponent.
-            </p>
-            <div className="flex gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowForfeitModal(false)}
-                className="flex-1 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-[9px] font-bold"
-              >
-                CANCEL [B]
-              </button>
-              <button
-                type="button"
-                onClick={handleForfeit}
-                className="flex-1 py-1.5 rounded bg-red-600 hover:bg-red-500 text-[9px] font-bold text-white shadow"
-              >
-                YES, FORFEIT
-              </button>
+      {/* Forfeit Confirmation Modal (portaled to document.body to sit above both Pokédex screens) */}
+      {showForfeitModal && (() => {
+        const modal = (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
+          >
+            <div className="flex flex-col gap-3 p-4 rounded-xl bg-pokedex-darkred border-2 border-slate-950 text-white max-w-xs text-center shadow-2xl">
+              <h3 className="text-xs font-bold text-amber-300">CONFIRM FORFEIT?</h3>
+              <p className="text-[9px] leading-relaxed">
+                Are you sure you want to surrender this battle? The victory will be awarded to your opponent.
+              </p>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowForfeitModal(false)}
+                  className="flex-1 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-[9px] font-bold"
+                >
+                  CANCEL [B]
+                </button>
+                <button
+                  type="button"
+                  onClick={handleForfeit}
+                  className="flex-1 py-1.5 rounded bg-red-600 hover:bg-red-500 text-[9px] font-bold text-white shadow"
+                >
+                  YES, FORFEIT
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+        return typeof document !== "undefined" ? createPortal(modal, document.body) : modal;
+      })()}
     </div>
   );
 };

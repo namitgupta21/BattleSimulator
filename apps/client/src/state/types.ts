@@ -36,6 +36,7 @@ export interface BattleViewState {
     config: RoomConfig | null;
     state: RoomStatePayload["state"] | null;
     players: RoomPlayerInfo[];
+    isReconnecting?: boolean;
   };
 
   battle: {
@@ -59,6 +60,10 @@ export interface BattleViewState {
     opponentDisconnected: boolean;
     opponentGraceDeadline: number | null;
     activeTab: "moves" | "switch";
+    isResync?: boolean;
+    battleStartSeq: number;
+    turnResultSeq: number;
+    lastTurnEvents: BattleEventData[];
   };
 
   ui: {
@@ -70,6 +75,7 @@ export interface BattleViewState {
 
 export type BattleAction =
   | { type: "SET_CONNECTION_STATUS"; status: ConnectionStatus }
+  | { type: "MARK_RECONNECTING" }
   | { type: "SET_PLAYER_NAME"; name: string }
   | { type: "SET_SCREEN"; screen: ScreenType }
   | { type: "ROOM_JOINED"; payload: { roomCode: string; playerSide: "p1" | "p2"; sessionToken: string; config: RoomConfig } }

@@ -74,7 +74,7 @@ export const HealthBar: React.FC<HealthBarProps> = ({
           className="relative flex-1 h-2.5 bg-slate-800/80 rounded-sm border border-slate-900 overflow-hidden"
         >
           <div
-            className={`h-full ${barColor} transition-all duration-500`}
+            className={`h-full ${barColor} ${clampedPercent === 0 ? "hp-bar-fill-faint" : "hp-bar-fill"}`}
             style={{ width: `${clampedPercent}%` }}
           />
         </div>
