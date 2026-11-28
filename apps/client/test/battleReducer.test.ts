@@ -361,4 +361,46 @@ describe("battleReducer", () => {
     expect(state.screen).toBe("result");
     expect(state.battle.currentDialogue).toBeNull();
   });
+
+  it("remembers revealed opponent bench pokemon across switches even without server revealedBench field", () => {
+    let state: BattleViewState = {
+      ...initialBattleViewState,
+      screen: "battle",
+      room: {
+        ...initialBattleViewState.room,
+        playerSide: "p1",
+      },
+      battle: {
+        ...initialBattleViewState.battle,
+        myTeam: [mockPokemon],
+        opponentPublic: {
+          ...mockOpponent,
+          active: { ...mockOpponent.active!, speciesId: "krabby", name: "Krabby", hpPercent: 100 },
+          totalTeamSize: 3,
+          aliveCount: 3,
+          faintedCount: 0,
+        },
+      },
+    };
+
+    // Opponent switches Krabby out for Raichu
+    state = battleReducer(state, {
+      type: "TURN_RESULT",
+      payload: {
+        turnNumber: 2,
+        events: [{ type: "SwitchedIn", side: "p2", pokemon: "Raichu" }],
+        yourTeam: [mockPokemon],
+        opponentPublic: {
+          active: { ...mockOpponent.active!, speciesId: "raichu", name: "Raichu", hpPercent: 100 },
+          totalTeamSize: 3,
+          aliveCount: 3,
+          faintedCount: 0,
+        },
+      },
+    });
+
+    expect(state.battle.opponentPublic?.revealedBench).toHaveLength(1);
+    expect(state.battle.opponentPublic?.revealedBench?.[0].speciesId).toBe("krabby");
+    expect(state.battle.opponentPublic?.revealedBench?.[0].hpPercent).toBe(100);
+  });
 });

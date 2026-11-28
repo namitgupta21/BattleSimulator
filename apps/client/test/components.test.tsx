@@ -1,10 +1,14 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import React from "react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MoveGrid } from "../src/battle/MoveGrid.js";
 import { SwitchMenu } from "../src/battle/SwitchMenu.js";
 import { TurnCountdown } from "../src/battle/TurnCountdown.js";
 import { MobileLogDrawer } from "../src/shell/MobileLogDrawer.js";
-import type { MoveSlot, PlayerPokemon } from "@pokemon/protocol";
+import { GameProvider } from "../src/state/GameContext.js";
+import { ScreenRouter } from "../src/screens/ScreenRouter.js";
+import type { GameConnection, ConnectionStatus } from "../src/connection/GameConnection.js";
+import { ClientEvents, ServerEvents, type MoveSlot, type PlayerPokemon } from "@pokemon/protocol";
 
 const mockMoves: MoveSlot[] = [
   { id: "thunderbolt", name: "Thunderbolt", type: "electric", currentPp: 15, maxPp: 15, basePower: 95, accuracy: 100 },
@@ -64,7 +68,7 @@ describe("MoveGrid", () => {
           { type: "switch", index: 1 },
         ]}
         selectedIndex={0}
-        onSelectIndex={() => {}}
+        onSelectIndex={() => { }}
         onConfirm={onConfirm}
         onOpenSwitch={onOpenSwitch}
       />
@@ -99,7 +103,7 @@ describe("SwitchMenu", () => {
         activeIndex={0}
         legalActions={[{ type: "switch", index: 1 }]}
         selectedIndex={1}
-        onSelectIndex={() => {}}
+        onSelectIndex={() => { }}
         onConfirmSwitch={onConfirmSwitch}
         onCancel={onCancel}
         isForcedSwitch={false}
@@ -189,5 +193,306 @@ describe("MobileLogDrawer", () => {
     const closeBtn = screen.getByRole("button", { name: /Close Battle Log/i });
     fireEvent.click(closeBtn);
     expect(onClose).toHaveBeenCalled();
+  });
+});
+
+class MockGameConnection implements GameConnection {
+  private listeners = new Map<string, Set<(data: any) => void>>();
+  private statusListeners = new Set<(status: ConnectionStatus) => void>();
+  public emitted: Array<{ event: string; data: any }> = [];
+  public status: ConnectionStatus = "connected";
+
+  async connect() {
+    this.status = "connected";
+    this.statusListeners.forEach((cb) => cb("connected"));
+  }
+  disconnect() {
+    this.status = "disconnected";
+    this.statusListeners.forEach((cb) => cb("disconnected"));
+  }
+  getStatus() {
+    return this.status;
+  }
+  getSocketId() {
+    return "mock-sock-1";
+  }
+  on(event: any, handler: any) {
+    if (!this.listeners.has(event)) this.listeners.set(event, new Set());
+    this.listeners.get(event)!.add(handler);
+    return () => {
+      this.listeners.get(event)?.delete(handler);
+    };
+  }
+  emit(event: any, data: any) {
+    this.emitted.push({ event, data });
+  }
+  onConnectionChange(callback: (status: ConnectionStatus) => void) {
+    this.statusListeners.add(callback);
+    return () => {
+      this.statusListeners.delete(callback);
+    };
+  }
+  trigger(event: string, data: any) {
+    this.listeners.get(event)?.forEach((fn) => fn(data));
+  }
+}
+
+describe("BattleScreen Enter & Move/Switch Integration", () => {
+  beforeEach(() => {
+    window.sessionStorage?.clear();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("advances initial dialogue with Enter, enters MoveGrid, selects moves (including Move 2 click), and switches Pokémon", async () => {
+    const conn = new MockGameConnection();
+    render(
+      <GameProvider connection={conn}>
+        <ScreenRouter />
+      </GameProvider>
+    );
+
+    // Emit ROOM_JOINED, BATTLE_START, and TURN_PROMPT
+    act(() => {
+      conn.trigger(ServerEvents.ROOM_JOINED, {
+        roomCode: "ABC123",
+        playerSide: "p1",
+        sessionToken: "tok-1",
+        config: { teamSize: 3, timerEnabled: false, turnDurationSeconds: 90 },
+      });
+      conn.trigger(ServerEvents.BATTLE_START, {
+        seed: 42,
+        playerSide: "p1",
+        activeIndex: 0,
+        team: mockTeam,
+        opponentPublic: {
+          active: {
+            speciesId: "squirtle",
+            name: "Squirtle",
+            level: 50,
+            types: ["water"],
+            hpPercent: 100,
+            status: "NONE",
+            statStages: { attack: 0, defense: 0, special: 0, speed: 0, accuracy: 0, evasion: 0 },
+            revealedMoves: [],
+          },
+          totalTeamSize: 3,
+          aliveCount: 3,
+          faintedCount: 0,
+        },
+      });
+      conn.trigger(ServerEvents.TURN_PROMPT, {
+        turnNumber: 1,
+        phase: "ActionSelection",
+        legalActions: [
+          { type: "move", index: 0 },
+          { type: "move", index: 1 },
+          { type: "move", index: 2 },
+          { type: "switch", index: 1 },
+        ],
+        serverTime: Date.now(),
+      });
+    });
+
+    expect(screen.getByText("Battle has begun! What will you do?")).toBeInTheDocument();
+
+    // First Enter completes typewriter; second Enter advances past BattleStart dialogue -> unlocks MoveGrid
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "Enter" });
+    });
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "Enter" });
+    });
+
+    expect(screen.getByText("THUNDERBOLT")).toBeInTheDocument();
+    expect(screen.getByText("QUICK ATTACK")).toBeInTheDocument();
+
+    // Clicking Move 2 ("Quick Attack") must immediately emit move index 1 (not stale index 0)
+    fireEvent.click(screen.getByRole("button", { name: /Move 2: Quick Attack/i }));
+    expect(conn.emitted).toContainEqual({
+      event: ClientEvents.BATTLE_ACTION,
+      data: { action: { type: "move", index: 1 } },
+    });
+
+    // Cancel action via B/Escape and open Switch Menu
+    conn.emitted = [];
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    expect(screen.getByText("THUNDERBOLT")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Switch Pokémon Roster/i }));
+    expect(screen.getByTestId("switch-menu")).toBeInTheDocument();
+    act(() => {
+      fireEvent.keyDown(window, { key: "Enter" });
+    });
+    expect(conn.emitted).toContainEqual({
+      event: ClientEvents.BATTLE_ACTION,
+      data: { action: { type: "switch", index: 1 } },
+    });
+
+    // Cancel waiting action, then close Switch menu via B/Escape to reach MoveGrid and open forfeit modal
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Forfeit Battle/i }));
+    const forfeitDialog = screen.getByRole("dialog");
+    expect(forfeitDialog.parentElement).toBe(document.body);
+  });
+
+  it("completes Turn 1 playback and unlocks Turn 2 moves/switching inside React.StrictMode", async () => {
+    vi.useFakeTimers();
+    const conn = new MockGameConnection();
+
+    render(
+      <React.StrictMode>
+        <GameProvider connection={conn}>
+          <ScreenRouter />
+        </GameProvider>
+      </React.StrictMode>
+    );
+
+    act(() => {
+      conn.trigger(ServerEvents.ROOM_JOINED, {
+        roomCode: "STR123",
+        playerSide: "p1",
+        sessionToken: "tok-strict",
+        config: { teamSize: 3, timerEnabled: false, turnDurationSeconds: 90 },
+      });
+      conn.trigger(ServerEvents.BATTLE_START, {
+        seed: 7,
+        playerSide: "p1",
+        activeIndex: 0,
+        team: mockTeam,
+        opponentPublic: {
+          active: {
+            speciesId: "squirtle",
+            name: "Squirtle",
+            level: 50,
+            types: ["water"],
+            hpPercent: 100,
+            status: "NONE",
+            statStages: { attack: 0, defense: 0, special: 0, speed: 0, accuracy: 0, evasion: 0 },
+            revealedMoves: [],
+          },
+          totalTeamSize: 3,
+          aliveCount: 3,
+          faintedCount: 0,
+        },
+      });
+      conn.trigger(ServerEvents.TURN_PROMPT, {
+        turnNumber: 1,
+        phase: "ActionSelection",
+        legalActions: [
+          { type: "move", index: 0 },
+          { type: "move", index: 1 },
+          { type: "switch", index: 1 },
+        ],
+        serverTime: Date.now(),
+      });
+    });
+
+    // Wait past BattleStart sprite timeout (600ms) + entrance (400ms) + typewriter, then press Enter once to dismiss
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1100);
+    });
+    expect(screen.getByRole("region")).toHaveTextContent("Battle has begun! What will you do?");
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "Enter" });
+    });
+
+    expect(screen.getByRole("button", { name: /Move 1: Thunderbolt/i })).not.toBeDisabled();
+
+    // Submit Move 1
+    fireEvent.click(screen.getByRole("button", { name: /Move 1: Thunderbolt/i }));
+    expect(conn.emitted).toContainEqual({
+      event: ClientEvents.BATTLE_ACTION,
+      data: { action: { type: "move", index: 0 } },
+    });
+
+    // Receive Turn 1 result and Turn 2 prompt
+    act(() => {
+      conn.trigger(ServerEvents.TURN_RESULT, {
+        turnNumber: 2,
+        playerSide: "p1",
+        activeIndex: 0,
+        events: [
+          { type: "MoveUsed", side: "p1", pokemon: "Pikachu", move: "thunderbolt" },
+          { type: "DamageDealt", side: "p2", pokemon: "Squirtle", intValue1: 45 },
+          { type: "MoveUsed", side: "p2", pokemon: "Squirtle", move: "water-gun" },
+          { type: "DamageDealt", side: "p1", pokemon: "Pikachu", intValue1: 20, intValue2: 80 },
+        ],
+        yourTeam: [{ ...mockTeam[0], currentHp: 80 }, mockTeam[1], mockTeam[2]],
+        opponentPublic: {
+          active: {
+            speciesId: "squirtle",
+            name: "Squirtle",
+            level: 50,
+            types: ["water"],
+            hpPercent: 55,
+            status: "NONE",
+            statStages: { attack: 0, defense: 0, special: 0, speed: 0, accuracy: 0, evasion: 0 },
+            revealedMoves: ["water-gun"],
+          },
+          totalTeamSize: 3,
+          aliveCount: 3,
+          faintedCount: 0,
+        },
+      });
+      conn.trigger(ServerEvents.TURN_PROMPT, {
+        turnNumber: 2,
+        phase: "ActionSelection",
+        legalActions: [
+          { type: "move", index: 0 },
+          { type: "move", index: 1 },
+          { type: "switch", index: 1 },
+        ],
+        serverTime: Date.now(),
+      });
+    });
+
+    // Step 1: Finish typing "Pikachu used thunderbolt!" while both HPs remain 100%
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1200);
+    });
+    expect(screen.getByRole("region")).toHaveTextContent(/Pikachu used thunderbolt/i);
+    expect(screen.getByRole("progressbar", { name: "Squirtle's HP" })).toHaveAttribute("aria-valuenow", "100");
+    expect(screen.getByRole("progressbar", { name: "Pikachu's HP" })).toHaveAttribute("aria-valuenow", "100");
+
+    // Step through remaining 3 events using Enter (once per completed step)
+    for (let step = 0; step < 3; step++) {
+      await act(async () => {
+        fireEvent.keyDown(window, { key: "Enter" });
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1200);
+      });
+      if (step === 0) {
+        // After Foe took damage step, ONLY Squirtle HP dropped to 55%; Pikachu HP is still 100!
+        expect(screen.getByRole("progressbar", { name: "Squirtle's HP" })).toHaveAttribute("aria-valuenow", "55");
+        expect(screen.getByRole("progressbar", { name: "Pikachu's HP" })).toHaveAttribute("aria-valuenow", "100");
+      }
+    }
+
+    // Final Enter advances past "You took 20 damage!" -> Turn 2 moves unlock!
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "Enter" });
+    });
+
+    conn.emitted = [];
+    const move2 = screen.getByRole("button", { name: /Move 2: Quick Attack/i });
+    expect(move2).not.toBeDisabled();
+    fireEvent.click(move2);
+    expect(conn.emitted).toContainEqual({
+      event: ClientEvents.BATTLE_ACTION,
+      data: { action: { type: "move", index: 1 } },
+    });
+
+    vi.useRealTimers();
   });
 });

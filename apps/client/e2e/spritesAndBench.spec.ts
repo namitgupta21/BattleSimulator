@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Sprites, Bench Strip & Hidden Information E2E", () => {
+  test.use({ reducedMotion: "reduce" });
+
   test("Three-tier fallback cascade: GIF -> Static PNG -> LCD Badge", async ({ page }) => {
     // Stage 1: Normal load (or allow animated)
     await page.goto("/");

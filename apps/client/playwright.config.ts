@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const serverPort = process.env.E2E_SERVER_PORT || "3000";
+const clientPort = process.env.E2E_CLIENT_PORT || "5173";
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false, // Run multiplayer matches sequentially
@@ -8,7 +11,7 @@ export default defineConfig({
   workers: 1,
   reporter: "list",
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: `http://127.0.0.1:${clientPort}`,
     trace: "on-first-retry",
   },
   projects: [
@@ -24,13 +27,15 @@ export default defineConfig({
   webServer: [
     {
       command: "npm start --workspace=@pokemon/server",
-      url: "http://127.0.0.1:3000/health",
+      env: { ...process.env, PORT: serverPort },
+      url: `http://127.0.0.1:${serverPort}/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
     },
     {
-      command: "npm run dev --workspace=@pokemon/client -- --port 5173 --host 127.0.0.1",
-      url: "http://127.0.0.1:5173",
+      command: `npm run dev --workspace=@pokemon/client -- --port ${clientPort} --host 127.0.0.1`,
+      env: { ...process.env, VITE_PROXY_TARGET: `http://127.0.0.1:${serverPort}` },
+      url: `http://127.0.0.1:${clientPort}`,
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
     },

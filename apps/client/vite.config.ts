@@ -7,11 +7,11 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/socket.io": {
-        target: process.env.VITE_SERVER_URL || "http://127.0.0.1:3000",
+        target: process.env.VITE_PROXY_TARGET || process.env.VITE_SERVER_URL || "http://127.0.0.1:3000",
         ws: true,
       },
       "/replay": {
-        target: process.env.VITE_SERVER_URL || "http://127.0.0.1:3000",
+        target: process.env.VITE_PROXY_TARGET || process.env.VITE_SERVER_URL || "http://127.0.0.1:3000",
       },
     },
   },
