@@ -83,4 +83,24 @@ describe("Hidden Information & Fog of War", () => {
     assert.strictEqual(serialized.includes("snorlax"), false, "Bench pokemon 'snorlax' must not appear");
     assert.strictEqual(serialized.includes("alakazam"), false, "Bench pokemon 'alakazam' must not appear");
   });
+
+  it("includes only previously seen bench pokemon in revealedBench when seenIndices is tracked", () => {
+    const revealedMoves = new Set<string>(["flamethrower"]);
+    const seenIndices = new Set<number>([0, 2]); // Charizard active, Alakazam previously seen & fainted; Snorlax unseen
+    const opponentView = BattleSanitizer.getOpponentPublicState(
+      sampleEngineTeam,
+      revealedMoves,
+      seenIndices
+    );
+
+    assert.ok(Array.isArray(opponentView.revealedBench));
+    assert.strictEqual(opponentView.revealedBench.length, 1);
+    assert.strictEqual(opponentView.revealedBench[0].speciesId, "alakazam");
+    assert.strictEqual(opponentView.revealedBench[0].level, 50);
+    assert.strictEqual(opponentView.revealedBench[0].hpPercent, 0);
+    assert.strictEqual((opponentView.revealedBench[0] as any).currentHp, undefined);
+
+    const serialized = JSON.stringify(opponentView);
+    assert.strictEqual(serialized.includes("snorlax"), false, "Unseen bench pokemon 'snorlax' must remain hidden");
+  });
 });

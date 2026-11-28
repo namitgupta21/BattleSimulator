@@ -33,45 +33,61 @@ export class BattleSanitizer {
     };
   }
 
+  private static toOpponentPublicPokemon(
+    member: EnginePokemonMember,
+    revealedMoves: Set<string> | Map<string, Set<string>>
+  ): OpponentPublicPokemon {
+    const hpPercent = Math.max(
+      0,
+      Math.min(100, Math.ceil((member.currentHp / member.maxHp) * 100))
+    );
+
+    let movesList: string[] = [];
+    if (revealedMoves instanceof Map) {
+      const pMoves = revealedMoves.get(member.name);
+      movesList = pMoves ? Array.from(pMoves) : [];
+    } else {
+      movesList = Array.from(revealedMoves);
+    }
+
+    return {
+      speciesId: member.speciesId,
+      name: member.name,
+      level: member.level,
+      types: [],
+      hpPercent,
+      status: member.status as StatusEffect,
+      statStages: { ...member.statStages },
+      revealedMoves: movesList,
+    };
+  }
+
   /**
    * Transforms an opponent's full team data into a sanitized public view.
-   * Strips: exact HP numbers, unrevealed moves, and all bench details.
+   * Strips: exact HP numbers, unrevealed moves, and all unrevealed bench details.
    */
   static getOpponentPublicState(
     team: EngineTeamData,
-    revealedMoves: Set<string> | Map<string, Set<string>>
+    revealedMoves: Set<string> | Map<string, Set<string>>,
+    seenIndices?: ReadonlySet<number>
   ): OpponentPublicState {
     const totalTeamSize = team.pokemon.length;
     const aliveCount = team.pokemon.filter((p) => p.currentHp > 0).length;
     const faintedCount = totalTeamSize - aliveCount;
 
     const activeMember = team.pokemon[team.activeIndex];
-    let active: OpponentPublicPokemon | null = null;
+    const active: OpponentPublicPokemon | null = activeMember
+      ? BattleSanitizer.toOpponentPublicPokemon(activeMember, revealedMoves)
+      : null;
 
-    if (activeMember) {
-      const hpPercent = Math.max(
-        0,
-        Math.min(100, Math.ceil((activeMember.currentHp / activeMember.maxHp) * 100))
-      );
-
-      let movesList: string[] = [];
-      if (revealedMoves instanceof Map) {
-        const pMoves = revealedMoves.get(activeMember.name);
-        movesList = pMoves ? Array.from(pMoves) : [];
-      } else {
-        movesList = Array.from(revealedMoves);
-      }
-
-      active = {
-        speciesId: activeMember.speciesId,
-        name: activeMember.name,
-        level: activeMember.level,
-        types: [],
-        hpPercent,
-        status: activeMember.status as StatusEffect,
-        statStages: { ...activeMember.statStages },
-        revealedMoves: movesList,
-      };
+    let revealedBench: OpponentPublicPokemon[] | undefined;
+    if (seenIndices) {
+      revealedBench = [];
+      team.pokemon.forEach((member, idx) => {
+        if (idx !== team.activeIndex && seenIndices.has(idx)) {
+          revealedBench!.push(BattleSanitizer.toOpponentPublicPokemon(member, revealedMoves));
+        }
+      });
     }
 
     return {
@@ -79,6 +95,7 @@ export class BattleSanitizer {
       totalTeamSize,
       aliveCount,
       faintedCount,
+      ...(revealedBench !== undefined ? { revealedBench } : {}),
     };
   }
 }

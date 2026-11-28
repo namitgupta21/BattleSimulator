@@ -85,6 +85,7 @@ export interface OpponentPublicState {
   totalTeamSize: number;
   aliveCount: number;
   faintedCount: number;
+  revealedBench?: OpponentPublicPokemon[];
 }
 
 export interface RoomConfig {

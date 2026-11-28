@@ -69,6 +69,8 @@ export class BattleOrchestrator {
 
   private revealedMovesP1 = new Map<string, Set<string>>();
   private revealedMovesP2 = new Map<string, Set<string>>();
+  private seenPokemonP1 = new Set<number>();
+  private seenPokemonP2 = new Set<number>();
 
   private pendingActions: { p1?: Action; p2?: Action } = {};
   private pendingSwitches: { p1?: Action; p2?: Action } = {};
@@ -102,11 +104,35 @@ export class BattleOrchestrator {
   }
 
   start(): void {
+    this.recordSeenPokemon(this.session.getState());
     // Send initial battle:start with sanitized views to both players
     this.sendBattleStart("p1");
     this.sendBattleStart("p2");
 
     this.startTurn();
+  }
+
+  private recordSeenPokemon(state: EngineBattleState, events?: BattleEventData[]): void {
+    if (state.p1Team.activeIndex >= 0) {
+      this.seenPokemonP1.add(state.p1Team.activeIndex);
+    }
+    if (state.p2Team.activeIndex >= 0) {
+      this.seenPokemonP2.add(state.p2Team.activeIndex);
+    }
+    if (events) {
+      for (const event of events) {
+        if ((event.type === "SwitchedIn" || event.type === "Fainted") && event.pokemon) {
+          const team = event.side === "p1" ? state.p1Team : state.p2Team;
+          const seenSet = event.side === "p1" ? this.seenPokemonP1 : this.seenPokemonP2;
+          const idx = team.pokemon.findIndex(
+            (p) => p.name.toLowerCase() === event.pokemon!.toLowerCase()
+          );
+          if (idx !== -1) {
+            seenSet.add(idx);
+          }
+        }
+      }
+    }
   }
 
   get currentState(): EngineBattleState {
@@ -296,14 +322,17 @@ export class BattleOrchestrator {
 
   private sendBattleStart(side: PlayerSide): void {
     const state = this.session.getState();
+    this.recordSeenPokemon(state);
     const ownTeamData = side === "p1" ? state.p1Team : state.p2Team;
     const oppTeamData = side === "p1" ? state.p2Team : state.p1Team;
     const oppRevealedMoves = side === "p1" ? this.revealedMovesP2 : this.revealedMovesP1;
+    const oppSeenIndices = side === "p1" ? this.seenPokemonP2 : this.seenPokemonP1;
 
     const yourTeam = ownTeamData.pokemon.map(BattleSanitizer.toPlayerPokemon);
     const opponentPublic = BattleSanitizer.getOpponentPublicState(
       oppTeamData,
-      oppRevealedMoves
+      oppRevealedMoves,
+      oppSeenIndices
     );
 
     this.callbacks.onBattleStart(side, {
@@ -432,16 +461,19 @@ export class BattleOrchestrator {
   }
 
   private emitTurnResult(state: EngineBattleState, events: BattleEventData[]): void {
+    this.recordSeenPokemon(state, events);
     // Send sanitized turn:result to each player
     for (const side of ["p1", "p2"] as PlayerSide[]) {
       const ownTeamData = side === "p1" ? state.p1Team : state.p2Team;
       const oppTeamData = side === "p1" ? state.p2Team : state.p1Team;
       const oppRevealedMoves = side === "p1" ? this.revealedMovesP2 : this.revealedMovesP1;
+      const oppSeenIndices = side === "p1" ? this.seenPokemonP2 : this.seenPokemonP1;
 
       const yourTeam = ownTeamData.pokemon.map(BattleSanitizer.toPlayerPokemon);
       const opponentPublic = BattleSanitizer.getOpponentPublicState(
         oppTeamData,
-        oppRevealedMoves
+        oppRevealedMoves,
+        oppSeenIndices
       );
 
       this.callbacks.onTurnResult(side, {

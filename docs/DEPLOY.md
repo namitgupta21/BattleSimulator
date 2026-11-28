@@ -101,6 +101,48 @@ curl -fsSL https://raw.githubusercontent.com/<OWNER>/<REPO>/main/docker-compose.
 curl -fsSL https://raw.githubusercontent.com/<OWNER>/<REPO>/main/.env.example -o .env
 ```
 
+### Step 3.3: Self-Hosted Pokémon Sprites (Host Setup)
+
+The production client serves Pokémon visual assets from a host-mounted directory (`./sprites:/srv/client/sprites:ro`), keeping image files completely out of Git and Docker images.
+
+1. **Download assets locally** on your development machine (or an administrative workstation):
+   ```bash
+   node tools/download-sprites.mjs
+   ```
+   This downloads all 151 Gen 1 animated GIFs, transparent PNGs, and party icons into `apps/client/public/sprites/`.
+
+2. **Upload assets to the EC2 server host**:
+   ```bash
+   # Create target sprites directory on the server
+   ssh -i /path/to/key.pem ubuntu@<EC2_PUBLIC_IP> "mkdir -p ~/pokemon-battle/sprites"
+
+   # Securely copy the sprites tree to the host
+   scp -i /path/to/key.pem -r apps/client/public/sprites/* ubuntu@<EC2_PUBLIC_IP>:~/pokemon-battle/sprites/
+   ```
+
+3. **Verify expected directory layout on the host**:
+   ```text
+   ~/pokemon-battle/
+   ├── docker-compose.yml
+   ├── .env
+   └── sprites/
+       ├── animated/
+       │   ├── 1.gif ... 151.gif
+       │   └── back/
+       │       ├── 1.gif ... 151.gif
+       ├── transparent/
+       │   ├── 1.png ... 151.png
+       │   └── back/
+       │       ├── 1.png ... 151.png
+       └── icons/
+           ├── 1.png ... 151.png
+   ```
+
+> [!IMPORTANT]
+> **Host-Only Storage**: Pokémon sprites live exclusively on the host filesystem at `~/pokemon-battle/sprites/` and are mounted into Caddy as read-only (`./sprites:/srv/client/sprites:ro`). Sprites are **never** committed to Git and **never** bundled in Docker images.
+> - **Server Rebuilds**: If the EC2 instance is ever terminated, recreated, or migrated, the sprites directory must be re-uploaded to the new host.
+> - **Fallback Behavior**: If a sprite file is missing, Caddy will return a clean `404 Not Found` (without SPA `index.html` fallback), allowing the client to automatically cascade to the static transparent sprite or retro LCD badge placeholder without error.
+
 ---
 
 ## 4. Production Configuration (`.env`)

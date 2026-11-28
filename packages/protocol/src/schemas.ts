@@ -112,6 +112,7 @@ export const OpponentPublicStateSchema = z.object({
   totalTeamSize: z.number().int(),
   aliveCount: z.number().int(),
   faintedCount: z.number().int(),
+  revealedBench: z.array(OpponentPublicPokemonSchema).optional(),
 });
 
 export const BattleStartPayloadSchema = z.object({
